@@ -50,7 +50,7 @@ jobs:
 
       # Only the manifests this PR touches: a third party's registry hiccup must not
       # turn the whole index red.
-      - name: Check changed extensions against npm
+      - name: Check changed plugins against npm
         run: pnpm check-npm
         env:
           BASE_REF: origin/${{ github.base_ref || 'main' }}

@@ -1,13 +1,12 @@
 {
-  "name": "penguin-extensions",
+  "name": "penguin-plugins",
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "The extension index for PenguinHarness: submissions, checks, and the generated index.json.",
+  "description": "The plugin index for PenguinHarness: submissions, checks, and the generated index.json.",
   "engines": {
     "node": ">=24"
   },
-  "packageManager": "pnpm@10.26.0",
   "scripts": {
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "test": "vitest run",
