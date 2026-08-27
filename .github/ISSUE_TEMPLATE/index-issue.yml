@@ -10,7 +10,7 @@ body:
     validations:
       required: true
   - type: input
-    id: plugin
+    id: extension
     attributes:
-      label: Plugin involved
+      label: Extension involved
       description: The npm package name, if this is about a specific entry.

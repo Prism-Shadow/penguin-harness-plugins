@@ -1,8 +1,8 @@
-# The plugin manifest
+# The extension manifest
 
-One TOML file per plugin, at `plugins/<npm package name>.toml`. The path is not a
-convention the tooling tolerates — it is checked: `@acme/penguin-plugin-widgets` must
-live at `plugins/@acme/penguin-plugin-widgets.toml` and nowhere else. That is what makes
+One TOML file per extension, at `extensions/<npm package name>.toml`. The path is not a
+convention the tooling tolerates — it is checked: `@acme/penguin-extension-widgets` must
+live at `extensions/@acme/penguin-extension-widgets.toml` and nowhere else. That is what makes
 a rename visible as a file move and makes two entries claiming one package impossible.
 
 Unknown keys are rejected. A typo in a key name is a mistake we would rather report than
@@ -12,7 +12,7 @@ silently ignore.
 
 | Key             | Required      | Rule                                                                                                                                                               |
 | --------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `name`          | yes           | The npm specifier, matching the file path. The part after the scope must start with `penguin-plugin-`.                                                             |
+| `name`          | yes           | The npm specifier, matching the file path. The part after the scope must start with `penguin-extension-`.                                                          |
 | `version`       | yes           | An exact semantic version — never a range. Must be published on npm, and must not decrease across updates.                                                         |
 | `description`   | yes           | One line, at most 1000 characters, identical to the published package's `description`.                                                                             |
 | `authors`       | yes           | Non-empty. See the format below.                                                                                                                                   |
@@ -23,7 +23,7 @@ silently ignore.
 | `categories`    | yes           | 1–3 values from the [category list](categories.md).                                                                                                                |
 | `owners`        | yes           | GitHub handles allowed to change this manifest.                                                                                                                    |
 | `yanked`        | no            | `true` removes the entry from the published index. Requires `yanked_reason`.                                                                                       |
-| `yanked_reason` | with `yanked` | Why the plugin was pulled.                                                                                                                                         |
+| `yanked_reason` | with `yanked` | Why the extension was pulled.                                                                                                                                      |
 
 ## Author format
 
@@ -44,12 +44,12 @@ person it credits.
 
 ## Naming rules
 
-The `penguin-plugin-` prefix is required because npm is where people will actually find
+The `penguin-extension-` prefix is required because npm is where people will actually find
 your package, and our index has no reach there.
 
-Beyond the prefix, prefer a name that says what your plugin _is_ rather than what the
-whole category _is_. `penguin-plugin-sandbox-bwrap` names an implementation;
-`penguin-plugin-sandbox` claims the floor. First-come applies, but a submission holding a
+Beyond the prefix, prefer a name that says what your extension _is_ rather than what the
+whole category _is_. `penguin-extension-sandbox-bwrap` names an implementation;
+`penguin-extension-sandbox` claims the floor. First-come applies, but a submission holding a
 category-wide name will be asked to narrow it.
 
 Names are permanent. There is no rename path — only publishing under a new name and
@@ -68,5 +68,5 @@ export.
 
 That last check is **static**: the tarball is unpacked and read, never imported.
 Executing submitted code in CI would hand every contributor a shell on the machine that
-publishes this index. If your plugin is bundled in a way that hides the export from a
+publishes this index. If your extension is bundled in a way that hides the export from a
 source-level read, say so in the pull request.

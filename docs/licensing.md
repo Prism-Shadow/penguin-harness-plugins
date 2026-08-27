@@ -1,6 +1,6 @@
 # Licensing
 
-A listed plugin must be licensed such that the people who install it may actually use
+A listed extension must be licensed such that the people who install it may actually use
 it. We accept OSI-approved licenses plus CC0, and we check the identifier against a
 closed list rather than against all of SPDX — a license this repository cannot fully
 read is one a human should look at.

@@ -1,5 +1,5 @@
 /**
- * The repository's own history is metadata: it tells us when a plugin entry last
+ * The repository's own history is metadata: it tells us when an extension entry last
  * changed (which becomes `updatedAt` in the index, as in typst/packages) and which
  * manifests a pull request touches (which is what the expensive npm checks are scoped
  * to, as in zed's `changedExtensionIds`).
@@ -25,7 +25,7 @@ function git(args: string[]): string {
 
 /** Every manifest in the working tree, repo-relative and sorted. */
 export function listManifestFiles(root: string): string[] {
-  const dir = path.join(root, "plugins");
+  const dir = path.join(root, "extensions");
   if (!fs.existsSync(dir)) return [];
   const files: string[] = [];
   const walk = (current: string): void => {
@@ -85,9 +85,9 @@ export function hasRef(ref: string): boolean {
  */
 export function changedManifests(baseRef: string): ManifestChange[] {
   const mergeBase = git(["merge-base", "HEAD", baseRef]).trim();
-  const out = git(["diff", "--name-status", "-M", mergeBase, "--", "plugins/"]);
+  const out = git(["diff", "--name-status", "-M", mergeBase, "--", "extensions/"]);
   const changes: ManifestChange[] = [];
-  for (const file of git(["ls-files", "--others", "--exclude-standard", "--", "plugins/"])
+  for (const file of git(["ls-files", "--others", "--exclude-standard", "--", "extensions/"])
     .split("\n")
     .map((line) => line.trim())
     .filter((line) => line.endsWith(".toml"))) {

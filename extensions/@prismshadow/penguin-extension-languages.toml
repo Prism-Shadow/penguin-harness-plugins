@@ -1,0 +1,10 @@
+name = "@prismshadow/penguin-extension-languages"
+version = "0.1.0"
+description = "Syntax highlighting for Typst, Swift, Kotlin, C# and Dart."
+authors = ["Myriad-Dreamin"]
+license = "MIT"
+repository = "https://github.com/Prism-Shadow/penguin-harness"
+homepage = "https://github.com/Prism-Shadow/penguin-harness/tree/main/extensions/languages"
+keywords = ["typst", "swift", "kotlin", "csharp", "dart"]
+categories = ["utility"]
+owners = ["Myriad-Dreamin"]

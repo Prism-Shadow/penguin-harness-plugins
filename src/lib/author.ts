@@ -4,7 +4,7 @@
  * An author is a display name optionally followed by exactly one contact in angle
  * brackets: a GitHub handle (`<@handle>`), a URL, or an email address. Keeping the
  * contact machine-checkable is what lets a reviewer confirm that the person submitting
- * a plugin is the person the manifest credits.
+ * an extension is the person the manifest credits.
  */
 
 const GITHUB_HANDLE = /^[A-Za-z0-9](?:[A-Za-z0-9]|-(?=[A-Za-z0-9])){0,38}$/;

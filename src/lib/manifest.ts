@@ -1,8 +1,8 @@
 /**
- * A submission is one TOML file per plugin under `plugins/`, and this module is the
+ * A submission is one TOML file per extension under `extensions/`, and this module is the
  * only thing that decides whether such a file is well-formed.
  *
- * The file path IS the npm specifier (`plugins/@scope/pkg.toml` ⇒ `@scope/pkg`), so a
+ * The file path IS the npm specifier (`extensions/@scope/pkg.toml` ⇒ `@scope/pkg`), so a
  * rename is visible as a file move and two submissions can never quietly claim the
  * same package. One manifest carries exactly one version — the current one. Older
  * versions stay resolvable through npm; the index is a catalogue of what we recommend
@@ -26,7 +26,7 @@ import {
 } from "./vocabulary.js";
 
 export interface Manifest {
-  /** npm specifier — the string an operator puts into `plugins.json`. */
+  /** npm specifier — the string an operator puts into `extensions.json`. */
   name: string;
   /** The version this index recommends; exact, never a range. */
   version: string;
@@ -34,14 +34,14 @@ export interface Manifest {
   authors: string[];
   /** SPDX expression, restricted to the list in docs/licensing.md. */
   license: string;
-  /** Source repository; required, because an unreadable plugin is not reviewable. */
+  /** Source repository; required, because an unreadable extension is not reviewable. */
   repository: string;
   homepage?: string;
   keywords?: string[];
   categories: string[];
   /** GitHub handles allowed to change this manifest. */
   owners: string[];
-  /** A yanked plugin keeps its manifest as a record but is dropped from index.json. */
+  /** A yanked extension keeps its manifest as a record but is dropped from index.json. */
   yanked?: boolean;
   yankedReason?: string;
 }
@@ -77,21 +77,21 @@ export class ManifestError extends Error {
   }
 }
 
-/** `plugins/@scope/pkg.toml` ⇒ `@scope/pkg`; returns null for anything else. */
+/** `extensions/@scope/pkg.toml` ⇒ `@scope/pkg`; returns null for anything else. */
 export function nameFromManifestPath(file: string): string | null {
   const posix = file.split(path.sep).join("/");
-  const match = /^plugins\/(.+)\.toml$/.exec(posix);
+  const match = /^extensions\/(.+)\.toml$/.exec(posix);
   if (match === null) return null;
   const name = match[1] as string;
-  return isPluginName(name) ? name : null;
+  return isExtensionName(name) ? name : null;
 }
 
-/** `@scope/pkg` ⇒ `plugins/@scope/pkg.toml`, the one place its manifest may live. */
+/** `@scope/pkg` ⇒ `extensions/@scope/pkg.toml`, the one place its manifest may live. */
 export function manifestPathFor(name: string): string {
-  return `plugins/${name}.toml`;
+  return `extensions/${name}.toml`;
 }
 
-function isPluginName(name: string): boolean {
+function isExtensionName(name: string): boolean {
   if (name.length > 214) return false;
   return name.startsWith("@") ? SCOPED_NAME.test(name) : PLAIN_NAME.test(name);
 }
@@ -126,7 +126,7 @@ export function parseManifest(source: string, file: string): Manifest {
   const name = typeof raw.name === "string" ? raw.name : null;
   if (name === null) {
     problems.push(`"name" is required and must be a string`);
-  } else if (!isPluginName(name)) {
+  } else if (!isExtensionName(name)) {
     problems.push(`"${name}" is not a valid npm package name`);
   } else {
     const expected = manifestPathFor(name);
@@ -246,7 +246,7 @@ export function parseManifest(source: string, file: string): Manifest {
     }
   }
   if (yanked === true && yankedReason === undefined) {
-    problems.push(`a yanked plugin must say why in "yanked_reason"`);
+    problems.push(`a yanked extension must say why in "yanked_reason"`);
   }
   if (yanked !== true && yankedReason !== undefined) {
     problems.push(`"yanked_reason" is only allowed together with yanked = true`);

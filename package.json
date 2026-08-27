@@ -1,9 +1,9 @@
 {
-  "name": "penguin-plugins",
+  "name": "penguin-extensions",
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "The plugin index for PenguinHarness: submissions, checks, and the generated index.json.",
+  "description": "The extension index for PenguinHarness: submissions, checks, and the generated index.json.",
   "engines": {
     "node": ">=24"
   },

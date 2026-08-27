@@ -1,6 +1,6 @@
 /**
  * The index claims things about a package it does not host: that the version exists,
- * that it is licensed as stated, that it is a PenguinHarness plugin at all. This
+ * that it is licensed as stated, that it is a PenguinHarness extension at all. This
  * module is where those claims are checked against npm, the registry that actually
  * serves the code.
  *
@@ -113,7 +113,7 @@ function verifyIntegrity(buffer: Buffer, dist: PackumentVersion["dist"]): string
 
 /**
  * Downloads the version's tarball and reads its entry file. Returns the problems found;
- * an empty array means the package looks like a loadable PenguinHarness plugin.
+ * an empty array means the package looks like a loadable PenguinHarness extension.
  */
 export async function probeTarball(
   pkg: PackumentVersion,
@@ -133,7 +133,7 @@ export async function probeTarball(
   const integrity = verifyIntegrity(buffer, pkg.dist);
   if (integrity !== null) problems.push(integrity);
 
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "penguin-plugin-"));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "penguin-extension-"));
   try {
     const archive = path.join(dir, "package.tgz");
     fs.writeFileSync(archive, buffer);
@@ -148,7 +148,7 @@ export async function probeTarball(
     const published = JSON.parse(fs.readFileSync(manifestPath, "utf8")) as PackumentVersion;
     if (published.type !== "module") {
       problems.push(
-        `package.json must declare "type": "module"; the harness imports plugins as ESM`,
+        `package.json must declare "type": "module"; the harness imports extensions as ESM`,
       );
     }
 
@@ -160,7 +160,7 @@ export async function probeTarball(
     }
     if (!declaresActivate(fs.readFileSync(entryPath, "utf8"))) {
       problems.push(
-        `entry point "${entry}" declares no "activate" export; a plugin's contract is one named export activate(ctx)`,
+        `entry point "${entry}" declares no "activate" export; an extension's contract is one named export activate(ctx)`,
       );
     }
   } finally {

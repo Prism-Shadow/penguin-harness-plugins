@@ -3,7 +3,7 @@
  *
  * Two groups. Per-file validation (`parseManifest`) says whether a manifest is
  * well-formed. Diff validation says whether the CHANGE is allowed — a version may not
- * go backwards, a plugin's name is permanent, and a manifest may only be changed by
+ * go backwards, an extension's name is permanent, and a manifest may only be changed by
  * the people it lists as owners. Those rules exist because the index is a name→package
  * mapping people trust: silently repointing or renaming an entry is the attack this
  * repository has to make impossible.
@@ -54,14 +54,14 @@ if (!hasRef(baseRef)) {
   for (const change of changes) {
     if (change.status === "renamed") {
       problems.push(
-        `${change.from} → ${change.file}: a plugin's name is permanent. Yank the old entry and submit the new package instead.`,
+        `${change.from} → ${change.file}: an extension's name is permanent. Yank the old entry and submit the new package instead.`,
       );
       continue;
     }
     if (change.status === "deleted") {
       if (!isMaintainer) {
         problems.push(
-          `${change.file}: entries are not deleted. Set yanked = true with a yanked_reason to take a plugin out of the index.`,
+          `${change.file}: entries are not deleted. Set yanked = true with a yanked_reason to take an extension out of the index.`,
         );
       }
       continue;

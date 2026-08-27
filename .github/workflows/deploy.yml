@@ -20,7 +20,7 @@ jobs:
   deploy:
     name: Publish index.json
     runs-on: ubuntu-latest
-    if: github.repository == 'Prism-Shadow/penguin-plugins'
+    if: github.repository == 'Prism-Shadow/penguin-extensions'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
