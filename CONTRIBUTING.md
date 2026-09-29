@@ -11,8 +11,8 @@ host code, and an entry for an unpublished package cannot pass CI.
 
 The published package must:
 
-- be named `penguin-extension-<something>`, optionally under your own scope
-  (`@you/penguin-extension-widgets`);
+- carry any valid npm name, optionally under your own scope (`@you/widgets`); there is
+  no required prefix;
 - declare `"type": "module"` — the harness imports extensions as ESM;
 - export a named `activate` function from its entry point. That is the extension contract:
   `activate(ctx)` runs once per process at load, and every harness view arrives through
@@ -28,16 +28,16 @@ confirm the harness loads it and the capability it registers works.
 ## The pull request
 
 Add exactly one file: `extensions/<npm package name>.toml`. The path spells the package
-name, so `@acme/penguin-extension-widgets` lives at
-`extensions/@acme/penguin-extension-widgets.toml`.
+name, so `@acme/widgets` lives at
+`extensions/@acme/widgets.toml`.
 
 ```toml
-name = "@acme/penguin-extension-widgets"
+name = "@acme/widgets"
 version = "1.2.3"
 description = "Widget tools for PenguinHarness."
 authors = ["Ada Lovelace <@ada>"]
 license = "MIT"
-repository = "https://github.com/acme/penguin-extension-widgets"
+repository = "https://github.com/acme/widgets"
 homepage = "https://example.com/widgets"      # optional
 keywords = ["widgets", "linux"]               # optional, at most 5
 categories = ["tool"]
@@ -59,8 +59,7 @@ the version did not go backwards. A maintainer then looks at the rest:
 - **Usefulness.** The extension should do something other people want, and do it through
   the harness's own capability vocabulary rather than by working around it.
 - **Naming.** Names are first-come, but a name that claims a whole problem space
-  (`penguin-extension-sandbox`) will be asked to become specific
-  (`penguin-extension-sandbox-bwrap`). Names are permanent — see below.
+  (`sandbox`) will be asked to become specific (`sandbox-bwrap`). Names are permanent — see below.
 - **Scope of what it takes.** An extension that spawns processes, reads outside the project
   root, or talks to the network should say so plainly in its README.
 - **Safety.** Extensions must not attempt to exfiltrate user data, disable the sandbox
@@ -83,7 +82,7 @@ Versions may not decrease, and only listed `owners` may change the file.
 
   ```toml
   yanked = true
-  yanked_reason = "Superseded by @acme/penguin-extension-widgets-2."
+  yanked_reason = "Superseded by @acme/widgets-2."
   ```
 
   The entry disappears from `index.json`; already-installed deployments are unaffected,

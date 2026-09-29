@@ -20,8 +20,7 @@ I am submitting
 For a new extension, I confirm that I have:
 
 - [ ] published the package on npm, with `"type": "module"` and a named `activate` export
-- [ ] used a name starting with `penguin-extension-` that names my implementation rather
-      than claiming a whole category
+- [ ] used a name that names my implementation rather than claiming a whole category
 - [ ] chosen an [allowed license](../docs/licensing.md) and used the same identifier in
       `package.json`, in the manifest, and in my repository's license file
 - [ ] listed myself in `owners`

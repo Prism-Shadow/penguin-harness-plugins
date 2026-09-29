@@ -56,13 +56,6 @@ export const LICENSES = [
   "CC0-1.0",
 ] as const;
 
-/**
- * Every extension package's unscoped name starts with this. The harness resolves extensions
- * by npm specifier, so the prefix is what makes a package findable as a PenguinHarness
- * extension on npm itself, where our index has no reach.
- */
-export const NAME_PREFIX = "penguin-extension-";
-
 /** Tarballs above this are rejected: an extension is code, not an asset bundle. */
 export const MAX_TARBALL_BYTES = 10 * 1024 * 1024;
 

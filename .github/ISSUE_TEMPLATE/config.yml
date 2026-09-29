@@ -1,7 +1,7 @@
 blank_issues_enabled: false
 contact_links:
   - name: Bug in a listed extension
-    url: https://github.com/Prism-Shadow/penguin-extensions/blob/main/CONTRIBUTING.md#reporting-a-problem-with-a-listed-extension
+    url: https://github.com/Prism-Shadow/penguin-plugins/blob/main/CONTRIBUTING.md#reporting-a-problem-with-a-listed-extension
     about: Report it on the extension's own repository — this index does not maintain listed extensions.
   - name: Question about PenguinHarness itself
     url: https://github.com/Prism-Shadow/penguin-harness/issues

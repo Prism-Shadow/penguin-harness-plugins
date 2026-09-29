@@ -98,7 +98,7 @@ function landingPage(count: number): string {
     <h1>PenguinHarness extension index</h1>
     <p>This site serves one artifact: <a href="./index.json"><code>index.json</code></a>, currently listing ${count} extension${count === 1 ? "" : "s"}.</p>
     <p>It is generated from the manifests in
-      <a href="https://github.com/Prism-Shadow/penguin-extensions">Prism-Shadow/penguin-extensions</a>.
+      <a href="https://github.com/Prism-Shadow/penguin-plugins">Prism-Shadow/penguin-plugins</a>.
       To list an extension, open a pull request there.</p>
   </body>
 </html>

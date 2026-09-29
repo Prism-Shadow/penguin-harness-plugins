@@ -34,7 +34,7 @@ jobs:
     name: Replace the nightly index asset
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    if: github.repository == 'Prism-Shadow/penguin-extensions'
+    if: github.repository == 'Prism-Shadow/penguin-plugins'
     steps:
       # Full history: `updatedAt` comes from each manifest's last commit.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

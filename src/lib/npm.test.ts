@@ -8,12 +8,12 @@ import type { Manifest } from "./manifest.js";
 import { checkAgainstNpm, declaresActivate, entryPointOf } from "./npm.js";
 
 const MANIFEST: Manifest = {
-  name: "@acme/penguin-extension-widgets",
+  name: "@acme/widgets",
   version: "1.2.3",
   description: "Widget tools for PenguinHarness.",
   authors: ["Ada <@ada>"],
   license: "MIT",
-  repository: "https://github.com/acme/penguin-extension-widgets",
+  repository: "https://github.com/acme/widgets",
   categories: ["tool"],
   owners: ["ada"],
 };

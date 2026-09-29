@@ -22,7 +22,6 @@ import {
   MAX_DESCRIPTION_LENGTH,
   MAX_KEYWORDS,
   MAX_KEYWORD_LENGTH,
-  NAME_PREFIX,
 } from "./vocabulary.js";
 
 export interface Manifest {
@@ -132,9 +131,6 @@ export function parseManifest(source: string, file: string): Manifest {
     const expected = manifestPathFor(name);
     if (file.split(path.sep).join("/") !== expected) {
       problems.push(`manifest for "${name}" must live at ${expected}`);
-    }
-    if (!unscoped(name).startsWith(NAME_PREFIX)) {
-      problems.push(`package name must start with "${NAME_PREFIX}" after the scope`);
     }
   }
 

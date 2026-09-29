@@ -11,7 +11,7 @@ body:
     id: extension
     attributes:
       label: Package name
-      placeholder: "@acme/penguin-extension-widgets"
+      placeholder: "@acme/widgets"
     validations:
       required: true
   - type: textarea

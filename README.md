@@ -4,7 +4,7 @@ The index of extensions available to [PenguinHarness][harness]. Extension author
 entry here; the harness reads the generated index and shows the result in its extension
 page.
 
-**Published index:** <https://prism-shadow.github.io/penguin-extensions/index.json>
+**Published index:** <https://prism-shadow.github.io/penguin-plugins/index.json>
 
 ## What this repository is — and is not
 
@@ -23,7 +23,7 @@ tarballs; they never import them.
 ## Layout
 
 ```
-extensions/@scope/penguin-extension-name.toml   one manifest per extension; the path is the npm name
+extensions/@scope/name.toml               one manifest per extension; the path is the npm name
 src/                                      the checks and the index builder
 docs/                                     the submission rules in prose
 ```
@@ -39,8 +39,8 @@ docs/                                     the submission rules in prose
 
 Read [CONTRIBUTING.md](CONTRIBUTING.md). The short version:
 
-1. Publish your extension to npm as `penguin-extension-<something>` (scoped is fine), with
-   `"type": "module"` and a named `activate` export.
+1. Publish your extension to npm under any name (scoped is fine), with `"type": "module"`
+   and a named `activate` export.
 2. Add `extensions/<npm name>.toml` — see [docs/manifest.md](docs/manifest.md).
 3. Open a pull request. CI checks the manifest and the published package; a maintainer
    reviews the rest.
@@ -54,12 +54,12 @@ the harness's builtin index uses, so a client that reads one reads the other.
 ```json
 [
   {
-    "name": "@acme/penguin-extension-widgets",
+    "name": "@acme/widgets",
     "version": "1.2.3",
     "description": "Widget tools for PenguinHarness.",
     "authors": ["Ada <@ada>"],
     "license": "MIT",
-    "repository": "https://github.com/acme/penguin-extension-widgets",
+    "repository": "https://github.com/acme/widgets",
     "keywords": ["widgets", "linux"],
     "categories": ["tool"],
     "updatedAt": 1755000000

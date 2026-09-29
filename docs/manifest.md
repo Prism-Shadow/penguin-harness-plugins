@@ -1,8 +1,8 @@
 # The extension manifest
 
 One TOML file per extension, at `extensions/<npm package name>.toml`. The path is not a
-convention the tooling tolerates — it is checked: `@acme/penguin-extension-widgets` must
-live at `extensions/@acme/penguin-extension-widgets.toml` and nowhere else. That is what makes
+convention the tooling tolerates — it is checked: `@acme/widgets` must
+live at `extensions/@acme/widgets.toml` and nowhere else. That is what makes
 a rename visible as a file move and makes two entries claiming one package impossible.
 
 Unknown keys are rejected. A typo in a key name is a mistake we would rather report than
@@ -12,7 +12,7 @@ silently ignore.
 
 | Key             | Required      | Rule                                                                                                                                                               |
 | --------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `name`          | yes           | The npm specifier, matching the file path. The part after the scope must start with `penguin-extension-`.                                                          |
+| `name`          | yes           | The npm specifier, matching the file path. Any valid npm package name, scoped or not.                                                                              |
 | `version`       | yes           | An exact semantic version — never a range. Must be published on npm, and must not decrease across updates.                                                         |
 | `description`   | yes           | One line, at most 1000 characters, identical to the published package's `description`.                                                                             |
 | `authors`       | yes           | Non-empty. See the format below.                                                                                                                                   |
@@ -44,12 +44,10 @@ person it credits.
 
 ## Naming rules
 
-The `penguin-extension-` prefix is required because npm is where people will actually find
-your package, and our index has no reach there.
-
-Beyond the prefix, prefer a name that says what your extension _is_ rather than what the
-whole category _is_. `penguin-extension-sandbox-bwrap` names an implementation;
-`penguin-extension-sandbox` claims the floor. First-come applies, but a submission holding a
+There is no required prefix: the manifest's path already identifies the package, and npm
+is where the name has to be unique. Prefer a name that says what your extension _is_
+rather than what the whole category _is_. `sandbox-bwrap` names an implementation;
+`sandbox` claims the floor. First-come applies, but a submission holding a
 category-wide name will be asked to narrow it.
 
 Names are permanent. There is no rename path — only publishing under a new name and

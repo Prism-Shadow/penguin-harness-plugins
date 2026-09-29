@@ -133,7 +133,7 @@ export async function probeTarball(
   const integrity = verifyIntegrity(buffer, pkg.dist);
   if (integrity !== null) problems.push(integrity);
 
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "penguin-extension-"));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "penguin-plugin-"));
   try {
     const archive = path.join(dir, "package.tgz");
     fs.writeFileSync(archive, buffer);
