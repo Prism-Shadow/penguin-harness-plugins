@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { ManifestError, manifestPathFor, nameFromManifestPath, parseManifest } from "./manifest.js";
+import { ManifestError, manifestPathFor, parseManifest } from "./manifest.js";
+
+const INTEGRITY = `sha256-${"0123456789abcdef".repeat(4)}`;
 
 const VALID = `
 name = "@acme/widgets"
@@ -11,9 +13,10 @@ repository = "https://github.com/acme/widgets"
 keywords = ["widgets", "linux"]
 categories = ["tool"]
 owners = ["ada"]
+integrity = "${INTEGRITY}"
 `;
 
-const FILE = "extensions/@acme/widgets.toml";
+const FILE = "plugins/@acme/widgets/1.2.3/0123456789abcdef/manifest.toml";
 
 function problemsOf(source: string, file = FILE): string[] {
   try {
@@ -30,13 +33,39 @@ describe("parseManifest", () => {
     const manifest = parseManifest(VALID, FILE);
     expect(manifest.name).toBe("@acme/widgets");
     expect(manifest.categories).toEqual(["tool"]);
+    expect(manifest.integrity).toBe(INTEGRITY);
     expect(manifest.yanked).toBeUndefined();
   });
 
-  it("requires the file path to spell the package name", () => {
-    expect(problemsOf(VALID, "extensions/widgets.toml")).toContainEqual(
-      expect.stringContaining("must live at extensions/@acme/widgets.toml"),
+  it("requires the path to spell the name", () => {
+    expect(
+      problemsOf(VALID, "plugins/widgets/1.2.3/0123456789abcdef/manifest.toml"),
+    ).toContainEqual(expect.stringContaining("must live under plugins/@acme/widgets/"));
+  });
+
+  it("requires the path to spell the version", () => {
+    expect(problemsOf(VALID, "plugins/@acme/widgets/1.2.4/0123456789abcdef/manifest.toml")).toEqual(
+      [expect.stringContaining("the path says version 1.2.4, the manifest says 1.2.3")],
     );
+  });
+
+  it("requires the path to spell the first 16 hex digits of the integrity", () => {
+    expect(problemsOf(VALID, "plugins/@acme/widgets/1.2.3/0123456789abcdee/manifest.toml")).toEqual(
+      [expect.stringContaining("is not the first 16 hex digits")],
+    );
+  });
+
+  it("requires an entry directory between the version and the manifest", () => {
+    expect(problemsOf(VALID, "plugins/@acme/widgets/1.2.3/manifest.toml")).toContainEqual(
+      expect.stringContaining("must be plugins/@acme/widgets/<version>/<key>/manifest.toml"),
+    );
+  });
+
+  it("requires a well-formed integrity", () => {
+    const without = VALID.replace(/^integrity = .*$/m, "");
+    expect(problemsOf(without)).toContainEqual(expect.stringContaining('"integrity" is required'));
+    const sha512 = VALID.replace(/^integrity = .*$/m, `integrity = "sha512-abc"`);
+    expect(problemsOf(sha512)).toContainEqual(expect.stringContaining("64 lowercase hex digits"));
   });
 
   it("reports every problem at once", () => {
@@ -49,6 +78,7 @@ license = "Commercial"
 repository = "http://example.com"
 categories = ["nonsense", "tool", "tool"]
 owners = []
+integrity = "${INTEGRITY}"
 surprise = 1
 `);
     expect(problems).toEqual(
@@ -78,10 +108,10 @@ surprise = 1
     );
   });
 
-  it("round-trips paths and names", () => {
-    expect(nameFromManifestPath(FILE)).toBe("@acme/widgets");
-    expect(nameFromManifestPath("extensions/solo.toml")).toBe("solo");
-    expect(nameFromManifestPath("docs/readme.md")).toBeNull();
-    expect(manifestPathFor("@acme/widgets")).toBe(FILE);
+  it("names the one place an entry's manifest may live", () => {
+    expect(manifestPathFor("@acme/widgets", "1.2.3", INTEGRITY)).toBe(FILE);
+    expect(manifestPathFor("solo", "0.1.0", INTEGRITY)).toBe(
+      "plugins/solo/0.1.0/0123456789abcdef/manifest.toml",
+    );
   });
 });

@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   audit:
-    name: Re-check every listed extension
+    name: Re-check every listed plugin
     runs-on: ubuntu-latest
     if: github.repository == 'Prism-Shadow/penguin-plugins'
     timeout-minutes: 30

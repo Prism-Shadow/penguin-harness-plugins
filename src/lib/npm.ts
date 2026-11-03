@@ -1,21 +1,31 @@
 /**
  * The index claims things about a package it does not host: that the version exists,
- * that it is licensed as stated, that it is a PenguinHarness extension at all. This
- * module is where those claims are checked against npm, the registry that actually
- * serves the code.
+ * that it is licensed as stated, that it is a PenguinHarness plugin at all, and — the
+ * claim everything else rests on — that installing the entry's lock produces exactly the
+ * content its `integrity` names. This module is where those claims are checked against
+ * npm, the registry that actually serves the code.
  *
- * The probe is deliberately STATIC. We download and unpack the published tarball and
- * read its entry file; we never import it. Executing a submission's code in CI would
- * hand every contributor a shell on the machine that publishes our index — the one
- * supply-chain step this repository exists to keep honest.
+ * The content check is the one a machine makes before it stores the package: install
+ * from the lock, archive the package with the shared archiver, hash, compare. Both run
+ * `@prismshadow/penguin-plugin-index`, so the index cannot accept a value a store would
+ * reject.
+ *
+ * The probe is deliberately STATIC. The install runs no scripts, and the entry file is
+ * read, never imported. Executing a submission's code in CI would hand every contributor
+ * a shell on the machine that publishes our index — the one supply-chain step this
+ * repository exists to keep honest.
  */
-import { execFileSync } from "node:child_process";
-import crypto from "node:crypto";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import type { Manifest } from "./manifest.js";
-import { MAX_TARBALL_BYTES } from "./vocabulary.js";
+import {
+  installFromLock,
+  packageFiles,
+  archiveIntegrity,
+  type Manifest,
+  type NpmRunner,
+} from "@prismshadow/penguin-plugin-index";
+import { MAX_ENTRY_BYTES } from "./vocabulary.js";
 
 export interface PackumentVersion {
   version: string;
@@ -26,7 +36,6 @@ export interface PackumentVersion {
   type?: string;
   main?: string;
   exports?: unknown;
-  dist?: { tarball?: string; integrity?: string; shasum?: string; unpackedSize?: number };
 }
 
 export interface Packument {
@@ -46,8 +55,11 @@ export async function fetchPackument(
   return (await res.json()) as Packument;
 }
 
-/** npm's `repository` is a string or `{ type, url }`; both normalize to a bare https URL. */
-function repositoryUrl(repository: unknown): string | null {
+/**
+ * npm's `repository` is a string or `{ type, url }`, the string possibly npm's shorthand
+ * (`github:owner/repo`, `owner/repo`); all normalize to a bare https URL.
+ */
+export function repositoryUrl(repository: unknown): string | null {
   const raw =
     typeof repository === "string"
       ? repository
@@ -56,6 +68,8 @@ function repositoryUrl(repository: unknown): string | null {
         : null;
   if (raw === null) return null;
   return raw
+    .replace(/^github:/, "https://github.com/")
+    .replace(/^([A-Za-z0-9][\w.-]*\/[\w.-]+)$/, "https://github.com/$1")
     .replace(/^git\+/, "")
     .replace(/^git:\/\//, "https://")
     .replace(/^ssh:\/\/git@/, "https://")
@@ -95,88 +109,83 @@ export function declaresActivate(source: string): boolean {
   return ACTIVATE_PATTERNS.some((pattern) => pattern.test(source));
 }
 
-function verifyIntegrity(buffer: Buffer, dist: PackumentVersion["dist"]): string | null {
-  const integrity = dist?.integrity;
-  if (typeof integrity === "string") {
-    const [algorithm, expected] = integrity.split("-", 2);
-    if (algorithm !== undefined && expected !== undefined) {
-      const actual = crypto.createHash(algorithm).update(buffer).digest("base64");
-      return actual === expected ? null : `tarball does not match its ${algorithm} integrity hash`;
-    }
-  }
-  if (typeof dist?.shasum === "string") {
-    const actual = crypto.createHash("sha1").update(buffer).digest("hex");
-    return actual === dist.shasum ? null : "tarball does not match its shasum";
-  }
-  return "npm published no integrity hash for this version";
-}
-
 /**
- * Downloads the version's tarball and reads its entry file. Returns the problems found;
- * an empty array means the package looks like a loadable PenguinHarness extension.
+ * Reads an installed package's own manifest and entry file. Returns the problems found;
+ * an empty array means the package looks like a loadable PenguinHarness plugin.
  */
-export async function probeTarball(
-  pkg: PackumentVersion,
-  fetchImpl: typeof fetch = fetch,
-): Promise<string[]> {
-  const url = pkg.dist?.tarball;
-  if (typeof url !== "string") return ["npm published no tarball URL for this version"];
-
-  const res = await fetchImpl(url);
-  if (!res.ok) return [`tarball download answered HTTP ${res.status}`];
-  const buffer = Buffer.from(await res.arrayBuffer());
-  if (buffer.byteLength > MAX_TARBALL_BYTES) {
-    return [`tarball is ${buffer.byteLength} bytes, over the ${MAX_TARBALL_BYTES} byte limit`];
-  }
-
+export function probePackage(root: string): string[] {
+  const manifestPath = path.join(root, "package.json");
+  if (!fs.existsSync(manifestPath)) return ["the installed package has no package.json"];
   const problems: string[] = [];
-  const integrity = verifyIntegrity(buffer, pkg.dist);
-  if (integrity !== null) problems.push(integrity);
-
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "penguin-plugin-"));
-  try {
-    const archive = path.join(dir, "package.tgz");
-    fs.writeFileSync(archive, buffer);
-    execFileSync("tar", ["-xzf", archive, "-C", dir], { stdio: "pipe" });
-
-    const root = path.join(dir, "package");
-    const manifestPath = path.join(root, "package.json");
-    if (!fs.existsSync(manifestPath)) {
-      problems.push("tarball has no package/package.json");
-      return problems;
-    }
-    const published = JSON.parse(fs.readFileSync(manifestPath, "utf8")) as PackumentVersion;
-    if (published.type !== "module") {
-      problems.push(
-        `package.json must declare "type": "module"; the harness imports extensions as ESM`,
-      );
-    }
-
-    const entry = entryPointOf(published);
-    const entryPath = path.join(root, entry ?? "index.js");
-    if (!entryPath.startsWith(root + path.sep) || !fs.existsSync(entryPath)) {
-      problems.push(`entry point "${entry}" is missing from the published tarball`);
-      return problems;
-    }
-    if (!declaresActivate(fs.readFileSync(entryPath, "utf8"))) {
-      problems.push(
-        `entry point "${entry}" declares no "activate" export; an extension's contract is one named export activate(ctx)`,
-      );
-    }
-  } finally {
-    fs.rmSync(dir, { recursive: true, force: true });
+  const published = JSON.parse(fs.readFileSync(manifestPath, "utf8")) as PackumentVersion;
+  if (published.type !== "module") {
+    problems.push(`package.json must declare "type": "module"; the harness imports plugins as ESM`);
+  }
+  const entry = entryPointOf(published);
+  const entryPath = path.resolve(root, entry ?? "index.js");
+  if (!entryPath.startsWith(root + path.sep) || !fs.existsSync(entryPath)) {
+    problems.push(`entry point "${entry}" is missing from the published package`);
+    return problems;
+  }
+  if (!declaresActivate(fs.readFileSync(entryPath, "utf8"))) {
+    problems.push(
+      `entry point "${entry}" declares no "activate" export; a plugin's contract is one named export activate(ctx)`,
+    );
   }
   return problems;
 }
 
 /**
- * Checks one manifest against npm. Metadata must agree exactly: the manifest is
+ * Installs the entry from its lock into a scratch prefix and compares what it produced
+ * with the manifest: the integrity, the size, and the static probe. `npm` is injectable
+ * so tests never reach a registry.
+ */
+export async function checkContent(
+  manifest: Manifest,
+  lock: string,
+  npm?: NpmRunner,
+): Promise<string[]> {
+  const prefix = fs.mkdtempSync(path.join(os.tmpdir(), "penguin-plugin-"));
+  try {
+    let pkgDir: string;
+    try {
+      pkgDir = await installFromLock(prefix, manifest.name, manifest.version, lock, npm);
+    } catch (err) {
+      return [
+        `installing from package-lock.json failed: ${err instanceof Error ? err.message : err}`,
+      ];
+    }
+    if (!fs.existsSync(path.join(pkgDir, "package.json"))) {
+      return [`installing from package-lock.json produced no ${manifest.name}`];
+    }
+    const problems: string[] = [];
+    const { integrity, size } = await archiveIntegrity(await packageFiles(pkgDir, prefix));
+    if (integrity !== manifest.integrity) {
+      problems.push(
+        `the installed package's integrity is ${integrity}, the manifest says ${manifest.integrity}`,
+      );
+    }
+    if (size > MAX_ENTRY_BYTES) {
+      problems.push(
+        `the package archives to ${size} bytes, over the ${MAX_ENTRY_BYTES} byte limit`,
+      );
+    }
+    problems.push(...probePackage(pkgDir));
+    return problems;
+  } finally {
+    fs.rmSync(prefix, { recursive: true, force: true });
+  }
+}
+
+/**
+ * Checks one entry against npm. Metadata must agree exactly: the manifest is
  * hand-written, so a drift between it and the published package is either a stale entry
  * or a submission describing something other than what npm will serve.
  */
 export async function checkAgainstNpm(
   manifest: Manifest,
-  fetchImpl: typeof fetch = fetch,
+  lock: string,
+  { fetchImpl = fetch, npm }: { fetchImpl?: typeof fetch; npm?: NpmRunner } = {},
 ): Promise<string[]> {
   const problems: string[] = [];
   let packument: Packument;
@@ -207,6 +216,6 @@ export async function checkAgainstNpm(
     problems.push(`repository mismatch: manifest says "${declared}", npm says "${published}"`);
   }
 
-  problems.push(...(await probeTarball(pkg, fetchImpl)));
+  problems.push(...(await checkContent(manifest, lock, npm)));
   return problems;
 }

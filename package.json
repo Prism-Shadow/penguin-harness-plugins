@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "The extension index for PenguinHarness: submissions, checks, and the generated index.json.",
+  "description": "The plugin index for PenguinHarness: entries, checks, and the generated index.json.",
   "engines": {
     "node": ">=24"
   },
@@ -13,11 +13,13 @@
     "test": "vitest run",
     "validate": "tsx src/validate.ts",
     "check-npm": "tsx src/check-npm.ts",
+    "new-entry": "tsx src/new-entry.ts",
     "build": "tsx src/build-index.ts",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
   "dependencies": {
+    "@prismshadow/penguin-plugin-index": "workspace:*",
     "semver": "^7.6.3",
     "smol-toml": "^1.3.1"
   },

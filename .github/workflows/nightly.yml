@@ -70,7 +70,7 @@ jobs:
             gh release create nightly \
               --prerelease \
               --title "Nightly index" \
-              --notes "The extension index, rebuilt from the manifests on this repository's main branch. The asset on this release is replaced in place; the tag never moves." \
+              --notes "The plugin index, rebuilt from the manifests on this repository's main branch. The asset on this release is replaced in place; the tag never moves." \
               --target main
           fi
           gh release upload nightly dist/index.json --clobber

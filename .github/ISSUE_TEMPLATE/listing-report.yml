@@ -1,14 +1,14 @@
-name: Report a listed extension
-description: A listed extension is malicious, misrepresents what it does, or is unsafe to keep listed.
+name: Report a listed plugin
+description: A listed plugin is malicious, misrepresents what it does, or is unsafe to keep listed.
 labels: ["listing-report"]
 body:
   - type: markdown
     attributes:
       value: |
-        For ordinary bugs, please use the extension's own issue tracker. This form is for
+        For ordinary bugs, please use the plugin's own issue tracker. This form is for
         problems with the LISTING — the entry should be changed or yanked.
   - type: input
-    id: extension
+    id: plugin
     attributes:
       label: Package name
       placeholder: "@acme/widgets"
@@ -18,7 +18,7 @@ body:
     id: problem
     attributes:
       label: What is wrong with the listing
-      description: Be specific about what the extension does versus what its entry claims.
+      description: Be specific about what the plugin does versus what its entry claims.
     validations:
       required: true
   - type: checkboxes
@@ -26,4 +26,4 @@ body:
     attributes:
       label: Have you contacted the author?
       options:
-        - label: I have raised this with the extension's maintainers, or explain below why I have not.
+        - label: I have raised this with the plugin's maintainers, or explain below why I have not.

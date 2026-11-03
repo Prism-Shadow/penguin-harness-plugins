@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@prismshadow/penguin-plugin-index':
+        specifier: workspace:*
+        version: link:packages/plugin-index
       semver:
         specifier: ^7.6.3
         version: 7.8.5
@@ -33,6 +36,25 @@ importers:
       vitest:
         specifier: ^3.2.6
         version: 3.2.7(@types/node@24.13.3)(tsx@4.23.12)
+
+  packages/plugin-index:
+    dependencies:
+      semver:
+        specifier: ^7.6.3
+        version: 7.8.5
+      smol-toml:
+        specifier: ^1.3.1
+        version: 1.8.0
+    devDependencies:
+      '@types/node':
+        specifier: ^24.0.0
+        version: 24.13.3
+      '@types/semver':
+        specifier: ^7.5.8
+        version: 7.8.0
+      typescript:
+        specifier: ^5.6.3
+        version: 5.9.3
 
 packages:
 

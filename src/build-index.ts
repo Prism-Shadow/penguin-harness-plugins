@@ -1,23 +1,25 @@
 /**
  * Builds the artifact this repository exists to publish: `dist/index.json`, the
- * document a PenguinHarness deployment fetches through its HTTP extension registry.
+ * document a PenguinHarness deployment fetches through its HTTP plugin registry.
  *
- * The shape is the harness's `ExtensionIndexEntry[]` verbatim — a flat array of entries,
- * one per listed extension, sorted by name. Nothing here is invented for the file format:
- * a consumer that can read the builtin index can read this one, which is the whole
- * point of keeping one index schema across sources.
+ * A flat array of entries, one per entry directory under `plugins/` that is not yanked,
+ * each carrying its `integrity`. A name may appear more than once — several versions,
+ * or several contents of one version — and the consumer picks by semver; the
+ * integrity is what it checks a fetched package against before storing it. The shape
+ * is the one a machine's plugin store writes to its own `index.json`, so a client that
+ * reads one reads the other.
  *
- * The build is a full rebuild from the manifests, every time (typst's bundler works the
- * same way). There is no incremental state to drift, and `updatedAt` comes from the
+ * The build is a full rebuild from the tree, every time (typst's bundler works the same
+ * way). There is no incremental state to drift, and `updatedAt` comes from the
  * manifest's last commit rather than from build time, so rebuilding an unchanged
  * repository produces a byte-identical index.
  */
 import fs from "node:fs";
 import path from "node:path";
+import { ManifestError, parseManifest } from "@prismshadow/penguin-plugin-index";
+import semver from "semver";
 import { lastCommitTimestamp, listManifestFiles } from "./lib/git.js";
-import { ManifestError, parseManifest } from "./lib/manifest.js";
 
-/** Mirrors `ExtensionIndexEntry` in the harness (packages/server/src/api/types.ts). */
 interface IndexEntry {
   name: string;
   version: string;
@@ -28,6 +30,7 @@ interface IndexEntry {
   homepage?: string;
   keywords?: string[];
   categories?: string[];
+  integrity: string;
   updatedAt?: number;
 }
 
@@ -46,9 +49,9 @@ for (const file of listManifestFiles(root)) {
     problems.push(err instanceof ManifestError ? err.message : String(err));
     continue;
   }
-  // A yanked extension keeps its manifest — the record of why it was pulled is the point —
-  // but leaves the catalogue. Deployments that already installed it are unaffected:
-  // the index is discovery, and npm still serves the package.
+  // A yanked entry keeps its manifest — the record of why it was pulled is the point —
+  // but leaves the catalogue. Deployments that already stored it are unaffected: the
+  // index is discovery, and npm still serves the package.
   if (manifest.yanked === true) {
     yanked += 1;
     continue;
@@ -63,6 +66,7 @@ for (const file of listManifestFiles(root)) {
     ...(manifest.homepage !== undefined ? { homepage: manifest.homepage } : {}),
     ...(manifest.keywords !== undefined ? { keywords: manifest.keywords } : {}),
     categories: manifest.categories,
+    integrity: manifest.integrity,
     updatedAt: lastCommitTimestamp(file),
   });
 }
@@ -73,7 +77,13 @@ if (problems.length > 0) {
   process.exit(1);
 }
 
-entries.sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
+const byCodeUnit = (a: string, b: string) => (a < b ? -1 : a > b ? 1 : 0);
+entries.sort(
+  (a, b) =>
+    byCodeUnit(a.name, b.name) ||
+    semver.compare(a.version, b.version) ||
+    byCodeUnit(a.integrity, b.integrity),
+);
 
 fs.mkdirSync(outDir, { recursive: true });
 fs.writeFileSync(path.join(outDir, "index.json"), JSON.stringify(entries));
@@ -88,18 +98,18 @@ function landingPage(count: number): string {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>PenguinHarness extension index</title>
+    <title>PenguinHarness plugin index</title>
     <style>
       body { font: 16px/1.6 system-ui, sans-serif; margin: 4rem auto; max-width: 42rem; padding: 0 1rem; }
       code { background: #f4f4f5; border-radius: 4px; padding: 0.1em 0.35em; }
     </style>
   </head>
   <body>
-    <h1>PenguinHarness extension index</h1>
-    <p>This site serves one artifact: <a href="./index.json"><code>index.json</code></a>, currently listing ${count} extension${count === 1 ? "" : "s"}.</p>
-    <p>It is generated from the manifests in
+    <h1>PenguinHarness plugin index</h1>
+    <p>This site serves one artifact: <a href="./index.json"><code>index.json</code></a>, currently listing ${count} entr${count === 1 ? "y" : "ies"}.</p>
+    <p>It is generated from the entries in
       <a href="https://github.com/Prism-Shadow/penguin-plugins">Prism-Shadow/penguin-plugins</a>.
-      To list an extension, open a pull request there.</p>
+      To list a plugin, open a pull request there.</p>
   </body>
 </html>
 `;
