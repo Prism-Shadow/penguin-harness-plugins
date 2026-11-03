@@ -78,7 +78,7 @@ console.log(
 );
 for (const file of strayFiles(root)) {
   problems.push(
-    `${file}: not part of an entry. plugins/ holds <name>/<version>/<key>/ directories with a manifest.toml and a package-lock.json, nothing else.`,
+    `${file}: not part of an entry. packages/ holds [<@scope>/]<bucket>/<name>/<version>/<key>/ directories with a manifest.toml and a package-lock.json, nothing else.`,
   );
 }
 

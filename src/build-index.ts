@@ -2,7 +2,7 @@
  * Builds the artifact this repository exists to publish: `dist/index.json`, the
  * document a PenguinHarness deployment fetches through its HTTP plugin registry.
  *
- * A flat array of entries, one per entry directory under `plugins/` that is not yanked,
+ * A flat array of entries, one per entry directory under `packages/` that is not yanked,
  * each carrying its `integrity`. A name may appear more than once — several versions,
  * or several contents of one version — and the consumer picks by semver; the
  * integrity is what it checks a fetched package against before storing it. The shape

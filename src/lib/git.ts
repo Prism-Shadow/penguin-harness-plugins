@@ -13,8 +13,9 @@ import {
   LOCK_FILE,
   MANIFEST_FILE,
   PACKAGE_DIR,
+  nameDir,
+  PACKAGES_DIR,
   parseEntryPath,
-  PLUGINS_DIR,
   STORED_FILE,
 } from "@prismshadow/penguin-plugin-index";
 
@@ -35,24 +36,27 @@ function git(args: string[]): string {
 const ENTRY_FILES = new Set([MANIFEST_FILE, LOCK_FILE]);
 
 /**
- * Every file under `plugins/`, repo-relative and sorted — except what the repository
+ * Every file under `packages/`, repo-relative and sorted — except what the repository
  * ignores in an entry (`package/`, `.stored`), so a store-shaped checkout lists the same.
+ * The shared checker package (`packages/plugin-index/`) is not entry data and is skipped.
  */
+const SHARED_PACKAGE_DIR = "plugin-index";
 function pluginTreeFiles(root: string): string[] {
-  const dir = path.join(root, PLUGINS_DIR);
+  const dir = path.join(root, PACKAGES_DIR);
   if (!fs.existsSync(dir)) return [];
   const files: string[] = [];
-  const walk = (current: string): void => {
+  const walk = (current: string, top: boolean): void => {
     for (const entry of fs.readdirSync(current, { withFileTypes: true })) {
       const full = path.join(current, entry.name);
       if (entry.isDirectory()) {
-        if (entry.name !== PACKAGE_DIR) walk(full);
+        if (entry.name !== PACKAGE_DIR && !(top && entry.name === SHARED_PACKAGE_DIR))
+          walk(full, false);
       } else if (entry.name !== STORED_FILE) {
         files.push(path.relative(root, full).split(path.sep).join("/"));
       }
     }
   };
-  walk(dir);
+  walk(dir, true);
   return files.sort();
 }
 
@@ -62,23 +66,25 @@ export function listManifestFiles(root: string): string[] {
 }
 
 /**
- * Files under `plugins/` that are not an entry's manifest or lock: a stray file, or an
+ * Files under `packages/` that are not an entry's manifest or lock: a stray file, or an
  * entry file at the wrong depth. The manifest check cannot see these, so they are listed
  * on their own.
  */
 export function strayFiles(root: string): string[] {
   return pluginTreeFiles(root).filter((file) => {
-    const entry = parseEntryPath(file.slice(PLUGINS_DIR.length + 1));
+    const entry = parseEntryPath(file.slice(PACKAGES_DIR.length + 1));
     return entry === null || !ENTRY_FILES.has(entry.file);
   });
 }
 
-/** An entry's directory (`plugins/<name>/<version>/<key>`) for a file in it, or null. */
+/** An entry's directory (`packages/…/<name>/<version>/<key>`, as filed) for a file in it, or null. */
 export function entryDirOf(file: string): string | null {
-  if (!file.startsWith(`${PLUGINS_DIR}/`)) return null;
-  const entry = parseEntryPath(file.slice(PLUGINS_DIR.length + 1));
+  if (!file.startsWith(`${PACKAGES_DIR}/`)) return null;
+  const entry = parseEntryPath(file.slice(PACKAGES_DIR.length + 1));
   if (entry === null) return null;
-  return `${PLUGINS_DIR}/${entry.name}/${entry.version}/${entry.key}`;
+  const scope = entry.name.startsWith("@") ? [entry.name.split("/")[0]!] : [];
+  const bare = entry.name.split("/").pop()!;
+  return [PACKAGES_DIR, ...scope, ...entry.bucket, bare, entry.version, entry.key].join("/");
 }
 
 /**
@@ -101,7 +107,7 @@ export type ChangeStatus = "added" | "modified" | "deleted" | "renamed";
 /** A change to one entry, named by its manifest's path. */
 export interface EntryChange {
   status: ChangeStatus;
-  /** The entry's manifest: `plugins/<name>/<version>/<key>/manifest.toml`. */
+  /** The entry's manifest: `packages/…/<name>/<version>/<key>/manifest.toml`. */
   file: string;
   /** Only set for renames: where the manifest used to live. */
   from?: string;
@@ -144,13 +150,13 @@ export function changedEntries(baseRef: string): EntryChange[] {
       byEntry.set(manifest, { status: "modified", file: manifest });
     }
   };
-  for (const file of git(["ls-files", "--others", "--exclude-standard", "--", `${PLUGINS_DIR}/`])
+  for (const file of git(["ls-files", "--others", "--exclude-standard", "--", `${PACKAGES_DIR}/`])
     .split("\n")
     .map((line) => line.trim())
     .filter((line) => line !== "")) {
     note("added", file);
   }
-  const out = git(["diff", "--name-status", "-M", mergeBase, "--", `${PLUGINS_DIR}/`]);
+  const out = git(["diff", "--name-status", "-M", mergeBase, "--", `${PACKAGES_DIR}/`]);
   for (const line of out.split("\n")) {
     if (line.trim() === "") continue;
     const parts = line.split("\t");
@@ -176,10 +182,10 @@ export function readAtRef(ref: string, file: string): string | null {
   }
 }
 
-/** Manifests under `plugins/<name>/` at a ref: the other entries of one name. */
+/** Manifests under a name's directory at a ref: the other entries of one name. */
 export function manifestsAtRef(ref: string, name: string): string[] {
   try {
-    return git(["ls-tree", "-r", "--name-only", ref, "--", `${PLUGINS_DIR}/${name}/`])
+    return git(["ls-tree", "-r", "--name-only", ref, "--", `${PACKAGES_DIR}/${nameDir(name)}/`])
       .split("\n")
       .filter((file) => path.posix.basename(file) === MANIFEST_FILE);
   } catch {

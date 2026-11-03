@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@prismshadow/penguin-plugin-index':
         specifier: workspace:*
-        version: link:packages/plugin-index
+        version: link:plugin-index
       semver:
         specifier: ^7.6.3
         version: 7.8.5
@@ -37,7 +37,7 @@ importers:
         specifier: ^3.2.6
         version: 3.2.7(@types/node@24.13.3)(tsx@4.23.12)
 
-  packages/plugin-index:
+  plugin-index:
     dependencies:
       semver:
         specifier: ^7.6.3

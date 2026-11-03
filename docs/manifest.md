@@ -3,14 +3,20 @@
 An entry is one package at one version with one content. It is a directory:
 
 ```
-plugins/<npm package name>/<version>/<first 16 hex digits of integrity>/
+packages/[<@scope>/]<bucket>/<name>/<version>/<first 16 hex digits of integrity>/
   manifest.toml
   package-lock.json
 ```
 
-The path is not a convention the tooling tolerates — it is checked three ways. It
-spells the package's `name` (`@acme/widgets` lives under `plugins/@acme/widgets/` and
-nowhere else), its `version`, and the first 16 hex digits of its `integrity`. So a new
+The bucket is read off the name without its scope, lower-cased: `1` or `2` for a name of
+that length, `3/<first character>` for three characters, and `<characters 1–2>/<characters
+3–4>` otherwise (the crates.io index's rule). It keeps every directory narrow however
+many plugins are listed.
+
+The path is not a convention the tooling tolerates — it is checked four ways. It
+spells the package's `name` (`@acme/widgets` lives under `packages/@acme/wi/dg/widgets/`
+and nowhere else), the bucket that name files under, its `version`, and the first 16 hex
+digits of its `integrity`. So a new
 version is a new directory, a new content of one version is another directory beside
 it, and nothing about a listed entry can change without showing up as a move.
 
@@ -20,7 +26,7 @@ this repository ignores those two, so it is a store without package data and a s
 is a checkout of it with the data filled in.
 
 Unknown keys are rejected. A typo in a key name is a mistake we would rather report than
-silently ignore. Nothing else may live under `plugins/`.
+silently ignore. Nothing else may live under `packages/`.
 
 ## Fields
 
@@ -92,7 +98,7 @@ old one.
 ## What is checked, and where
 
 **Offline** (`pnpm validate`): every rule in the table above, the lock's shape, and
-that nothing but entries lives under `plugins/`; plus the change-level rules — no moved
+that nothing but entries lives under `packages/`; plus the change-level rules — no moved
 entries, no deletions in place of a yank, only a name's owners may add entries under it,
 and only an entry's owners may edit it.
 

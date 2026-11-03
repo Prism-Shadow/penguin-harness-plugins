@@ -13,7 +13,7 @@ installed from there; an entry in this repository is metadata, a lock, a content
 and a promise that somebody checked it. Concretely:
 
 - the code lives on **npm** — the harness resolves a plugin by its package specifier;
-- the metadata lives **here** — one directory per entry under `plugins/`;
+- the metadata lives **here** — one directory per entry under `packages/`;
 - the artifact lives on **GitHub Pages** — `index.json`, rebuilt from the entries on
   every push to `main`.
 
@@ -23,14 +23,21 @@ with scripts disabled and read them; they never import them.
 ## Layout
 
 ```
-plugins/<npm name>/<version>/<key>/manifest.toml       one entry; the path is the name,
-plugins/<npm name>/<version>/<key>/package-lock.json   the version and the content's hash
-packages/plugin-index/                                 the entry format as code, shared with the harness
-src/                                                   the checks and the index builder
-docs/                                                  the submission rules in prose
+packages/<entry>/manifest.toml       one entry; the path is the bucket, the name,
+packages/<entry>/package-lock.json   the version and the content's hash
+plugin-index/                        the entry format as code, shared with the harness
+src/                                 the checks and the index builder
+docs/                                the submission rules in prose
 ```
 
-`plugins/` has the shape of a PenguinHarness machine's plugin store, whose entries add
+`<entry>` is `[<@scope>/]<bucket>/<name>/<version>/<key>`. The bucket keeps every
+directory narrow however many plugins are listed: it is read off the name without its
+scope, the way the crates.io index files a crate — `1` or `2` for a name of that length,
+`3/<first character>` for three characters, `<characters 1–2>/<characters 3–4>`
+otherwise. `@penguinharness/sandbox-bwrap` 0.2.2 is under
+`packages/@penguinharness/sa/nd/sandbox-bwrap/0.2.2/<key>/`.
+
+`packages/` has the shape of a PenguinHarness machine's plugin store, whose entries add
 the installed `package/` and a `.stored` marker beside the same two files. This
 repository ignores those two, so a store is a checkout of this tree with the package
 data filled in.

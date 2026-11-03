@@ -5,7 +5,7 @@ stack, so a reader can tell from the catalogue which part of the system a plugin
 into — not merely what topic it belongs to.
 
 The list is closed. Widening it is a normal pull request against
-`packages/plugin-index/src/vocabulary.ts` and this file, and a good reason is a plugin that genuinely does
+`plugin-index/src/vocabulary.ts` and this file, and a good reason is a plugin that genuinely does
 not fit.
 
 | Category      | For plugins that …                                                                                          |

@@ -36,7 +36,7 @@ pnpm new-entry @acme/widgets@1.2.3
 
 That resolves the package's lock against npm, installs from it (scripts disabled),
 computes the content hash, and writes
-`plugins/@acme/widgets/1.2.3/<first 16 hex digits of the hash>/` with two files:
+`packages/@acme/wi/dg/widgets/1.2.3/<first 16 hex digits of the hash>/` with two files:
 `package-lock.json`, and a `manifest.toml` filled in from your `package.json`:
 
 ```toml

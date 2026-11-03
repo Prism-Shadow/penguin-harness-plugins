@@ -5,9 +5,12 @@ scratch/
 # An entry keeps its manifest and its lock; a plugin store keeps the package and its
 # completion marker beside them. So a store is a checkout of this tree with the package
 # data filled in, and none of that data is ever committed. Anchored at the entry depth
-# (<name>/<version>/<key>/, a scoped name is two segments) so that a plugin whose own
-# name is `package` is not hidden.
-/plugins/*/*/*/package/
-/plugins/*/*/*/.stored
-/plugins/@*/*/*/*/package/
-/plugins/@*/*/*/*/.stored
+# ([<@scope>/]<bucket>/<name>/<version>/<key>/: a bucket is one directory when it is 1 or
+# 2 and two otherwise, a scope is one more) so that a plugin whose own name is `package`
+# is not hidden.
+/packages/[12]/*/*/*/package/
+/packages/[12]/*/*/*/.stored
+/packages/*/*/*/*/*/package/
+/packages/*/*/*/*/*/.stored
+/packages/@*/*/*/*/*/*/package/
+/packages/@*/*/*/*/*/*/.stored
