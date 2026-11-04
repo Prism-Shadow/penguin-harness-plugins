@@ -33,13 +33,13 @@ export const MAX_KEYWORD_LENGTH = 20;
 export const MAX_DESCRIPTION_LENGTH = 1000;
 
 /**
- * Additional distribution channels a manifest may declare. npm is the base channel every
- * entry has (the lock resolves against the registry); these are the sources beyond it —
- * a GitHub release, a vendor's mirror — each pinned by the hash of the tarball it serves.
+ * Distribution channels a manifest declares — at least one, at most this many. Channels
+ * are peers: `kind = "npm"` is the registry, anything else a source beyond it (a GitHub
+ * release, a vendor's mirror), each pinned by the hash of the tarball it serves.
  */
 export const MAX_CHANNELS = 8;
 
-/** Lowercase alphanumeric with hyphens, at most 20 characters — and never "npm". */
+/** A channel's kind: lowercase alphanumeric with hyphens, at most 20 characters. */
 export const CHANNEL_NAME = /^[a-z0-9][a-z0-9-]{0,19}$/;
 /** npm integrity strings: `sha256-` with 64 hex digits or `sha512-` with 128. */
 export const CHANNEL_INTEGRITY = /^sha(?:256-[0-9a-f]{64}|512-[0-9a-f]{128})$/;

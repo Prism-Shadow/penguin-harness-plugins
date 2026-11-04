@@ -58,23 +58,26 @@ export interface Manifest {
   /** A yanked entry keeps its manifest as a record but is dropped from index.json. */
   yanked?: boolean;
   yankedReason?: string;
-  /** `sha256-<hex>` of the entry's package, archived (see the archive module). */
+  /** `sha256-<hex>` of the entry's package, archived (see the archive module) — the
+   *  canonical content hash every channel must install to, and the path's key. */
   integrity: string;
   /**
-   * Sources beyond npm a package can be installed from, each the tarball it serves
-   * pinned by its own hash. npm itself is the base channel — the lock resolves against
-   * the registry — and is never listed here.
+   * Where the package can be installed from, each serving the same content — the one
+   * `integrity` names — pinned by the hash of the tarball it serves. npm is a channel
+   * like any other (`kind = "npm"`); an entry need not have it, but must have at least
+   * one channel, because an installable-from-nowhere entry is not listable.
    */
-  channels?: Channel[];
+  channels: Channel[];
 }
 
-/** One distribution channel beyond npm: where the tarball lives, what hash pins it. */
+/** One distribution channel: where the tarball lives, what hash pins it. */
 export interface Channel {
-  /** Lowercase alphanumeric with hyphens, never "npm" — that is the implicit base. */
-  name: string;
-  /** `https://` URL of the tarball as the channel serves it. */
-  url: string;
-  /** `sha256-<hex>` or `sha512-<hex>` of the tarball, as served at `url`. */
+  /** Lowercase alphanumeric with hyphens, at most 20 characters. "npm" is the registry. */
+  kind: string;
+  /** `https://` URL of the tarball as the channel serves it. The npm channel has none —
+   *  the registry serves `name` at the standard URL. */
+  url?: string;
+  /** `sha256-<hex>` or `sha512-<hex>` of the tarball, as served at `url` (or by npm). */
   integrity: string;
 }
 
@@ -295,40 +298,45 @@ export function parseManifest(source: string, file: string): Manifest {
     problems.push(`"yanked_reason" is only allowed together with yanked = true`);
   }
 
-  let channels: Channel[] | undefined;
-  if (raw.channels !== undefined) {
+  let channels: Channel[] = [];
+  {
     const rawChannels = raw.channels;
     if (!Array.isArray(rawChannels)) {
-      problems.push(`"channels" must be an array of [[channels]] tables`);
+      problems.push(`"channels" is required and must list at least one [[channels]] table`);
     } else {
+      if (rawChannels.length === 0) {
+        problems.push(`"channels" must list at least one [[channels]] table`);
+      }
       if (rawChannels.length > MAX_CHANNELS) {
         problems.push(`at most ${MAX_CHANNELS} channels`);
       }
-      const seenNames = new Set<string>();
+      const seenKinds = new Set<string>();
       const seenUrls = new Set<string>();
-      channels = [];
       for (const [i, entry] of rawChannels.entries()) {
         if (entry === null || typeof entry !== "object" || Array.isArray(entry)) {
-          problems.push(`channels[${i}] must be a table with "name", "url" and "integrity"`);
+          problems.push(`channels[${i}] must be a table with "kind", "url" and "integrity"`);
           continue;
         }
         const table = entry as Record<string, unknown>;
-        const name = table.name;
-        const nameOk = typeof name === "string" && CHANNEL_NAME.test(name) && !seenNames.has(name);
-        if (typeof name !== "string" || !CHANNEL_NAME.test(name)) {
+        const kind = table.kind;
+        if (typeof kind !== "string" || !CHANNEL_NAME.test(kind)) {
           problems.push(
-            `channels[${i}].name must be lowercase alphanumeric with hyphens, at most 20 characters`,
+            `channels[${i}].kind must be lowercase alphanumeric with hyphens, at most 20 characters`,
           );
-        } else if (name === "npm") {
-          problems.push(`channels[${i}].name "npm" is the base channel and is never listed`);
-        } else if (seenNames.has(name)) {
-          problems.push(`channels[${i}].name "${name}" repeats an earlier channel`);
+        } else if (kind === "npm" && seenKinds.has(kind)) {
+          problems.push(`channels[${i}].kind "npm" repeats an earlier channel`);
+        } else if (seenKinds.has(kind)) {
+          problems.push(`channels[${i}].kind "${kind}" repeats an earlier channel`);
         } else {
-          seenNames.add(name);
+          seenKinds.add(kind);
         }
+        const isNpm = kind === "npm";
         const url = table.url;
-        const urlOk = typeof url === "string" && url.startsWith("https://") && !seenUrls.has(url);
-        if (typeof url !== "string" || !url.startsWith("https://")) {
+        if (isNpm) {
+          if (url !== undefined) {
+            problems.push(`channels[${i}].url must be omitted for the "npm" channel`);
+          }
+        } else if (typeof url !== "string" || !url.startsWith("https://")) {
           problems.push(`channels[${i}].url must be an https URL`);
         } else if (seenUrls.has(url)) {
           problems.push(`channels[${i}].url repeats an earlier channel's URL`);
@@ -342,15 +350,15 @@ export function parseManifest(source: string, file: string): Manifest {
             `channels[${i}].integrity must be sha256- (64 hex digits) or sha512- (128 hex digits)`,
           );
         }
-        if (nameOk && urlOk && integrityOk) {
-          channels.push({
-            name: name as string,
-            url: url as string,
-            integrity: integrity as string,
-          });
+        const kindOk = typeof kind === "string" && CHANNEL_NAME.test(kind);
+        const urlOk =
+          isNpm === true
+            ? url === undefined
+            : typeof url === "string" && url.startsWith("https://");
+        if (kindOk && urlOk && integrityOk) {
+          channels.push(isNpm ? { kind, integrity } : { kind, url: url as string, integrity });
         }
       }
-      if (channels.length === 0) channels = undefined;
     }
   }
 
@@ -370,6 +378,6 @@ export function parseManifest(source: string, file: string): Manifest {
     ...(yanked !== undefined ? { yanked } : {}),
     ...(yankedReason !== undefined ? { yankedReason } : {}),
     integrity: integrity as string,
-    ...(channels !== undefined ? { channels } : {}),
+    channels,
   };
 }

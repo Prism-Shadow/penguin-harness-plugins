@@ -232,20 +232,20 @@ export async function checkAgainstNpm(
 }
 
 /**
- * Checks the entry's declared channels: each URL is fetched, its tarball hashed against
- * the channel's own integrity, and the tarball installed (scripts disabled) and archived
- * to the entry's integrity — the same computation the base channel's lock install gets,
- * so a channel cannot serve content the manifest's integrity does not name. `npm` is
- * injectable so tests never reach a registry.
+ * Checks the entry's URL channels: each tarball is fetched, hashed against the channel's
+ * own integrity, installed (scripts disabled) and archived — the archive must equal the
+ * manifest's `integrity`, so no channel can serve content the entry does not name, and
+ * the static probe runs on what it installs. The npm channel is not here: its checks are
+ * `checkAgainstNpm`'s. `npm` is injectable so tests never reach a registry.
  */
 export async function checkChannels(
   manifest: Manifest,
   { fetchImpl = fetch, npm = runNpm }: { fetchImpl?: typeof fetch; npm?: NpmRunner } = {},
 ): Promise<string[]> {
-  if (manifest.channels === undefined || manifest.channels.length === 0) return [];
   const problems: string[] = [];
   for (const channel of manifest.channels) {
-    const label = `channel "${channel.name}" (${channel.url})`;
+    if (channel.url === undefined) continue; // the npm channel: covered by checkAgainstNpm
+    const label = `channel "${channel.kind}" (${channel.url})`;
     let tarball: Buffer;
     try {
       const res = await fetchImpl(channel.url);

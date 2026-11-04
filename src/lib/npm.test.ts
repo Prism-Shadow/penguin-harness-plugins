@@ -67,6 +67,7 @@ beforeAll(async () => {
     categories: ["tool"],
     owners: ["ada"],
     integrity: await integrityOf(GOOD),
+    channels: [{ kind: "npm", integrity: await integrityOf(GOOD) }],
   };
 });
 
@@ -226,7 +227,7 @@ describe("checkChannels", () => {
       integrity,
       channels: [
         {
-          name: "github",
+          kind: "github",
           url: CHANNEL_URL,
           integrity: `sha512-${createHash("sha512").update(tarball).digest("hex")}`,
         },
@@ -242,7 +243,7 @@ describe("checkChannels", () => {
   it("reports a tarball whose hash misses the channel's pin", async () => {
     const manifest = {
       ...MANIFEST,
-      channels: [{ name: "github", url: CHANNEL_URL, integrity: `sha512-${"0".repeat(128)}` }],
+      channels: [{ kind: "github", url: CHANNEL_URL, integrity: `sha512-${"0".repeat(128)}` }],
     };
     const problems = await checkChannels(manifest, {
       fetchImpl: serving(Buffer.from("x")),
@@ -254,7 +255,7 @@ describe("checkChannels", () => {
   it("reports a URL that does not answer", async () => {
     const manifest = {
       ...MANIFEST,
-      channels: [{ name: "github", url: CHANNEL_URL, integrity: `sha512-${"0".repeat(128)}` }],
+      channels: [{ kind: "github", url: CHANNEL_URL, integrity: `sha512-${"0".repeat(128)}` }],
     };
     const problems = await checkChannels(manifest, {
       fetchImpl: serving(404),
@@ -270,7 +271,7 @@ describe("checkChannels", () => {
       ...MANIFEST,
       channels: [
         {
-          name: "github",
+          kind: "github",
           url: CHANNEL_URL,
           integrity: `sha512-${createHash("sha512").update(tarball).digest("hex")}`,
         },
@@ -281,5 +282,12 @@ describe("checkChannels", () => {
     };
     const problems = await checkChannels(manifest, { fetchImpl: serving(tarball), npm });
     expect(problems).toEqual([expect.stringContaining("installs to integrity")]);
+  });
+
+  it("skips the npm channel — its checks live in checkAgainstNpm", async () => {
+    const manifest = { ...MANIFEST, channels: [{ kind: "npm", integrity: MANIFEST.integrity }] };
+    expect(await checkChannels(manifest, { fetchImpl: serving(404), npm: async () => {} })).toEqual(
+      [],
+    );
   });
 });

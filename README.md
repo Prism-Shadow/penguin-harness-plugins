@@ -42,13 +42,13 @@ the installed `package/` and a `.stored` marker beside the same two files. This
 repository ignores those two, so a store is a checkout of this tree with the package
 data filled in.
 
-| Command                           | What it does                                                                                                                            |
-| --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| `pnpm new-entry <name>@<version>` | Writes a new entry for a published package: its lock, its integrity, its manifest.                                                      |
-| `pnpm validate`                   | Schema, path and change-level rules (paths, deletions, ownership). Offline.                                                             |
-| `pnpm check-npm`                  | Installs changed entries from their locks and checks them; fetches declared channels and verifies their hashes. `--all` for everything. |
-| `pnpm build`                      | Rebuilds `dist/index.json` from every entry.                                                                                            |
-| `pnpm test`                       | Unit tests for the checks and the shared package.                                                                                       |
+| Command                           | What it does                                                                                                                                            |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pnpm new-entry <name>@<version>` | Writes a new entry for a published package: its lock, its integrity, its manifest.                                                                      |
+| `pnpm validate`                   | Schema, path and change-level rules (paths, deletions, ownership). Offline.                                                                             |
+| `pnpm check-npm`                  | Checks the npm channel against the registry when an entry has one, and fetches each URL channel to verify its hash and content. `--all` for everything. |
+| `pnpm build`                      | Rebuilds `dist/index.json` from every entry.                                                                                                            |
+| `pnpm test`                       | Unit tests for the checks and the shared package.                                                                                                       |
 
 ## Submitting a plugin
 

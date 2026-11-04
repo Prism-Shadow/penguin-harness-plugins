@@ -32,26 +32,39 @@ if (files.length === 0) {
 const problems: string[] = [];
 for (const file of files) {
   let manifest;
-  let lock;
   try {
     manifest = parseManifest(fs.readFileSync(file, "utf8"), file);
-    lock = fs.readFileSync(path.posix.join(path.posix.dirname(file), LOCK_FILE), "utf8");
   } catch (err) {
     problems.push(err instanceof ManifestError ? err.message : `${file}:\n  - ${String(err)}`);
     continue;
   }
   if (manifest.yanked === true) {
-    console.log(`${manifest.name}@${manifest.version}: yanked, skipping npm checks.`);
+    console.log(`${manifest.name}@${manifest.version}: yanked, skipping channel checks.`);
     continue;
   }
-  console.log(`Checking ${manifest.name}@${manifest.version} (${manifest.integrity}) against npm…`);
-  const found = await checkAgainstNpm(manifest, lock);
-  for (const problem of found) {
-    problems.push([`${file}:`, `  - ${problem}`].join("\n"));
+  const npmChannel = manifest.channels.find((channel) => channel.kind === "npm");
+  if (npmChannel !== undefined) {
+    console.log(
+      `Checking ${manifest.name}@${manifest.version} (${manifest.integrity}) against npm…`,
+    );
+    const lockPath = path.posix.join(path.posix.dirname(file), LOCK_FILE);
+    let lock: string;
+    try {
+      lock = fs.readFileSync(lockPath, "utf8");
+    } catch {
+      problems.push(`${file}:\n  - the npm channel requires a ${LOCK_FILE} beside the manifest`);
+      lock = "";
+    }
+    if (lock !== "") {
+      const found = await checkAgainstNpm(manifest, lock);
+      for (const problem of found) {
+        problems.push([`${file}:`, `  - ${problem}`].join("\n"));
+      }
+    }
   }
-  const channelCount = manifest.channels?.length ?? 0;
-  if (channelCount > 0) {
-    console.log(`Checking ${channelCount} distribution channel(s)…`);
+  const urlChannels = manifest.channels.filter((channel) => channel.url !== undefined);
+  if (urlChannels.length > 0) {
+    console.log(`Checking ${urlChannels.length} distribution channel(s)…`);
     for (const problem of await checkChannels(manifest)) {
       problems.push([`${file}:`, `  - ${problem}`].join("\n"));
     }

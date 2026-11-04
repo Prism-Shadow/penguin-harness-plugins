@@ -43,34 +43,43 @@ silently ignore. Nothing else may live under `packages/`.
 | `keywords`      | no            | At most 5, lowercase, alphanumeric with hyphens, at most 20 characters each. Use them for the target platforms (`linux`, `macos`, `windows`) and for search terms. |
 | `categories`    | yes           | 1–3 values from the [category list](categories.md).                                                                                                                |
 | `owners`        | yes           | GitHub handles allowed to change this entry and to add entries under its name.                                                                                     |
-| `channels`      | no            | Additional distribution channels beyond npm — see [Channels](#channels) below.                                                                                     |
+| `channels`      | yes           | Where the package can be installed from, npm being one possible kind — see [Channels](#channels) below.                                                            |
 | `yanked`        | no            | `true` removes the entry from the published index. Requires `yanked_reason`.                                                                                       |
 | `yanked_reason` | with `yanked` | Why the entry was pulled.                                                                                                                                          |
 
 ## Channels
 
-npm is the base channel: every entry's lock resolves against the registry, and `integrity`
-names what installing it produces. An entry may declare additional channels — a GitHub
-release, a vendor's mirror — each a tarball a harness can install the package from when
-npm is not the road it takes:
+An entry lists where it can be installed from as one or more channels — at least one,
+at most 8. Channels are peers, and `kind` says which: `npm` is the registry, anything
+else a tarball served from somewhere else (a GitHub release, a vendor's mirror). Every
+channel must serve the same content — the one the entry's `integrity` names:
 
 ```toml
+integrity = "sha256-…" # the canonical hash; every channel installs to it
+
 [[channels]]
-name = "github"
+kind = "npm"
+integrity = "sha256-…" # the same hash: the registry serves this content
+
+[[channels]]
+kind = "github"
 url = "https://github.com/acme/widgets/releases/download/v1.2.3/widgets-1.2.3.tgz"
-integrity = "sha512-…" # 128 lowercase hex digits
+integrity = "sha512-…" # 128 lowercase hex digits, of this channel's tarball
 ```
 
-| Key         | Required | Rule                                                                     |
-| ----------- | -------- | ------------------------------------------------------------------------ |
-| `name`      | yes      | Lowercase alphanumeric with hyphens, at most 20 characters. Never `npm`. |
-| `url`       | yes      | `https://` URL of the tarball as the channel serves it.                  |
-| `integrity` | yes      | `sha256-` (64 hex digits) or `sha512-` (128) of that tarball, as served. |
+| Key         | Required            | Rule                                                                               |
+| ----------- | ------------------- | ---------------------------------------------------------------------------------- |
+| `kind`      | yes                 | Lowercase alphanumeric with hyphens, at most 20 characters. `npm` is the registry. |
+| `url`       | unless `kind="npm"` | `https://` URL of the tarball as the channel serves it. Must be absent for `npm`.  |
+| `integrity` | yes                 | `sha256-` (64 hex digits) or `sha512-` (128) of that channel's tarball, as served. |
 
-At most 8 channels; names and URLs must not repeat. A channel's tarball must install to
-exactly the content `integrity` names — the same deterministic archive the lock install is
-hashed against — and pass the same static probe. `pnpm check-npm` fetches every declared
-URL and verifies both hashes on each run that touches the entry.
+Kinds and URLs must not repeat, and there is at most one `npm` channel. An entry with an
+`npm` channel carries a `package-lock.json` and is checked against the registry —
+metadata agreement, then install-from-lock and hash — while each URL channel is checked
+by fetching its tarball, hashing it against the channel's pin, installing it (scripts
+disabled) and archiving what it produced: that archive must equal `integrity`, and the
+same static probe runs on it. An entry need not have an `npm` channel at all; it must
+have some channel, because an installable-from-nowhere entry is not listable.
 
 ## The lock
 

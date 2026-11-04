@@ -53,9 +53,14 @@ function parseAll(): Map<string, Manifest> {
       problems.push(err instanceof ManifestError ? err.message : String(err));
       continue;
     }
+    const hasNpmChannel = manifest.channels.some((channel) => channel.kind === "npm");
+    if (!hasNpmChannel) {
+      manifests.set(file, manifest);
+      continue;
+    }
     const lockFile = path.posix.join(path.posix.dirname(file), LOCK_FILE);
     if (!fs.existsSync(lockFile)) {
-      problems.push(`${file}:\n  - the entry has no ${LOCK_FILE} beside its manifest`);
+      problems.push(`${file}:\n  - the npm channel requires a ${LOCK_FILE} beside the manifest`);
       continue;
     }
     const lockProblems = checkLock(
@@ -78,7 +83,7 @@ console.log(
 );
 for (const file of strayFiles(root)) {
   problems.push(
-    `${file}: not part of an entry. packages/ holds [<@scope>/]<bucket>/<name>/<version>/<key>/ directories with a manifest.toml and a package-lock.json, nothing else.`,
+    `${file}: not part of an entry. packages/ holds [<@scope>/]<bucket>/<name>/<version>/<key>/ directories with a manifest.toml — and a package-lock.json when the entry has an npm channel — nothing else.`,
   );
 }
 

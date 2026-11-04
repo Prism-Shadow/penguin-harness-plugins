@@ -3,7 +3,7 @@ import { ManifestError, manifestPathFor, parseManifest } from "./manifest.js";
 
 const INTEGRITY = `sha256-${"0123456789abcdef".repeat(4)}`;
 
-const VALID = `
+const FIELDS = `
 name = "@acme/widgets"
 version = "1.2.3"
 description = "Widget tools for PenguinHarness."
@@ -15,6 +15,14 @@ categories = ["tool"]
 owners = ["ada"]
 integrity = "${INTEGRITY}"
 `;
+
+const CHANNELS = `
+[[channels]]
+kind = "npm"
+integrity = "${INTEGRITY}"
+`;
+
+const VALID = FIELDS + CHANNELS;
 
 const FILE = "packages/@acme/wi/dg/widgets/1.2.3/0123456789abcdef/manifest.toml";
 
@@ -103,15 +111,15 @@ surprise = 1
   });
 
   it("ties yanked to a reason in both directions", () => {
-    expect(problemsOf(`${VALID}\nyanked = true\n`)).toContainEqual(
+    expect(problemsOf(FIELDS + `yanked = true\n` + CHANNELS)).toContainEqual(
       expect.stringContaining("must say why"),
     );
-    expect(problemsOf(`${VALID}\nyanked_reason = "gone"\n`)).toContainEqual(
+    expect(problemsOf(FIELDS + `yanked_reason = "gone"\n` + CHANNELS)).toContainEqual(
       expect.stringContaining("only allowed together with yanked = true"),
     );
-    expect(parseManifest(`${VALID}\nyanked = true\nyanked_reason = "gone"\n`, FILE).yanked).toBe(
-      true,
-    );
+    expect(
+      parseManifest(FIELDS + `yanked = true\nyanked_reason = "gone"\n` + CHANNELS, FILE).yanked,
+    ).toBe(true);
   });
 
   it("names the one place an entry's manifest may live", () => {
@@ -123,60 +131,77 @@ surprise = 1
 });
 
 describe("parseManifest: channels", () => {
-  const CHANNEL = `
+  const GITHUB = `
 [[channels]]
-name = "github"
+kind = "github"
 url = "https://github.com/acme/widgets/releases/download/v1.2.3/widgets-1.2.3.tgz"
 integrity = "sha512-${"0123456789abcdef".repeat(8)}"
 `;
 
-  it("accepts declared channels and carries them on the manifest", () => {
-    const manifest = parseManifest(`${VALID}${CHANNEL}`, FILE);
+  it("accepts an npm-only entry and carries its channel", () => {
+    const manifest = parseManifest(VALID, FILE);
+    expect(manifest.channels).toEqual([{ kind: "npm", integrity: INTEGRITY }]);
+  });
+
+  it("accepts url channels beside the npm channel", () => {
+    const manifest = parseManifest(`${VALID}${GITHUB}`, FILE);
     expect(manifest.channels).toEqual([
+      { kind: "npm", integrity: INTEGRITY },
       {
-        name: "github",
+        kind: "github",
         url: "https://github.com/acme/widgets/releases/download/v1.2.3/widgets-1.2.3.tgz",
         integrity: `sha512-${"0123456789abcdef".repeat(8)}`,
       },
     ]);
   });
 
-  it("accepts a manifest with no channels at all", () => {
-    expect(parseManifest(VALID, FILE).channels).toBeUndefined();
+  it("requires at least one channel", () => {
+    expect(problemsOf(VALID.replace(CHANNELS, ""))).toContainEqual(
+      expect.stringContaining('"channels" is required'),
+    );
+    expect(problemsOf(FIELDS + `channels = []\n`)).toContainEqual(
+      expect.stringContaining("at least one [[channels]] table"),
+    );
   });
 
-  it("rejects a channel named npm", () => {
+  it("rejects a repeated npm channel and repeated kinds", () => {
+    expect(
+      problemsOf(`${VALID}\n[[channels]]\nkind = "npm"\nintegrity = "${INTEGRITY}"\n`),
+    ).toContainEqual(expect.stringContaining('kind "npm" repeats'));
+    expect(problemsOf(`${VALID}${GITHUB}${GITHUB}`)).toContainEqual(
+      expect.stringContaining('kind "github" repeats an earlier channel'),
+    );
+  });
+
+  it("rejects a url on the npm channel and its absence elsewhere", () => {
     expect(
       problemsOf(
-        `${VALID}\n[[channels]]\nname = "npm"\nurl = "https://x/y.tgz"\nintegrity = "sha256-${"0".repeat(64)}"\n`,
+        `${VALID}\n[[channels]]\nkind = "npm"\nurl = "https://x/y.tgz"\nintegrity = "${INTEGRITY}"\n`,
       ),
-    ).toContainEqual(expect.stringContaining("the base channel"));
-  });
-
-  it("rejects repeated channel names and URLs", () => {
-    const twice = `${CHANNEL}${CHANNEL}`;
-    const problems = problemsOf(`${VALID}${twice}`);
-    expect(problems).toContainEqual(expect.stringContaining("repeats an earlier channel"));
+    ).toContainEqual(expect.stringContaining('url must be omitted for the "npm" channel'));
+    expect(
+      problemsOf(`${VALID}\n[[channels]]\nkind = "mirror"\nintegrity = "${INTEGRITY}"\n`),
+    ).toContainEqual(expect.stringContaining("channels[1].url must be an https URL"));
   });
 
   it("rejects a bad channel integrity and an http URL", () => {
     expect(
       problemsOf(
-        `${VALID}\n[[channels]]\nname = "mirror"\nurl = "http://x/y.tgz"\nintegrity = "sha1-abc"\n`,
+        `${VALID}\n[[channels]]\nkind = "mirror"\nurl = "http://x/y.tgz"\nintegrity = "sha1-abc"\n`,
       ),
-    ).toContainEqual(expect.stringContaining("channels[0].url must be an https URL"));
+    ).toContainEqual(expect.stringContaining("channels[1].url must be an https URL"));
     expect(
       problemsOf(
-        `${VALID}\n[[channels]]\nname = "mirror"\nurl = "https://x/y.tgz"\nintegrity = "sha1-abc"\n`,
+        `${VALID}\n[[channels]]\nkind = "mirror"\nurl = "https://x/y.tgz"\nintegrity = "sha1-abc"\n`,
       ),
-    ).toContainEqual(expect.stringContaining("channels[0].integrity must be sha256-"));
+    ).toContainEqual(expect.stringContaining("channels[1].integrity must be sha256-"));
   });
 
-  it("rejects an uppercase channel name", () => {
+  it("rejects an uppercase channel kind", () => {
     expect(
       problemsOf(
-        `${VALID}\n[[channels]]\nname = "GitHub"\nurl = "https://x/y.tgz"\nintegrity = "sha256-${"0".repeat(64)}"\n`,
+        `${VALID}\n[[channels]]\nkind = "GitHub"\nurl = "https://x/y.tgz"\nintegrity = "sha256-${"0".repeat(64)}"\n`,
       ),
-    ).toContainEqual(expect.stringContaining("channels[0].name must be lowercase"));
+    ).toContainEqual(expect.stringContaining("channels[1].kind must be lowercase"));
   });
 });

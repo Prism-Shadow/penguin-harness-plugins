@@ -82,6 +82,7 @@ try {
     categories: [],
     owners: [],
     integrity,
+    channels: [{ kind: "npm", integrity }],
   };
 
   const dir = path.join(PACKAGES_DIR, ...entryDir(name, version, integrity).split("/"));
