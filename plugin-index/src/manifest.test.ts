@@ -59,7 +59,7 @@ describe("parseManifest", () => {
 
   it("requires the path to spell the version", () => {
     expect(
-      problemsOf(VALID, "packages/@acme/wi/dg/widgets/1.2.4/0123456789abcdef/manifest.toml"),
+      problemsOf(VALID, "packages/@acme/wi/dg/widgets/1.2.4/0101010101010101/manifest.toml"),
     ).toEqual([expect.stringContaining("the path says version 1.2.4, the manifest says 1.2.3")]);
   });
 

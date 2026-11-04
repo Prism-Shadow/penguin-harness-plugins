@@ -131,8 +131,9 @@ old one.
 
 **Offline** (`pnpm validate`): every rule in the table above, the lock's shape, and
 that nothing but entries lives under `packages/`; plus the change-level rules — no moved
-entries, no deletions in place of a yank, only a name's owners may add entries under it,
-and only an entry's owners may edit it.
+entries (a maintainer may carry a schema migration that moves them), no deletions in
+place of a yank, only a name's owners may add entries under it, and only an entry's
+owners may edit it.
 
 **Against npm** (`pnpm check-npm`): the version exists and is not deprecated; license,
 description and repository match the published package; installing the lock yields a

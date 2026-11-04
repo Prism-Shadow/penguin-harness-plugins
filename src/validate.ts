@@ -115,9 +115,13 @@ if (!hasRef(baseRef)) {
 
   for (const change of changes) {
     if (change.status === "renamed") {
-      problems.push(
-        `${change.from} → ${change.file}: an entry's path is permanent — it spells the name, the version and the content. Add the new entry beside it and yank the old one instead.`,
-      );
+      // An entry's path spells its content, so a schema change moves every entry at
+      // once. A maintainer may carry that migration; a contributor may not.
+      if (!isMaintainer) {
+        problems.push(
+          `${change.from} → ${change.file}: an entry's path is permanent — it spells the name, the version and the content. Add the new entry beside it and yank the old one instead.`,
+        );
+      }
       continue;
     }
     if (change.status === "deleted") {
