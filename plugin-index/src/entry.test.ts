@@ -13,7 +13,8 @@ import {
   parseEntryPath,
 } from "./entry.js";
 
-const INTEGRITY = `sha256-${"fedcba9876543210".repeat(4)}`;
+// sha512 of 64 bytes of 0xfe, in npm's base64 form; its digest starts fedcba98….
+const INTEGRITY = `sha512-${Buffer.from("fedcba9876543210".repeat(8), "hex").toString("base64")}`;
 
 const workDir = fs.mkdtempSync(path.join(os.tmpdir(), "entry-test-"));
 afterAll(() => fs.rmSync(workDir, { recursive: true, force: true }));
@@ -36,7 +37,7 @@ describe("entry paths", () => {
     expect(entryDir("@acme/widgets", "1.2.3", INTEGRITY)).toBe(
       "@acme/wi/dg/widgets/1.2.3/fedcba9876543210",
     );
-    expect(() => entryDir("solo", "1.0.0", "sha256-XYZ")).toThrow("not a sha256 integrity");
+    expect(() => entryDir("solo", "1.0.0", "sha512-XYZ")).toThrow("not an npm integrity");
   });
 
   it("file a name in the bucket its name spells", () => {

@@ -27,7 +27,6 @@ import {
 import { checkLicense } from "./license.js";
 import {
   CATEGORIES,
-  CHANNEL_INTEGRITY,
   CHANNEL_NAME,
   MAX_CATEGORIES,
   MAX_CHANNELS,
@@ -58,27 +57,25 @@ export interface Manifest {
   /** A yanked entry keeps its manifest as a record but is dropped from index.json. */
   yanked?: boolean;
   yankedReason?: string;
-  /** `sha256-<hex>` of the entry's package, archived (see the archive module) — the
-   *  canonical content hash every channel must install to, and the path's key. */
+  /** npm's own integrity (`sha512-<base64>`, the registry's `dist.integrity`) of the one
+   *  tarball the entry's channels serve — and the path's key. The release pipeline packs
+   *  what npm publishes, so every channel can serve the very same bytes. */
   integrity: string;
   /**
-   * Where the package can be installed from, each serving the same content — the one
-   * `integrity` names — pinned by the hash of the tarball it serves. npm is a channel
-   * like any other (`kind = "npm"`); an entry need not have it, but must have at least
-   * one channel, because an installable-from-nowhere entry is not listable.
+   * Where the package can be installed from, each serving that one tarball. npm is a
+   * channel like any other (`kind = "npm"`); an entry need not have it, but must have at
+   * least one channel, because an installable-from-nowhere entry is not listable.
    */
   channels: Channel[];
 }
 
-/** One distribution channel: where the tarball lives, what hash pins it. */
+/** One distribution channel: where the tarball lives. */
 export interface Channel {
   /** Lowercase alphanumeric with hyphens, at most 20 characters. "npm" is the registry. */
   kind: string;
   /** `https://` URL of the tarball as the channel serves it. The npm channel has none —
    *  the registry serves `name` at the standard URL. */
   url?: string;
-  /** `sha256-<hex>` or `sha512-<hex>` of the tarball, as served at `url` (or by npm). */
-  integrity: string;
 }
 
 const KNOWN_KEYS = new Set([
@@ -157,7 +154,7 @@ export function parseManifest(source: string, file: string): Manifest {
   if (integrity === null) {
     problems.push(`"integrity" is required and must be a string`);
   } else if (!INTEGRITY.test(integrity)) {
-    problems.push(`"integrity" must be sha256- followed by 64 lowercase hex digits`);
+    problems.push(`"integrity" must be npm's sha512- followed by 88 base64 characters`);
   }
 
   // The path spells the entry: its bucket, its name, its version and its content, each checked.
@@ -318,6 +315,11 @@ export function parseManifest(source: string, file: string): Manifest {
           continue;
         }
         const table = entry as Record<string, unknown>;
+        if (table.integrity !== undefined) {
+          problems.push(
+            `channels[${i}].integrity is not a thing: the entry has one integrity, the tarball's, and every channel serves it`,
+          );
+        }
         const kind = table.kind;
         if (typeof kind !== "string" || !CHANNEL_NAME.test(kind)) {
           problems.push(
@@ -332,6 +334,10 @@ export function parseManifest(source: string, file: string): Manifest {
         }
         const isNpm = kind === "npm";
         const url = table.url;
+        const urlOk =
+          isNpm === true
+            ? url === undefined
+            : typeof url === "string" && url.startsWith("https://");
         if (isNpm) {
           if (url !== undefined) {
             problems.push(`channels[${i}].url must be omitted for the "npm" channel`);
@@ -343,20 +349,8 @@ export function parseManifest(source: string, file: string): Manifest {
         } else {
           seenUrls.add(url);
         }
-        const integrity = table.integrity;
-        const integrityOk = typeof integrity === "string" && CHANNEL_INTEGRITY.test(integrity);
-        if (typeof integrity !== "string" || !CHANNEL_INTEGRITY.test(integrity)) {
-          problems.push(
-            `channels[${i}].integrity must be sha256- (64 hex digits) or sha512- (128 hex digits)`,
-          );
-        }
-        const kindOk = typeof kind === "string" && CHANNEL_NAME.test(kind);
-        const urlOk =
-          isNpm === true
-            ? url === undefined
-            : typeof url === "string" && url.startsWith("https://");
-        if (kindOk && urlOk && integrityOk) {
-          channels.push(isNpm ? { kind, integrity } : { kind, url: url as string, integrity });
+        if (typeof kind === "string" && CHANNEL_NAME.test(kind) && urlOk) {
+          channels.push(isNpm ? { kind } : { kind, url: url as string });
         }
       }
     }

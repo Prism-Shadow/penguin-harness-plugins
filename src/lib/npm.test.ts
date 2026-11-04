@@ -66,8 +66,8 @@ beforeAll(async () => {
     repository: "https://github.com/acme/widgets",
     categories: ["tool"],
     owners: ["ada"],
-    integrity: await integrityOf(GOOD),
-    channels: [{ kind: "npm", integrity: await integrityOf(GOOD) }],
+    integrity: `sha512-${Buffer.from("ab".repeat(64), "hex").toString("base64")}`,
+    channels: [{ kind: "npm" }],
   };
 });
 
@@ -118,7 +118,7 @@ describe("declaresActivate", () => {
 });
 
 describe("checkAgainstNpm", () => {
-  it("passes an entry whose lock installs exactly the content its integrity names", async () => {
+  it("passes an entry whose lock installs a loadable package", async () => {
     expect(
       await checkAgainstNpm(MANIFEST, LOCK, { fetchImpl: registry(), npm: fakeNpm(GOOD) }),
     ).toEqual([]);
@@ -133,18 +133,16 @@ describe("checkAgainstNpm", () => {
       }),
       "node_modules/left/package.json": JSON.stringify({ name: "left", version: "1.0.0" }),
     };
-    const manifest = { ...MANIFEST, integrity: await integrityOf(withDep) };
-    expect(manifest.integrity).not.toBe(MANIFEST.integrity);
     expect(
-      await checkAgainstNpm(manifest, LOCK, { fetchImpl: registry(), npm: fakeNpm(withDep) }),
+      await checkAgainstNpm(MANIFEST, LOCK, { fetchImpl: registry(), npm: fakeNpm(withDep) }),
     ).toEqual([]);
   });
 
-  it("reports content that is not what the integrity names", async () => {
-    const changed = { ...GOOD, "node_modules/@acme/widgets/dist/extra.js": "1\n" };
+  it("reports an entry point that does not probe clean", async () => {
+    const changed = { ...GOOD, "node_modules/@acme/widgets/dist/index.js": "export const x = 1;\n" };
     expect(
       await checkAgainstNpm(MANIFEST, LOCK, { fetchImpl: registry(), npm: fakeNpm(changed) }),
-    ).toEqual([expect.stringContaining("the installed package's integrity is sha256-")]);
+    ).toEqual([expect.stringContaining('declares no "activate" export')]);
   });
 
   it("reports a lock npm cannot install", async () => {
@@ -220,18 +218,11 @@ describe("checkChannels", () => {
 
   it("passes a channel whose tarball hashes to its integrity and installs to the entry's content", async () => {
     const files = GOOD;
-    const integrity = await integrityOf(files);
     const tarball = Buffer.from("fake tarball bytes");
     const manifest = {
       ...MANIFEST,
-      integrity,
-      channels: [
-        {
-          kind: "github",
-          url: CHANNEL_URL,
-          integrity: `sha512-${createHash("sha512").update(tarball).digest("hex")}`,
-        },
-      ],
+      integrity: `sha512-${createHash("sha512").update(tarball).digest("base64")}`,
+      channels: [{ kind: "github", url: CHANNEL_URL }],
     };
     const npm: NpmRunner = async (args, cwd) => {
       expect(args[0]).toBe("install");
@@ -243,7 +234,7 @@ describe("checkChannels", () => {
   it("reports a tarball whose hash misses the channel's pin", async () => {
     const manifest = {
       ...MANIFEST,
-      channels: [{ kind: "github", url: CHANNEL_URL, integrity: `sha512-${"0".repeat(128)}` }],
+      channels: [{ kind: "github", url: CHANNEL_URL }],
     };
     const problems = await checkChannels(manifest, {
       fetchImpl: serving(Buffer.from("x")),
@@ -255,7 +246,7 @@ describe("checkChannels", () => {
   it("reports a URL that does not answer", async () => {
     const manifest = {
       ...MANIFEST,
-      channels: [{ kind: "github", url: CHANNEL_URL, integrity: `sha512-${"0".repeat(128)}` }],
+      channels: [{ kind: "github", url: CHANNEL_URL }],
     };
     const problems = await checkChannels(manifest, {
       fetchImpl: serving(404),
@@ -266,26 +257,20 @@ describe("checkChannels", () => {
 
   it("reports a tarball that installs to other content than the integrity names", async () => {
     const tarball = Buffer.from("fake tarball bytes");
-    const changed = { ...GOOD, "node_modules/@acme/widgets/dist/extra.js": "1\n" };
     const manifest = {
       ...MANIFEST,
-      channels: [
-        {
-          kind: "github",
-          url: CHANNEL_URL,
-          integrity: `sha512-${createHash("sha512").update(tarball).digest("hex")}`,
-        },
-      ],
+      integrity: `sha512-${createHash("sha512").update(Buffer.from("other bytes")).digest("base64")}`,
+      channels: [{ kind: "github", url: CHANNEL_URL }],
     };
     const npm: NpmRunner = async (_args, cwd) => {
-      write(cwd, changed);
+      write(cwd, GOOD);
     };
     const problems = await checkChannels(manifest, { fetchImpl: serving(tarball), npm });
-    expect(problems).toEqual([expect.stringContaining("installs to integrity")]);
+    expect(problems).toEqual([expect.stringContaining("the tarball's hash is")]);
   });
 
   it("skips the npm channel — its checks live in checkAgainstNpm", async () => {
-    const manifest = { ...MANIFEST, channels: [{ kind: "npm", integrity: MANIFEST.integrity }] };
+    const manifest = { ...MANIFEST, channels: [{ kind: "npm" }] };
     expect(await checkChannels(manifest, { fetchImpl: serving(404), npm: async () => {} })).toEqual(
       [],
     );

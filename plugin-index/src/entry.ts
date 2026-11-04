@@ -32,8 +32,8 @@ export const LOCK_FILE = "package-lock.json";
 export const PACKAGE_DIR = "package";
 export const STORED_FILE = ".stored";
 
-/** `sha256-<64 lowercase hex digits>`: an entry's integrity. */
-export const INTEGRITY = /^sha256-([0-9a-f]{64})$/;
+/** npm's integrity format: `sha512-` followed by the digest's base64 (88 chars, ending `==`). */
+export const INTEGRITY = /^sha512-([A-Za-z0-9+/]{86}==)$/;
 /** How many hex digits of the integrity name an entry's directory. */
 export const KEY_LENGTH = 16;
 
@@ -46,9 +46,11 @@ export function isPackageName(name: string): boolean {
   return name.startsWith("@") ? SCOPED_NAME.test(name) : PLAIN_NAME.test(name);
 }
 
-/** The directory key of an integrity: its first 16 hex digits, or null when malformed. */
+/** The directory key of an integrity: the first 16 hex digits of its sha512 digest. */
 export function entryKey(integrity: string): string | null {
-  return INTEGRITY.exec(integrity)?.[1]?.slice(0, KEY_LENGTH) ?? null;
+  const match = INTEGRITY.exec(integrity);
+  if (match === null) return null;
+  return Buffer.from(match[1]!, "base64").toString("hex").slice(0, KEY_LENGTH);
 }
 
 /** The bucket directories of a package name, as path segments (see the header). */
@@ -69,7 +71,7 @@ export function nameDir(name: string): string {
 /** An entry's directory, relative to the tree root: `<name's directory>/<version>/<key>`. */
 export function entryDir(name: string, version: string, integrity: string): string {
   const key = entryKey(integrity);
-  if (key === null) throw new Error(`'${integrity}' is not a sha256 integrity`);
+  if (key === null) throw new Error(`'${integrity}' is not an npm integrity`);
   return `${nameDir(name)}/${version}/${key}`;
 }
 

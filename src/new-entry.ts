@@ -26,7 +26,7 @@ import {
 } from "@prismshadow/penguin-plugin-index";
 import semver from "semver";
 import { stringify as stringifyToml } from "smol-toml";
-import { repositoryUrl } from "./lib/npm.js";
+import { fetchPackument, repositoryUrl } from "./lib/npm.js";
 
 const spec = process.argv[2] ?? "";
 const at = spec.lastIndexOf("@");
@@ -57,7 +57,15 @@ try {
   const lock = await resolveLock(resolveDir, name, version);
   console.log("Installing from the lock…");
   const pkgDir = await installFromLock(installDir, name, version, lock);
-  const { integrity, size } = await archiveIntegrity(await packageFiles(pkgDir, installDir));
+  console.log("Reading the registry's integrity…");
+  const packument = await fetchPackument(name);
+  const published = packument.versions?.[version];
+  const integrity = published?.dist?.integrity;
+  if (typeof integrity !== "string") {
+    console.error(`the registry reports no integrity for ${name}@${version}`);
+    process.exit(1);
+  }
+  const { size } = await archiveIntegrity(await packageFiles(pkgDir, installDir));
   const pkg = JSON.parse(fs.readFileSync(path.join(pkgDir, "package.json"), "utf8")) as Record<
     string,
     unknown
@@ -82,7 +90,7 @@ try {
     categories: [],
     owners: [],
     integrity,
-    channels: [{ kind: "npm", integrity }],
+    channels: [{ kind: "npm" }],
   };
 
   const dir = path.join(PACKAGES_DIR, ...entryDir(name, version, integrity).split("/"));

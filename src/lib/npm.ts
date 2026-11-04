@@ -47,6 +47,7 @@ export interface PackumentVersion {
   type?: string;
   main?: string;
   exports?: unknown;
+  dist?: { integrity?: string; tarball?: string };
 }
 
 export interface Packument {
@@ -170,12 +171,7 @@ export async function checkContent(
       return [`installing from package-lock.json produced no ${manifest.name}`];
     }
     const problems: string[] = [];
-    const { integrity, size } = await archiveIntegrity(await packageFiles(pkgDir, prefix));
-    if (integrity !== manifest.integrity) {
-      problems.push(
-        `the installed package's integrity is ${integrity}, the manifest says ${manifest.integrity}`,
-      );
-    }
+    const { size } = await archiveIntegrity(await packageFiles(pkgDir, prefix));
     if (size > MAX_ENTRY_BYTES) {
       problems.push(
         `the package archives to ${size} bytes, over the ${MAX_ENTRY_BYTES} byte limit`,
@@ -232,11 +228,11 @@ export async function checkAgainstNpm(
 }
 
 /**
- * Checks the entry's URL channels: each tarball is fetched, hashed against the channel's
- * own integrity, installed (scripts disabled) and archived — the archive must equal the
- * manifest's `integrity`, so no channel can serve content the entry does not name, and
- * the static probe runs on what it installs. The npm channel is not here: its checks are
- * `checkAgainstNpm`'s. `npm` is injectable so tests never reach a registry.
+ * Checks the entry's URL channels: each tarball is fetched and hashed — npm's own
+ * `sha512-<base64>` format, compared against the entry's single `integrity`, because
+ * every channel serves the same bytes npm publishes — then installed (scripts disabled)
+ * and statically probed. The npm channel is not here: its checks are `checkAgainstNpm`'s.
+ * `npm` is injectable so tests never reach a registry.
  */
 export async function checkChannels(
   manifest: Manifest,
@@ -265,12 +261,11 @@ export async function checkChannels(
       problems.push(`${label}: ${err instanceof Error ? err.message : err}`);
       continue;
     }
-    const hash = createHash(channel.integrity.startsWith("sha512-") ? "sha512" : "sha256");
-    hash.update(tarball);
-    const served = `${channel.integrity.startsWith("sha512-") ? "sha512" : "sha256"}-${hash.digest("hex")}`;
-    if (served !== channel.integrity) {
+    const digest = createHash("sha512").update(tarball).digest("base64");
+    const served = `sha512-${digest}`;
+    if (served !== manifest.integrity) {
       problems.push(
-        `${label}: the tarball's hash is ${served}, the manifest pins ${channel.integrity}`,
+        `${label}: the tarball's hash is ${served}, the manifest pins ${manifest.integrity}`,
       );
       continue;
     }
@@ -283,12 +278,6 @@ export async function checkChannels(
       if (!fs.existsSync(path.join(pkgDir, "package.json"))) {
         problems.push(`${label}: installing the tarball produced no ${manifest.name}`);
         continue;
-      }
-      const { integrity } = await archiveIntegrity(await packageFiles(pkgDir, prefix));
-      if (integrity !== manifest.integrity) {
-        problems.push(
-          `${label}: the tarball installs to integrity ${integrity}, the manifest says ${manifest.integrity}`,
-        );
       }
       problems.push(...probePackage(pkgDir).map((problem) => `${label}: ${problem}`));
     } catch (err) {

@@ -50,7 +50,7 @@ homepage = "https://example.com/widgets"      # optional
 keywords = ["widgets", "linux"]               # optional, at most 5
 categories = []                               # fill in: 1–3 categories
 owners = []                                   # fill in: your GitHub handle
-integrity = "sha256-…"                        # written by new-entry; do not edit
+integrity = "sha512-…"                        # written by new-entry; do not edit
 ```
 
 Fill in `categories` and `owners`. `owners` lists the GitHub handles allowed to change
@@ -59,11 +59,11 @@ enforces it, so keep it accurate.
 
 `pnpm new-entry` writes the npm channel for you. If your plugin is reachable beyond the
 registry — a GitHub release, a mirror — add a `[[channels]]` table per source: its
-`kind`, the tarball URL, and that tarball's own `sha256-`/`sha512-`; see
-[docs/manifest.md](docs/manifest.md). CI fetches each URL and checks both the channel's
-hash and that the tarball installs to the entry's content. An entry without an npm
-channel (reachable only outside the registry) is fine too; it just needs at least one
-channel, and no `package-lock.json`.
+`kind` and the tarball URL; see [docs/manifest.md](docs/manifest.md). CI fetches each
+URL and checks that the tarball it serves hashes to the entry's `integrity` — publish
+the same bytes `npm pack` produces. An entry without an npm channel (reachable only
+outside the registry) is fine too; it just needs at least one channel, and no
+`package-lock.json`.
 
 Then run the checks locally if you like — `pnpm validate && pnpm check-npm` — and open
 the PR. One entry per pull request.

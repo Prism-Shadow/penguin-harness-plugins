@@ -16,7 +16,7 @@ many plugins are listed.
 The path is not a convention the tooling tolerates — it is checked four ways. It
 spells the package's `name` (`@acme/widgets` lives under `packages/@acme/wi/dg/widgets/`
 and nowhere else), the bucket that name files under, its `version`, and the first 16 hex
-digits of its `integrity`. So a new
+digits of its `integrity`'s digest. So a new
 version is a new directory, a new content of one version is another directory beside
 it, and nothing about a listed entry can change without showing up as a move.
 
@@ -34,7 +34,7 @@ silently ignore. Nothing else may live under `packages/`.
 | --------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `name`          | yes           | The npm specifier, matching the path. Any valid npm package name, scoped or not.                                                                                   |
 | `version`       | yes           | An exact semantic version — never a range — matching the path. Must be published on npm.                                                                           |
-| `integrity`     | yes           | `sha256-` and 64 lowercase hex digits: the hash of the package as installed from the lock (see below). Its first 16 digits are the entry's directory.              |
+| `integrity`     | yes           | npm's content hash: `sha512-` followed by 86 base64 characters — the same value the registry reports as `dist.integrity` (see below). The first 16 hex digits of its digest are the entry's directory. |
 | `description`   | yes           | One line, at most 1000 characters, identical to the published package's `description`.                                                                             |
 | `authors`       | yes           | Non-empty. See the format below.                                                                                                                                   |
 | `license`       | yes           | An [allowed](licensing.md) SPDX expression, identical to the published package's `license`.                                                                        |
@@ -52,34 +52,31 @@ silently ignore. Nothing else may live under `packages/`.
 An entry lists where it can be installed from as one or more channels — at least one,
 at most 8. Channels are peers, and `kind` says which: `npm` is the registry, anything
 else a tarball served from somewhere else (a GitHub release, a vendor's mirror). Every
-channel must serve the same content — the one the entry's `integrity` names:
+channel must serve byte-identical tarballs — the ones the entry's `integrity` names:
 
 ```toml
-integrity = "sha256-…" # the canonical hash; every channel installs to it
+integrity = "sha512-…" # the canonical hash: every channel serves these bytes
 
 [[channels]]
 kind = "npm"
-integrity = "sha256-…" # the same hash: the registry serves this content
 
 [[channels]]
 kind = "github"
 url = "https://github.com/acme/widgets/releases/download/v1.2.3/widgets-1.2.3.tgz"
-integrity = "sha512-…" # 128 lowercase hex digits, of this channel's tarball
 ```
 
-| Key         | Required            | Rule                                                                               |
-| ----------- | ------------------- | ---------------------------------------------------------------------------------- |
-| `kind`      | yes                 | Lowercase alphanumeric with hyphens, at most 20 characters. `npm` is the registry. |
-| `url`       | unless `kind="npm"` | `https://` URL of the tarball as the channel serves it. Must be absent for `npm`.  |
-| `integrity` | yes                 | `sha256-` (64 hex digits) or `sha512-` (128) of that channel's tarball, as served. |
+| Key    | Required            | Rule                                                                               |
+| ------ | ------------------- | ---------------------------------------------------------------------------------- |
+| `kind` | yes                 | Lowercase alphanumeric with hyphens, at most 20 characters. `npm` is the registry. |
+| `url`  | unless `kind="npm"` | `https://` URL of the tarball as the channel serves it. Must be absent for `npm`.  |
 
 Kinds and URLs must not repeat, and there is at most one `npm` channel. An entry with an
 `npm` channel carries a `package-lock.json` and is checked against the registry —
-metadata agreement, then install-from-lock and hash — while each URL channel is checked
-by fetching its tarball, hashing it against the channel's pin, installing it (scripts
-disabled) and archiving what it produced: that archive must equal `integrity`, and the
-same static probe runs on it. An entry need not have an `npm` channel at all; it must
-have some channel, because an installable-from-nowhere entry is not listable.
+metadata agreement, then install-from-lock with a size check — while each URL channel is
+checked by fetching its tarball, hashing it against `integrity`, installing it (scripts
+disabled) and running the same static probe on it. An entry need not have an `npm`
+channel at all; it must have some channel, because an installable-from-nowhere entry is
+not listable.
 
 ## The lock
 
@@ -90,14 +87,14 @@ against the lock's own hashes. `pnpm new-entry` writes it; you do not.
 
 ## The integrity
 
-The package is installed from the lock with `npm ci --ignore-scripts --omit=dev --force`
-— `--force` so that every platform's optional packages the lock names are installed,
-whatever machine runs it. Its directory, with the dependencies npm hoisted beside it
-folded into its own `node_modules`, is archived by a deterministic archiver (sorted
-entries, epoch mtimes, no owners, 0755 for what executes and 0644 otherwise, no
-compression), and `integrity` is the sha256 of that archive.
+`integrity` is npm's own content hash, copied from the registry: `sha512-` followed by
+86 base64 characters, the value the registry reports as `dist.integrity` for that
+version. It pins the package's tarball bytes, and every channel must serve a tarball
+that hashes to exactly it — for a GitHub release channel that means publishing the same
+bytes `npm pack` produces. An entry's directory is the first 16 hex digits of that
+digest.
 
-The install, the archiver and the hash live in one small package,
+The install, the hash and the checks live in one small package,
 `@prismshadow/penguin-plugin-index`, which this repository's checks and the harness's
 plugin store both import. The harness makes the same computation before it stores a
 package fetched from npm, and refuses one whose value is not the index's.
@@ -138,9 +135,9 @@ entries, no deletions in place of a yank, only a name's owners may add entries u
 and only an entry's owners may edit it.
 
 **Against npm** (`pnpm check-npm`): the version exists and is not deprecated; license,
-description and repository match the published package; installing the lock produces
-exactly the content `integrity` names, archived to at most 64 MiB; and the package is
-ESM whose entry point declares an `activate` export.
+description and repository match the published package; installing the lock yields a
+package of at most 64 MiB; and the package is ESM whose entry point declares an
+`activate` export.
 
 That last check is **static**: the install runs no scripts and the entry file is read,
 never imported. Executing submitted code in CI would hand every contributor a shell on

@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { ManifestError, manifestPathFor, parseManifest } from "./manifest.js";
 
-const INTEGRITY = `sha256-${"0123456789abcdef".repeat(4)}`;
+// sha512 of 64 bytes of 0x01, npm base64 form; digest starts 0101….
+const INTEGRITY = `sha512-${Buffer.from("0101010101010101010101010101010101010101010101010101010101010101", "hex").toString("base64")}`;
 
 const FIELDS = `
 name = "@acme/widgets"
@@ -24,7 +25,7 @@ integrity = "${INTEGRITY}"
 
 const VALID = FIELDS + CHANNELS;
 
-const FILE = "packages/@acme/wi/dg/widgets/1.2.3/0123456789abcdef/manifest.toml";
+const FILE = "packages/@acme/wi/dg/widgets/1.2.3/0101010101010101/manifest.toml";
 
 function problemsOf(source: string, file = FILE): string[] {
   try {
@@ -79,7 +80,7 @@ describe("parseManifest", () => {
     const without = VALID.replace(/^integrity = .*$/m, "");
     expect(problemsOf(without)).toContainEqual(expect.stringContaining('"integrity" is required'));
     const sha512 = VALID.replace(/^integrity = .*$/m, `integrity = "sha512-abc"`);
-    expect(problemsOf(sha512)).toContainEqual(expect.stringContaining("64 lowercase hex digits"));
+    expect(problemsOf(sha512)).toContainEqual(expect.stringContaining("88 base64 characters"));
   });
 
   it("reports every problem at once", () => {
@@ -125,7 +126,7 @@ surprise = 1
   it("names the one place an entry's manifest may live", () => {
     expect(manifestPathFor("@acme/widgets", "1.2.3", INTEGRITY)).toBe(FILE);
     expect(manifestPathFor("solo", "0.1.0", INTEGRITY)).toBe(
-      "packages/so/lo/solo/0.1.0/0123456789abcdef/manifest.toml",
+      "packages/so/lo/solo/0.1.0/0101010101010101/manifest.toml",
     );
   });
 });
@@ -135,22 +136,20 @@ describe("parseManifest: channels", () => {
 [[channels]]
 kind = "github"
 url = "https://github.com/acme/widgets/releases/download/v1.2.3/widgets-1.2.3.tgz"
-integrity = "sha512-${"0123456789abcdef".repeat(8)}"
 `;
 
   it("accepts an npm-only entry and carries its channel", () => {
     const manifest = parseManifest(VALID, FILE);
-    expect(manifest.channels).toEqual([{ kind: "npm", integrity: INTEGRITY }]);
+    expect(manifest.channels).toEqual([{ kind: "npm" }]);
   });
 
   it("accepts url channels beside the npm channel", () => {
     const manifest = parseManifest(`${VALID}${GITHUB}`, FILE);
     expect(manifest.channels).toEqual([
-      { kind: "npm", integrity: INTEGRITY },
+      { kind: "npm" },
       {
         kind: "github",
         url: "https://github.com/acme/widgets/releases/download/v1.2.3/widgets-1.2.3.tgz",
-        integrity: `sha512-${"0123456789abcdef".repeat(8)}`,
       },
     ]);
   });
@@ -165,9 +164,9 @@ integrity = "sha512-${"0123456789abcdef".repeat(8)}"
   });
 
   it("rejects a repeated npm channel and repeated kinds", () => {
-    expect(
-      problemsOf(`${VALID}\n[[channels]]\nkind = "npm"\nintegrity = "${INTEGRITY}"\n`),
-    ).toContainEqual(expect.stringContaining('kind "npm" repeats'));
+    expect(problemsOf(`${VALID}\n[[channels]]\nkind = "npm"\n`)).toContainEqual(
+      expect.stringContaining('kind "npm" repeats'),
+    );
     expect(problemsOf(`${VALID}${GITHUB}${GITHUB}`)).toContainEqual(
       expect.stringContaining('kind "github" repeats an earlier channel'),
     );
@@ -175,33 +174,29 @@ integrity = "sha512-${"0123456789abcdef".repeat(8)}"
 
   it("rejects a url on the npm channel and its absence elsewhere", () => {
     expect(
-      problemsOf(
-        `${VALID}\n[[channels]]\nkind = "npm"\nurl = "https://x/y.tgz"\nintegrity = "${INTEGRITY}"\n`,
-      ),
+      problemsOf(`${VALID}\n[[channels]]\nkind = "npm"\nurl = "https://x/y.tgz"\n`),
     ).toContainEqual(expect.stringContaining('url must be omitted for the "npm" channel'));
-    expect(
-      problemsOf(`${VALID}\n[[channels]]\nkind = "mirror"\nintegrity = "${INTEGRITY}"\n`),
-    ).toContainEqual(expect.stringContaining("channels[1].url must be an https URL"));
+    expect(problemsOf(`${VALID}\n[[channels]]\nkind = "mirror"\n`)).toContainEqual(
+      expect.stringContaining("channels[1].url must be an https URL"),
+    );
   });
 
-  it("rejects a bad channel integrity and an http URL", () => {
+  it("rejects a channel-level integrity and an http URL", () => {
     expect(
       problemsOf(
-        `${VALID}\n[[channels]]\nkind = "mirror"\nurl = "http://x/y.tgz"\nintegrity = "sha1-abc"\n`,
+        `${VALID}\n[[channels]]\nkind = "mirror"\nurl = "http://x/y.tgz"\n`,
       ),
     ).toContainEqual(expect.stringContaining("channels[1].url must be an https URL"));
     expect(
       problemsOf(
-        `${VALID}\n[[channels]]\nkind = "mirror"\nurl = "https://x/y.tgz"\nintegrity = "sha1-abc"\n`,
+        `${VALID}\n[[channels]]\nkind = "mirror"\nurl = "https://x/y.tgz"\nintegrity = "${INTEGRITY}"\n`,
       ),
-    ).toContainEqual(expect.stringContaining("channels[1].integrity must be sha256-"));
+    ).toContainEqual(expect.stringContaining("channels[1].integrity is not a thing"));
   });
 
   it("rejects an uppercase channel kind", () => {
     expect(
-      problemsOf(
-        `${VALID}\n[[channels]]\nkind = "GitHub"\nurl = "https://x/y.tgz"\nintegrity = "sha256-${"0".repeat(64)}"\n`,
-      ),
+      problemsOf(`${VALID}\n[[channels]]\nkind = "GitHub"\nurl = "https://x/y.tgz"\n`),
     ).toContainEqual(expect.stringContaining("channels[1].kind must be lowercase"));
   });
 });

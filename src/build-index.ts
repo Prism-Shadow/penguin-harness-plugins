@@ -31,8 +31,8 @@ interface IndexEntry {
   keywords?: string[];
   categories?: string[];
   integrity: string;
-  /** Where the package can be installed from, each channel hash-pinned. */
-  channels: { kind: string; url?: string; integrity: string }[];
+  /** Where the package can be installed from; each channel serves the same tarball. */
+  channels: { kind: string; url?: string }[];
   updatedAt?: number;
 }
 
