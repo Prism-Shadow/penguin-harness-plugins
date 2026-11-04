@@ -111,7 +111,7 @@ function landingPage(count: number): string {
     <h1>PenguinHarness plugin index</h1>
     <p>This site serves one artifact: <a href="./index.json"><code>index.json</code></a>, currently listing ${count} entr${count === 1 ? "y" : "ies"}.</p>
     <p>It is generated from the entries in
-      <a href="https://github.com/Prism-Shadow/penguin-plugins">Prism-Shadow/penguin-plugins</a>.
+      <a href="https://github.com/Prism-Shadow/penguin-harness-plugins">Prism-Shadow/penguin-harness-plugins</a>.
       To list a plugin, open a pull request there.</p>
   </body>
 </html>

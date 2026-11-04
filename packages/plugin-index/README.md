@@ -1,7 +1,7 @@
 # @prismshadow/penguin-plugin-index
 
 The plugin entry format, as code: what the PenguinHarness plugin index
-([penguin-plugins](https://github.com/Prism-Shadow/penguin-plugins)) checks, and what the
+([penguin-harness-plugins](https://github.com/Prism-Shadow/penguin-harness-plugins)) checks, and what the
 harness computes when a package enters a machine's plugin store. Both sides import this
 package so that the value they compare — an entry's `integrity` — is computed by one
 implementation.

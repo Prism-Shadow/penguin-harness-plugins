@@ -4,7 +4,7 @@ The index of plugins available to [PenguinHarness][harness]. Plugin authors subm
 entry here; the harness reads the generated index and shows the result in its plugin
 page.
 
-**Published index:** <https://prism-shadow.github.io/penguin-plugins/index.json>
+**Published index:** <https://prism-shadow.github.io/penguin-harness-plugins/index.json>
 
 ## What this repository is — and is not
 
