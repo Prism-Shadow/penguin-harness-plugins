@@ -9,7 +9,7 @@ Facts that outlive a single session, for anyone (human or agent) working here.
   `dist.integrity`. There is no second, channel-level integrity: a `[[channels]]` table
   may only carry `kind` and `url` (`url` absent for `npm`), and the tooling rejects a
   channel `integrity` outright.
-- An entry's directory key is the first 16 hex digits of that digest — of the *decoded*
+- An entry's directory key is the first 16 hex digits of that digest — of the _decoded_
   digest, not of the base64 text.
 - Every channel must serve byte-identical tarballs. A GitHub-release channel publishes
   the same bytes `npm pack` produces; CI hashes what each URL serves against the one
