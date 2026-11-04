@@ -44,6 +44,7 @@ export {
   manifestPathFor,
   PACKAGES_DIR,
   parseManifest,
+  type Channel,
   type Manifest,
 } from "./manifest.js";
 export * from "./vocabulary.js";

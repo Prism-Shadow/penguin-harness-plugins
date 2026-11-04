@@ -297,8 +297,7 @@ export function parseManifest(source: string, file: string): Manifest {
         }
         const table = entry as Record<string, unknown>;
         const name = table.name;
-        const nameOk =
-          typeof name === "string" && CHANNEL_NAME.test(name) && !seenNames.has(name);
+        const nameOk = typeof name === "string" && CHANNEL_NAME.test(name) && !seenNames.has(name);
         if (typeof name !== "string" || !CHANNEL_NAME.test(name)) {
           problems.push(
             `channels[${i}].name must be lowercase alphanumeric with hyphens, at most 20 characters`,
@@ -320,15 +319,18 @@ export function parseManifest(source: string, file: string): Manifest {
           seenUrls.add(url);
         }
         const integrity = table.integrity;
-        const integrityOk =
-          typeof integrity === "string" && CHANNEL_INTEGRITY.test(integrity);
+        const integrityOk = typeof integrity === "string" && CHANNEL_INTEGRITY.test(integrity);
         if (typeof integrity !== "string" || !CHANNEL_INTEGRITY.test(integrity)) {
           problems.push(
             `channels[${i}].integrity must be sha256- (64 hex digits) or sha512- (128 hex digits)`,
           );
         }
         if (nameOk && urlOk && integrityOk) {
-          channels.push({ name: name as string, url: url as string, integrity: integrity as string });
+          channels.push({
+            name: name as string,
+            url: url as string,
+            integrity: integrity as string,
+          });
         }
       }
       if (channels.length === 0) channels = undefined;

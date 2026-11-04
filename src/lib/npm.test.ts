@@ -4,7 +4,13 @@ import os from "node:os";
 import path from "node:path";
 import { packageIntegrity, type Manifest, type NpmRunner } from "@prismshadow/penguin-plugin-index";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { checkAgainstNpm, checkChannels, declaresActivate, entryPointOf, repositoryUrl } from "./npm.js";
+import {
+  checkAgainstNpm,
+  checkChannels,
+  declaresActivate,
+  entryPointOf,
+  repositoryUrl,
+} from "./npm.js";
 
 const workDir = fs.mkdtempSync(path.join(os.tmpdir(), "npm-test-"));
 afterAll(() => fs.rmSync(workDir, { recursive: true, force: true }));
@@ -205,7 +211,10 @@ describe("checkChannels", () => {
   const CHANNEL_URL = "https://github.com/acme/widgets/releases/download/v1.2.3/widgets-1.2.3.tgz";
 
   function serving(body: Buffer | number): typeof fetch {
-    return (async () => new Response(typeof body === "number" ? "" : body, { status: typeof body === "number" ? body : 200 })) as typeof fetch;
+    return (async () =>
+      new Response(typeof body === "number" ? "" : body, {
+        status: typeof body === "number" ? body : 200,
+      })) as typeof fetch;
   }
 
   it("passes a channel whose tarball hashes to its integrity and installs to the entry's content", async () => {
@@ -215,7 +224,13 @@ describe("checkChannels", () => {
     const manifest = {
       ...MANIFEST,
       integrity,
-      channels: [{ name: "github", url: CHANNEL_URL, integrity: `sha512-${createHash("sha512").update(tarball).digest("hex")}` }],
+      channels: [
+        {
+          name: "github",
+          url: CHANNEL_URL,
+          integrity: `sha512-${createHash("sha512").update(tarball).digest("hex")}`,
+        },
+      ],
     };
     const npm: NpmRunner = async (args, cwd) => {
       expect(args[0]).toBe("install");
@@ -229,7 +244,10 @@ describe("checkChannels", () => {
       ...MANIFEST,
       channels: [{ name: "github", url: CHANNEL_URL, integrity: `sha512-${"0".repeat(128)}` }],
     };
-    const problems = await checkChannels(manifest, { fetchImpl: serving(Buffer.from("x")), npm: async () => {} });
+    const problems = await checkChannels(manifest, {
+      fetchImpl: serving(Buffer.from("x")),
+      npm: async () => {},
+    });
     expect(problems).toEqual([expect.stringContaining("the tarball's hash is")]);
   });
 
@@ -238,7 +256,10 @@ describe("checkChannels", () => {
       ...MANIFEST,
       channels: [{ name: "github", url: CHANNEL_URL, integrity: `sha512-${"0".repeat(128)}` }],
     };
-    const problems = await checkChannels(manifest, { fetchImpl: serving(404), npm: async () => {} });
+    const problems = await checkChannels(manifest, {
+      fetchImpl: serving(404),
+      npm: async () => {},
+    });
     expect(problems).toEqual([expect.stringContaining("HTTP 404")]);
   });
 
@@ -247,7 +268,13 @@ describe("checkChannels", () => {
     const changed = { ...GOOD, "node_modules/@acme/widgets/dist/extra.js": "1\n" };
     const manifest = {
       ...MANIFEST,
-      channels: [{ name: "github", url: CHANNEL_URL, integrity: `sha512-${createHash("sha512").update(tarball).digest("hex")}` }],
+      channels: [
+        {
+          name: "github",
+          url: CHANNEL_URL,
+          integrity: `sha512-${createHash("sha512").update(tarball).digest("hex")}`,
+        },
+      ],
     };
     const npm: NpmRunner = async (_args, cwd) => {
       write(cwd, changed);

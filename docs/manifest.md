@@ -63,9 +63,9 @@ integrity = "sha512-…" # 128 lowercase hex digits
 
 | Key         | Required | Rule                                                                     |
 | ----------- | -------- | ------------------------------------------------------------------------ |
-| `name`      | yes      | Lowercase alphanumeric with hyphens, at most 20 characters. Never `npm`.  |
-| `url`       | yes      | `https://` URL of the tarball as the channel serves it.                   |
-| `integrity` | yes      | `sha256-` (64 hex digits) or `sha512-` (128) of that tarball, as served.  |
+| `name`      | yes      | Lowercase alphanumeric with hyphens, at most 20 characters. Never `npm`. |
+| `url`       | yes      | `https://` URL of the tarball as the channel serves it.                  |
+| `integrity` | yes      | `sha256-` (64 hex digits) or `sha512-` (128) of that tarball, as served. |
 
 At most 8 channels; names and URLs must not repeat. A channel's tarball must install to
 exactly the content `integrity` names — the same deterministic archive the lock install is

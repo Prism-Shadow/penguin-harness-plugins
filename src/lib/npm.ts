@@ -255,7 +255,9 @@ export async function checkChannels(
       }
       const buf = Buffer.from(await res.arrayBuffer());
       if (buf.length > MAX_ENTRY_BYTES) {
-        problems.push(`${label}: the tarball is ${buf.length} bytes, over the ${MAX_ENTRY_BYTES} limit`);
+        problems.push(
+          `${label}: the tarball is ${buf.length} bytes, over the ${MAX_ENTRY_BYTES} limit`,
+        );
         continue;
       }
       tarball = buf;
@@ -267,7 +269,9 @@ export async function checkChannels(
     hash.update(tarball);
     const served = `${channel.integrity.startsWith("sha512-") ? "sha512" : "sha256"}-${hash.digest("hex")}`;
     if (served !== channel.integrity) {
-      problems.push(`${label}: the tarball's hash is ${served}, the manifest pins ${channel.integrity}`);
+      problems.push(
+        `${label}: the tarball's hash is ${served}, the manifest pins ${channel.integrity}`,
+      );
       continue;
     }
     const prefix = fs.mkdtempSync(path.join(os.tmpdir(), "penguin-channel-"));
@@ -286,9 +290,7 @@ export async function checkChannels(
           `${label}: the tarball installs to integrity ${integrity}, the manifest says ${manifest.integrity}`,
         );
       }
-      problems.push(
-        ...probePackage(pkgDir).map((problem) => `${label}: ${problem}`),
-      );
+      problems.push(...probePackage(pkgDir).map((problem) => `${label}: ${problem}`));
     } catch (err) {
       problems.push(`${label}: ${err instanceof Error ? err.message : err}`);
     } finally {
