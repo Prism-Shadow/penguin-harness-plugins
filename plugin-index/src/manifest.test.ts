@@ -182,9 +182,7 @@ url = "https://github.com/acme/widgets/releases/download/v1.2.3/widgets-1.2.3.tg
 
   it("rejects a channel-level integrity and an http URL", () => {
     expect(
-      problemsOf(
-        `${VALID}\n[[channels]]\nkind = "mirror"\nurl = "http://x/y.tgz"\n`,
-      ),
+      problemsOf(`${VALID}\n[[channels]]\nkind = "mirror"\nurl = "http://x/y.tgz"\n`),
     ).toContainEqual(expect.stringContaining("channels[1].url must be an https URL"));
     expect(
       problemsOf(

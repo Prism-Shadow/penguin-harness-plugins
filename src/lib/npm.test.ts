@@ -139,7 +139,10 @@ describe("checkAgainstNpm", () => {
   });
 
   it("reports an entry point that does not probe clean", async () => {
-    const changed = { ...GOOD, "node_modules/@acme/widgets/dist/index.js": "export const x = 1;\n" };
+    const changed = {
+      ...GOOD,
+      "node_modules/@acme/widgets/dist/index.js": "export const x = 1;\n",
+    };
     expect(
       await checkAgainstNpm(MANIFEST, LOCK, { fetchImpl: registry(), npm: fakeNpm(changed) }),
     ).toEqual([expect.stringContaining('declares no "activate" export')]);

@@ -30,22 +30,22 @@ silently ignore. Nothing else may live under `packages/`.
 
 ## Fields
 
-| Key             | Required      | Rule                                                                                                                                                               |
-| --------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `name`          | yes           | The npm specifier, matching the path. Any valid npm package name, scoped or not.                                                                                   |
-| `version`       | yes           | An exact semantic version — never a range — matching the path. Must be published on npm.                                                                           |
+| Key             | Required      | Rule                                                                                                                                                                                                   |
+| --------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `name`          | yes           | The npm specifier, matching the path. Any valid npm package name, scoped or not.                                                                                                                       |
+| `version`       | yes           | An exact semantic version — never a range — matching the path. Must be published on npm.                                                                                                               |
 | `integrity`     | yes           | npm's content hash: `sha512-` followed by 86 base64 characters — the same value the registry reports as `dist.integrity` (see below). The first 16 hex digits of its digest are the entry's directory. |
-| `description`   | yes           | One line, at most 1000 characters, identical to the published package's `description`.                                                                             |
-| `authors`       | yes           | Non-empty. See the format below.                                                                                                                                   |
-| `license`       | yes           | An [allowed](licensing.md) SPDX expression, identical to the published package's `license`.                                                                        |
-| `repository`    | yes           | `https://` URL of the source repository. Must agree with the published package's `repository`.                                                                     |
-| `homepage`      | no            | `https://` URL.                                                                                                                                                    |
-| `keywords`      | no            | At most 5, lowercase, alphanumeric with hyphens, at most 20 characters each. Use them for the target platforms (`linux`, `macos`, `windows`) and for search terms. |
-| `categories`    | yes           | 1–3 values from the [category list](categories.md).                                                                                                                |
-| `owners`        | yes           | GitHub handles allowed to change this entry and to add entries under its name.                                                                                     |
-| `channels`      | yes           | Where the package can be installed from, npm being one possible kind — see [Channels](#channels) below.                                                            |
-| `yanked`        | no            | `true` removes the entry from the published index. Requires `yanked_reason`.                                                                                       |
-| `yanked_reason` | with `yanked` | Why the entry was pulled.                                                                                                                                          |
+| `description`   | yes           | One line, at most 1000 characters, identical to the published package's `description`.                                                                                                                 |
+| `authors`       | yes           | Non-empty. See the format below.                                                                                                                                                                       |
+| `license`       | yes           | An [allowed](licensing.md) SPDX expression, identical to the published package's `license`.                                                                                                            |
+| `repository`    | yes           | `https://` URL of the source repository. Must agree with the published package's `repository`.                                                                                                         |
+| `homepage`      | no            | `https://` URL.                                                                                                                                                                                        |
+| `keywords`      | no            | At most 5, lowercase, alphanumeric with hyphens, at most 20 characters each. Use them for the target platforms (`linux`, `macos`, `windows`) and for search terms.                                     |
+| `categories`    | yes           | 1–3 values from the [category list](categories.md).                                                                                                                                                    |
+| `owners`        | yes           | GitHub handles allowed to change this entry and to add entries under its name.                                                                                                                         |
+| `channels`      | yes           | Where the package can be installed from, npm being one possible kind — see [Channels](#channels) below.                                                                                                |
+| `yanked`        | no            | `true` removes the entry from the published index. Requires `yanked_reason`.                                                                                                                           |
+| `yanked_reason` | with `yanked` | Why the entry was pulled.                                                                                                                                                                              |
 
 ## Channels
 
