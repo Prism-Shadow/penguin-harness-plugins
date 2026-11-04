@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { ManifestError, manifestPathFor, parseManifest } from "./manifest.js";
 
 // sha512 of 64 bytes of 0x01, npm base64 form; digest starts 0101….
-const INTEGRITY = `sha512-${Buffer.from("0101010101010101010101010101010101010101010101010101010101010101", "hex").toString("base64")}`;
+const INTEGRITY = `sha512-${Buffer.from("01".repeat(64), "hex").toString("base64")}`;
 
 const FIELDS = `
 name = "@acme/widgets"
@@ -20,7 +20,6 @@ integrity = "${INTEGRITY}"
 const CHANNELS = `
 [[channels]]
 kind = "npm"
-integrity = "${INTEGRITY}"
 `;
 
 const VALID = FIELDS + CHANNELS;

@@ -8,9 +8,8 @@ homepage = "https://github.com/Prism-Shadow/penguin-harness-languages/tree/main/
 keywords = ["syntax-highlighting", "csharp"]
 categories = ["tool"]
 owners = ["Myriad-Dreamin"]
-integrity = "sha256-91372c217f3cb6452c8a94e333b027105be935d2c2f4260cfbcd67cda27b56f8"
+integrity = "sha512-HxIJj1xbiD/Y01zEfRyDYgBVp7pQDhz6VgvMsY9zhE6a9sFucIyGCevsBye/P4BfRP8Dyrq5dnQy45EfQDonPw=="
 
 [[channels]]
 kind = "github"
 url = "https://github.com/Prism-Shadow/penguin-harness-languages/releases/download/v0.0.2/penguinharness-language-csharp-0.0.2.tgz"
-integrity = "sha512-1f12098f5c5b883fd8d35cc47d1c83620055a7ba500e1cfa560bccb18f73844e9af6c16e708c8609ebec0727bf3f805f44ff03cabab9767432e3911f403a273f"

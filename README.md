@@ -78,7 +78,7 @@ flat JSON array of entries — the same shape a machine's plugin store writes to
     "repository": "https://github.com/acme/widgets",
     "keywords": ["widgets", "linux"],
     "categories": ["tool"],
-    "integrity": "sha512-qx0I4mAjVnPQmvZC2fNelleC4oazoseT4m6S6sbeHPlOh7AeCh5eiquee9ohh2eeNg6ang4rie1thae7Ie7xQ==",
+    "integrity": "sha512-O7Eu2jwpjbXeJVl/VNkk8uF+eKJq2JU+2CGO5oLwu76QIeLzAJ0VLJEb8fJexoOpAnFBZnZ6+9jlvQ+wEk7Lig==",
     "updatedAt": 1755000000
   }
 ]

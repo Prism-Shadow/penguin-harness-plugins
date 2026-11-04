@@ -1,0 +1,15 @@
+name = "@penguinharness/language-typst"
+version = "0.0.2"
+description = "Typst syntax highlighting for PenguinHarness."
+authors = ["Myriad-Dreamin <@Myriad-Dreamin>"]
+license = "MIT"
+repository = "https://github.com/Prism-Shadow/penguin-harness-languages"
+homepage = "https://github.com/Prism-Shadow/penguin-harness-languages/tree/main/plugins/language-typst"
+keywords = ["syntax-highlighting", "typst"]
+categories = ["tool"]
+owners = ["Myriad-Dreamin"]
+integrity = "sha512-viOyxIb+BPh/5vYrrS8eqi/sdCILa8EEj6G+w+1R8RIgik8P64/eKc1Ury31OJ6J+qEZlI0Lnybhqf4aRCS+Dg=="
+
+[[channels]]
+kind = "github"
+url = "https://github.com/Prism-Shadow/penguin-harness-languages/releases/download/v0.0.2/penguinharness-language-typst-0.0.2.tgz"

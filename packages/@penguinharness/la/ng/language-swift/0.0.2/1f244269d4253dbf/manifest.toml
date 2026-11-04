@@ -1,0 +1,15 @@
+name = "@penguinharness/language-swift"
+version = "0.0.2"
+description = "Swift syntax highlighting for PenguinHarness."
+authors = ["Myriad-Dreamin <@Myriad-Dreamin>"]
+license = "MIT"
+repository = "https://github.com/Prism-Shadow/penguin-harness-languages"
+homepage = "https://github.com/Prism-Shadow/penguin-harness-languages/tree/main/plugins/language-swift"
+keywords = ["syntax-highlighting", "swift"]
+categories = ["tool"]
+owners = ["Myriad-Dreamin"]
+integrity = "sha512-HyRCadQlPb9XBdg4E3eY6TzIGcrTs3GbW7VNEEbBvHVDIlSIJb6Vw6LCvP1fUT85pR7P2Z3X7GLGsJJJzrU46g=="
+
+[[channels]]
+kind = "github"
+url = "https://github.com/Prism-Shadow/penguin-harness-languages/releases/download/v0.0.2/penguinharness-language-swift-0.0.2.tgz"
