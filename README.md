@@ -46,7 +46,7 @@ data filled in.
 | --------------------------------- | ---------------------------------------------------------------------------------- |
 | `pnpm new-entry <name>@<version>` | Writes a new entry for a published package: its lock, its integrity, its manifest. |
 | `pnpm validate`                   | Schema, path and change-level rules (paths, deletions, ownership). Offline.        |
-| `pnpm check-npm`                  | Installs changed entries from their locks and checks them. `--all` for everything. |
+| `pnpm check-npm`                  | Installs changed entries from their locks and checks them; fetches declared channels and verifies their hashes. `--all` for everything. |
 | `pnpm build`                      | Rebuilds `dist/index.json` from every entry.                                       |
 | `pnpm test`                       | Unit tests for the checks and the shared package.                                  |
 

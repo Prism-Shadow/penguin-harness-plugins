@@ -42,6 +42,7 @@ export {
   manifestPathFor,
   parseManifest,
   PLUGINS_DIR,
+  type Channel,
   type Manifest,
 } from "./manifest.js";
 export * from "./vocabulary.js";

@@ -57,6 +57,11 @@ Fill in `categories` and `owners`. `owners` lists the GitHub handles allowed to 
 this entry later and to add further entries under this name, including yours. CI
 enforces it, so keep it accurate.
 
+If your plugin is reachable beyond npm — a GitHub release, a mirror — declare the extra
+`[[channels]]` (name, tarball URL, that tarball's own `sha256-`/`sha512-`); see
+[docs/manifest.md](docs/manifest.md). CI fetches each URL and checks both the channel's
+hash and that the tarball installs to the entry's content.
+
 Then run the checks locally if you like — `pnpm validate && pnpm check-npm` — and open
 the PR. One entry per pull request.
 

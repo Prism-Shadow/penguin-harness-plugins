@@ -10,7 +10,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { LOCK_FILE, ManifestError, parseManifest } from "@prismshadow/penguin-plugin-index";
 import { changedEntries, hasRef, listManifestFiles } from "./lib/git.js";
-import { checkAgainstNpm } from "./lib/npm.js";
+import { checkAgainstNpm, checkChannels } from "./lib/npm.js";
 
 const root = process.cwd();
 const baseRef = process.env.BASE_REF ?? "origin/main";
@@ -46,8 +46,15 @@ for (const file of files) {
   }
   console.log(`Checking ${manifest.name}@${manifest.version} (${manifest.integrity}) against npm…`);
   const found = await checkAgainstNpm(manifest, lock);
-  if (found.length > 0) {
-    problems.push([`${file}:`, ...found.map((problem) => `  - ${problem}`)].join("\n"));
+  for (const problem of found) {
+    problems.push([`${file}:`, `  - ${problem}`].join("\n"));
+  }
+  const channelCount = manifest.channels?.length ?? 0;
+  if (channelCount > 0) {
+    console.log(`Checking ${channelCount} distribution channel(s)…`);
+    for (const problem of await checkChannels(manifest)) {
+      problems.push([`${file}:`, `  - ${problem}`].join("\n"));
+    }
   }
 }
 

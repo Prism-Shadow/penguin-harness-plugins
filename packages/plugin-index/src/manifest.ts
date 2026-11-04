@@ -17,7 +17,10 @@ import { entryDir, entryKey, INTEGRITY, isPackageName, MANIFEST_FILE } from "./e
 import { checkLicense } from "./license.js";
 import {
   CATEGORIES,
+  CHANNEL_INTEGRITY,
+  CHANNEL_NAME,
   MAX_CATEGORIES,
+  MAX_CHANNELS,
   MAX_DESCRIPTION_LENGTH,
   MAX_KEYWORDS,
   MAX_KEYWORD_LENGTH,
@@ -47,6 +50,22 @@ export interface Manifest {
   yankedReason?: string;
   /** `sha256-<hex>` of the entry's package, archived (see the archive module). */
   integrity: string;
+  /**
+   * Sources beyond npm a package can be installed from, each the tarball it serves
+   * pinned by its own hash. npm itself is the base channel — the lock resolves against
+   * the registry — and is never listed here.
+   */
+  channels?: Channel[];
+}
+
+/** One distribution channel beyond npm: where the tarball lives, what hash pins it. */
+export interface Channel {
+  /** Lowercase alphanumeric with hyphens, never "npm" — that is the implicit base. */
+  name: string;
+  /** `https://` URL of the tarball as the channel serves it. */
+  url: string;
+  /** `sha256-<hex>` or `sha512-<hex>` of the tarball, as served at `url`. */
+  integrity: string;
 }
 
 const KNOWN_KEYS = new Set([
@@ -63,6 +82,7 @@ const KNOWN_KEYS = new Set([
   "yanked",
   "yanked_reason",
   "integrity",
+  "channels",
 ]);
 
 const KEYWORD = /^[a-z0-9][a-z0-9-]*$/;
@@ -258,6 +278,63 @@ export function parseManifest(source: string, file: string): Manifest {
     problems.push(`"yanked_reason" is only allowed together with yanked = true`);
   }
 
+  let channels: Channel[] | undefined;
+  if (raw.channels !== undefined) {
+    const rawChannels = raw.channels;
+    if (!Array.isArray(rawChannels)) {
+      problems.push(`"channels" must be an array of [[channels]] tables`);
+    } else {
+      if (rawChannels.length > MAX_CHANNELS) {
+        problems.push(`at most ${MAX_CHANNELS} channels`);
+      }
+      const seenNames = new Set<string>();
+      const seenUrls = new Set<string>();
+      channels = [];
+      for (const [i, entry] of rawChannels.entries()) {
+        if (entry === null || typeof entry !== "object" || Array.isArray(entry)) {
+          problems.push(`channels[${i}] must be a table with "name", "url" and "integrity"`);
+          continue;
+        }
+        const table = entry as Record<string, unknown>;
+        const name = table.name;
+        const nameOk =
+          typeof name === "string" && CHANNEL_NAME.test(name) && !seenNames.has(name);
+        if (typeof name !== "string" || !CHANNEL_NAME.test(name)) {
+          problems.push(
+            `channels[${i}].name must be lowercase alphanumeric with hyphens, at most 20 characters`,
+          );
+        } else if (name === "npm") {
+          problems.push(`channels[${i}].name "npm" is the base channel and is never listed`);
+        } else if (seenNames.has(name)) {
+          problems.push(`channels[${i}].name "${name}" repeats an earlier channel`);
+        } else {
+          seenNames.add(name);
+        }
+        const url = table.url;
+        const urlOk = typeof url === "string" && url.startsWith("https://") && !seenUrls.has(url);
+        if (typeof url !== "string" || !url.startsWith("https://")) {
+          problems.push(`channels[${i}].url must be an https URL`);
+        } else if (seenUrls.has(url)) {
+          problems.push(`channels[${i}].url repeats an earlier channel's URL`);
+        } else {
+          seenUrls.add(url);
+        }
+        const integrity = table.integrity;
+        const integrityOk =
+          typeof integrity === "string" && CHANNEL_INTEGRITY.test(integrity);
+        if (typeof integrity !== "string" || !CHANNEL_INTEGRITY.test(integrity)) {
+          problems.push(
+            `channels[${i}].integrity must be sha256- (64 hex digits) or sha512- (128 hex digits)`,
+          );
+        }
+        if (nameOk && urlOk && integrityOk) {
+          channels.push({ name: name as string, url: url as string, integrity: integrity as string });
+        }
+      }
+      if (channels.length === 0) channels = undefined;
+    }
+  }
+
   if (problems.length > 0) throw new ManifestError(file, problems);
 
   return {
@@ -274,5 +351,6 @@ export function parseManifest(source: string, file: string): Manifest {
     ...(yanked !== undefined ? { yanked } : {}),
     ...(yankedReason !== undefined ? { yankedReason } : {}),
     integrity: integrity as string,
+    ...(channels !== undefined ? { channels } : {}),
   };
 }

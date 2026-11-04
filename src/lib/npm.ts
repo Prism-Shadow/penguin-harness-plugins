@@ -15,17 +15,28 @@
  * a shell on the machine that publishes our index — the one supply-chain step this
  * repository exists to keep honest.
  */
+import { createHash } from "node:crypto";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import {
+  archiveIntegrity,
   installFromLock,
   packageFiles,
-  archiveIntegrity,
+  runNpm,
   type Manifest,
   type NpmRunner,
 } from "@prismshadow/penguin-plugin-index";
 import { MAX_ENTRY_BYTES } from "./vocabulary.js";
+
+/** The flags of any install — the lock's `npm ci` and a channel's tarball alike. */
+const INSTALL_FLAGS_SHARED = [
+  "--ignore-scripts",
+  "--omit=dev",
+  "--force",
+  "--no-audit",
+  "--no-fund",
+] as const;
 
 export interface PackumentVersion {
   version: string;
@@ -217,5 +228,72 @@ export async function checkAgainstNpm(
   }
 
   problems.push(...(await checkContent(manifest, lock, npm)));
+  return problems;
+}
+
+/**
+ * Checks the entry's declared channels: each URL is fetched, its tarball hashed against
+ * the channel's own integrity, and the tarball installed (scripts disabled) and archived
+ * to the entry's integrity — the same computation the base channel's lock install gets,
+ * so a channel cannot serve content the manifest's integrity does not name. `npm` is
+ * injectable so tests never reach a registry.
+ */
+export async function checkChannels(
+  manifest: Manifest,
+  { fetchImpl = fetch, npm = runNpm }: { fetchImpl?: typeof fetch; npm?: NpmRunner } = {},
+): Promise<string[]> {
+  if (manifest.channels === undefined || manifest.channels.length === 0) return [];
+  const problems: string[] = [];
+  for (const channel of manifest.channels) {
+    const label = `channel "${channel.name}" (${channel.url})`;
+    let tarball: Buffer;
+    try {
+      const res = await fetchImpl(channel.url);
+      if (!res.ok) {
+        problems.push(`${label}: the URL answered HTTP ${res.status}`);
+        continue;
+      }
+      const buf = Buffer.from(await res.arrayBuffer());
+      if (buf.length > MAX_ENTRY_BYTES) {
+        problems.push(`${label}: the tarball is ${buf.length} bytes, over the ${MAX_ENTRY_BYTES} limit`);
+        continue;
+      }
+      tarball = buf;
+    } catch (err) {
+      problems.push(`${label}: ${err instanceof Error ? err.message : err}`);
+      continue;
+    }
+    const hash = createHash(channel.integrity.startsWith("sha512-") ? "sha512" : "sha256");
+    hash.update(tarball);
+    const served = `${channel.integrity.startsWith("sha512-") ? "sha512" : "sha256"}-${hash.digest("hex")}`;
+    if (served !== channel.integrity) {
+      problems.push(`${label}: the tarball's hash is ${served}, the manifest pins ${channel.integrity}`);
+      continue;
+    }
+    const prefix = fs.mkdtempSync(path.join(os.tmpdir(), "penguin-channel-"));
+    try {
+      const file = path.join(prefix, "package.tgz");
+      fs.writeFileSync(file, tarball);
+      await npm(["install", file, "--install-strategy=nested", ...INSTALL_FLAGS_SHARED], prefix);
+      const pkgDir = path.join(prefix, "node_modules", ...manifest.name.split("/"));
+      if (!fs.existsSync(path.join(pkgDir, "package.json"))) {
+        problems.push(`${label}: installing the tarball produced no ${manifest.name}`);
+        continue;
+      }
+      const { integrity } = await archiveIntegrity(await packageFiles(pkgDir, prefix));
+      if (integrity !== manifest.integrity) {
+        problems.push(
+          `${label}: the tarball installs to integrity ${integrity}, the manifest says ${manifest.integrity}`,
+        );
+      }
+      problems.push(
+        ...probePackage(pkgDir).map((problem) => `${label}: ${problem}`),
+      );
+    } catch (err) {
+      problems.push(`${label}: ${err instanceof Error ? err.message : err}`);
+    } finally {
+      fs.rmSync(prefix, { recursive: true, force: true });
+    }
+  }
   return problems;
 }

@@ -31,6 +31,8 @@ interface IndexEntry {
   keywords?: string[];
   categories?: string[];
   integrity: string;
+  /** Sources beyond npm the package can be installed from, each hash-pinned. */
+  channels?: { name: string; url: string; integrity: string }[];
   updatedAt?: number;
 }
 
@@ -67,6 +69,7 @@ for (const file of listManifestFiles(root)) {
     ...(manifest.keywords !== undefined ? { keywords: manifest.keywords } : {}),
     categories: manifest.categories,
     integrity: manifest.integrity,
+    ...(manifest.channels !== undefined ? { channels: manifest.channels } : {}),
     updatedAt: lastCommitTimestamp(file),
   });
 }

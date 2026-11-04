@@ -43,8 +43,34 @@ silently ignore. Nothing else may live under `packages/`.
 | `keywords`      | no            | At most 5, lowercase, alphanumeric with hyphens, at most 20 characters each. Use them for the target platforms (`linux`, `macos`, `windows`) and for search terms. |
 | `categories`    | yes           | 1–3 values from the [category list](categories.md).                                                                                                                |
 | `owners`        | yes           | GitHub handles allowed to change this entry and to add entries under its name.                                                                                     |
+| `channels`      | no            | Additional distribution channels beyond npm — see [Channels](#channels) below.                                                                                     |
 | `yanked`        | no            | `true` removes the entry from the published index. Requires `yanked_reason`.                                                                                       |
 | `yanked_reason` | with `yanked` | Why the entry was pulled.                                                                                                                                          |
+
+## Channels
+
+npm is the base channel: every entry's lock resolves against the registry, and `integrity`
+names what installing it produces. An entry may declare additional channels — a GitHub
+release, a vendor's mirror — each a tarball a harness can install the package from when
+npm is not the road it takes:
+
+```toml
+[[channels]]
+name = "github"
+url = "https://github.com/acme/widgets/releases/download/v1.2.3/widgets-1.2.3.tgz"
+integrity = "sha512-…" # 128 lowercase hex digits
+```
+
+| Key         | Required | Rule                                                                     |
+| ----------- | -------- | ------------------------------------------------------------------------ |
+| `name`      | yes      | Lowercase alphanumeric with hyphens, at most 20 characters. Never `npm`.  |
+| `url`       | yes      | `https://` URL of the tarball as the channel serves it.                   |
+| `integrity` | yes      | `sha256-` (64 hex digits) or `sha512-` (128) of that tarball, as served.  |
+
+At most 8 channels; names and URLs must not repeat. A channel's tarball must install to
+exactly the content `integrity` names — the same deterministic archive the lock install is
+hashed against — and pass the same static probe. `pnpm check-npm` fetches every declared
+URL and verifies both hashes on each run that touches the entry.
 
 ## The lock
 

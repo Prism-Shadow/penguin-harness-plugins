@@ -115,3 +115,54 @@ surprise = 1
     );
   });
 });
+
+describe("parseManifest: channels", () => {
+  const CHANNEL = `
+[[channels]]
+name = "github"
+url = "https://github.com/acme/widgets/releases/download/v1.2.3/widgets-1.2.3.tgz"
+integrity = "sha512-${"0123456789abcdef".repeat(8)}"
+`;
+
+  it("accepts declared channels and carries them on the manifest", () => {
+    const manifest = parseManifest(`${VALID}${CHANNEL}`, FILE);
+    expect(manifest.channels).toEqual([
+      {
+        name: "github",
+        url: "https://github.com/acme/widgets/releases/download/v1.2.3/widgets-1.2.3.tgz",
+        integrity: `sha512-${"0123456789abcdef".repeat(8)}`,
+      },
+    ]);
+  });
+
+  it("accepts a manifest with no channels at all", () => {
+    expect(parseManifest(VALID, FILE).channels).toBeUndefined();
+  });
+
+  it("rejects a channel named npm", () => {
+    expect(
+      problemsOf(`${VALID}\n[[channels]]\nname = "npm"\nurl = "https://x/y.tgz"\nintegrity = "sha256-${"0".repeat(64)}"\n`),
+    ).toContainEqual(expect.stringContaining("the base channel"));
+  });
+
+  it("rejects repeated channel names and URLs", () => {
+    const twice = `${CHANNEL}${CHANNEL}`;
+    const problems = problemsOf(`${VALID}${twice}`);
+    expect(problems).toContainEqual(expect.stringContaining('repeats an earlier channel'));
+  });
+
+  it("rejects a bad channel integrity and an http URL", () => {
+    expect(
+      problemsOf(`${VALID}\n[[channels]]\nname = "mirror"\nurl = "http://x/y.tgz"\nintegrity = "sha1-abc"\n`),
+    ).toContainEqual(expect.stringContaining("channels[0].url must be an https URL"));
+    expect(
+      problemsOf(`${VALID}\n[[channels]]\nname = "mirror"\nurl = "https://x/y.tgz"\nintegrity = "sha1-abc"\n`),
+    ).toContainEqual(expect.stringContaining("channels[0].integrity must be sha256-"));
+  });
+
+  it("rejects an uppercase channel name", () => {
+    expect(
+      problemsOf(`${VALID}\n[[channels]]\nname = "GitHub"\nurl = "https://x/y.tgz"\nintegrity = "sha256-${"0".repeat(64)}"\n`),
+    ).toContainEqual(expect.stringContaining("channels[0].name must be lowercase"));
+  });
+});
