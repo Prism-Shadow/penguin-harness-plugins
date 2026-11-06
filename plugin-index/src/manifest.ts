@@ -52,6 +52,12 @@ export interface Manifest {
   /** Source repository; required, because an unreadable plugin is not reviewable. */
   repository: string;
   homepage?: string;
+  /** The plugin's card name, as the package's own manifest declares it — what an
+   *  uninstalled plugin's card shows instead of the package name. Optional: an entry
+   *  without one falls back to the package name. */
+  title?: string;
+  /** The card name in Chinese, beside `title`. */
+  title_zh?: string;
   keywords?: string[];
   categories: string[];
   /** GitHub handles allowed to change this entry and to add entries under its name. */
@@ -88,6 +94,8 @@ const KNOWN_KEYS = new Set([
   "license",
   "repository",
   "homepage",
+  "title",
+  "title_zh",
   "keywords",
   "categories",
   "owners",
@@ -233,6 +241,16 @@ export function parseManifest(source: string, file: string): Manifest {
   if (raw.homepage !== undefined) {
     if (typeof raw.homepage !== "string" || !raw.homepage.startsWith("https://")) {
       problems.push(`"homepage" must be an https URL`);
+    }
+  }
+
+  for (const key of ["title", "title_zh"] as const) {
+    if (raw[key] !== undefined) {
+      if (typeof raw[key] !== "string" || (raw[key] as string).trim() === "") {
+        problems.push(`"${key}" must be a non-empty string`);
+      } else if ((raw[key] as string).length > MAX_DESCRIPTION_LENGTH) {
+        problems.push(`"${key}" is longer than ${MAX_DESCRIPTION_LENGTH} characters`);
+      }
     }
   }
 

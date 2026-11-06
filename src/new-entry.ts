@@ -78,6 +78,15 @@ try {
   const keywords = Array.isArray(pkg.keywords)
     ? pkg.keywords.filter((k): k is string => typeof k === "string")
     : [];
+  const penguin =
+    typeof pkg.penguin === "object" && pkg.penguin !== null
+      ? (pkg.penguin as Record<string, unknown>)
+      : {};
+  const title = typeof penguin.title === "string" && penguin.title.trim() !== "" ? penguin.title : undefined;
+  const titleZh =
+    typeof penguin.title_zh === "string" && penguin.title_zh.trim() !== ""
+      ? penguin.title_zh
+      : undefined;
   const manifest = {
     name,
     version,
@@ -86,6 +95,8 @@ try {
     license: typeof pkg.license === "string" ? pkg.license : "",
     ...(repository !== undefined ? { repository } : {}),
     ...(typeof pkg.homepage === "string" ? { homepage: pkg.homepage } : {}),
+    ...(title !== undefined ? { title } : {}),
+    ...(titleZh !== undefined ? { title_zh: titleZh } : {}),
     ...(keywords.length > 0 ? { keywords } : {}),
     categories: [],
     owners: [],

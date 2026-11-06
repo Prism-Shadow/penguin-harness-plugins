@@ -28,6 +28,8 @@ interface IndexEntry {
   license: string;
   repository?: string;
   homepage?: string;
+  title?: string;
+  title_zh?: string;
   keywords?: string[];
   categories?: string[];
   integrity: string;
@@ -66,6 +68,8 @@ for (const file of listManifestFiles(root)) {
     license: manifest.license,
     repository: manifest.repository,
     ...(manifest.homepage !== undefined ? { homepage: manifest.homepage } : {}),
+    ...(manifest.title !== undefined ? { title: manifest.title } : {}),
+    ...(manifest.title_zh !== undefined ? { title_zh: manifest.title_zh } : {}),
     ...(manifest.keywords !== undefined ? { keywords: manifest.keywords } : {}),
     categories: manifest.categories,
     integrity: manifest.integrity,
