@@ -17,7 +17,7 @@ export {
   hoistedDependencies,
   INTEGRITY,
   isPackageName,
-  KEY_LENGTH,
+  keylessEntryDir,
   LOCK_FILE,
   MANIFEST_FILE,
   nameDir,

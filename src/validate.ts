@@ -21,6 +21,8 @@ import {
   checkLock,
   LOCK_FILE,
   ManifestError,
+  PACKAGES_DIR,
+  parseEntryPath,
   parseManifest,
   type Manifest,
 } from "@prismshadow/penguin-plugin-index";
@@ -83,8 +85,35 @@ console.log(
 );
 for (const file of strayFiles(root)) {
   problems.push(
-    `${file}: not part of an entry. packages/ holds [<@scope>/]<bucket>/<name>/<version>/<key>/ directories with a manifest.toml — and a package-lock.json when the entry has an npm channel — nothing else.`,
+    `${file}: not part of an entry. packages/ holds [<@scope>/]<bucket>/<name>/<version>/ directories with a manifest.toml — <version>/<key>/ once several contents share the version — and a package-lock.json when the entry has an npm channel — nothing else.`,
   );
+}
+
+/**
+ * A keyless path claims its name and version have exactly one content, so it may not
+ * sit beside any other entry of the same name and version — the claim is what lets the
+ * store treat `…/<version>/` as the entry.
+ */
+{
+  const byNameVersion = new Map<string, { file: string; keyless: boolean }[]>();
+  for (const [file, manifest] of manifests) {
+    const entry = parseEntryPath(file.slice(PACKAGES_DIR.length + 1));
+    if (entry === null) continue;
+    const id = `${manifest.name}@${manifest.version}`;
+    const list = byNameVersion.get(id);
+    const item = { file, keyless: entry.key === undefined };
+    if (list === undefined) byNameVersion.set(id, [item]);
+    else list.push(item);
+  }
+  for (const [id, items] of byNameVersion) {
+    if (items.length < 2) continue;
+    for (const { file, keyless } of items) {
+      if (!keyless) continue;
+      problems.push(
+        `${file}: ${items.length} entries share "${id}" — a keyless entry (no <key> directory) claims to be the only content of its name and version; file it under a <key> directory or drop it.`,
+      );
+    }
+  }
 }
 
 /** The owners of a name at the base: everyone listed by any of its entries there. */

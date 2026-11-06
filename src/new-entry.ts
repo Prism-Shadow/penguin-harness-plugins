@@ -3,10 +3,10 @@
  *
  * Nobody computes an integrity by hand. This resolves the package's lock against the
  * registry, installs from it exactly as `pnpm check-npm` will (the shared package's one
- * install), archives and hashes what it produced, and writes
- * `packages/[<@scope>/]<bucket>/<name>/<version>/<key>/` with the lock and a manifest filled in from the
- * package's own package.json. `categories` and `owners` are left empty for the submitter
- * to fill: `pnpm validate` says so until they are.
+ * install), archives and hashes what it produced, and writes the entry's keyless
+ * directory `packages/[<@scope>/]<bucket>/<name>/<version>/` with the lock and a
+ * manifest filled in from the package's own package.json. `categories` and `owners` are
+ * left empty for the submitter to fill: `pnpm validate` says so until they are.
  *
  * Like the checks, it runs none of the package's code.
  */
@@ -15,9 +15,9 @@ import os from "node:os";
 import path from "node:path";
 import {
   archiveIntegrity,
-  entryDir,
   installFromLock,
   isPackageName,
+  keylessEntryDir,
   LOCK_FILE,
   MANIFEST_FILE,
   packageFiles,
@@ -93,7 +93,17 @@ try {
     channels: [{ kind: "npm" }],
   };
 
-  const dir = path.join(PACKAGES_DIR, ...entryDir(name, version, integrity).split("/"));
+  const dir = path.join(PACKAGES_DIR, ...keylessEntryDir(name, version).split("/"));
+  if (fs.existsSync(path.join(dir, MANIFEST_FILE))) {
+    console.error(`${dir}/${MANIFEST_FILE} already exists — ${name}@${version} is already entered`);
+    process.exit(1);
+  }
+  if (fs.existsSync(dir)) {
+    console.error(
+      `${dir} already holds keyed entries — several contents share ${name}@${version}, and a keyless entry may not sit beside them (pnpm validate would refuse it)`,
+    );
+    process.exit(1);
+  }
   fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(path.join(dir, MANIFEST_FILE), stringifyToml(manifest) + "\n");
   fs.writeFileSync(path.join(dir, LOCK_FILE), lock);

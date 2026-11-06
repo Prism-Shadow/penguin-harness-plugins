@@ -7,6 +7,7 @@ import {
   copyPackage,
   entryDir,
   entryKey,
+  keylessEntryDir,
   nameDir,
   packageFiles,
   packageIntegrity,
@@ -15,6 +16,9 @@ import {
 
 // sha512 of 64 bytes of 0xfe, in npm's base64 form; its digest starts fedcba98….
 const INTEGRITY = `sha512-${Buffer.from("fedcba9876543210".repeat(8), "hex").toString("base64")}`;
+// The same digest in base64url — the entry key: 86 characters, every one path-safe.
+const KEY =
+  "_ty6mHZUMhD-3LqYdlQyEP7cuph2VDIQ_ty6mHZUMhD-3LqYdlQyEP7cuph2VDIQ_ty6mHZUMhD-3LqYdlQyEA";
 
 const workDir = fs.mkdtempSync(path.join(os.tmpdir(), "entry-test-"));
 afterAll(() => fs.rmSync(workDir, { recursive: true, force: true }));
@@ -31,12 +35,11 @@ const pkg = (name: string, deps: Record<string, string> = {}) =>
   JSON.stringify({ name, version: "1.0.0", dependencies: deps });
 
 describe("entry paths", () => {
-  it("spell the bucket, the name, the version and the first 16 hex digits of the integrity", () => {
-    expect(entryKey(INTEGRITY)).toBe("fedcba9876543210");
+  it("spell the bucket, the name, the version and the integrity's base64url digest", () => {
+    expect(entryKey(INTEGRITY)).toBe(KEY);
     expect(entryKey("sha512-abc")).toBeNull();
-    expect(entryDir("@acme/widgets", "1.2.3", INTEGRITY)).toBe(
-      "@acme/wi/dg/widgets/1.2.3/fedcba9876543210",
-    );
+    expect(entryDir("@acme/widgets", "1.2.3", INTEGRITY)).toBe(`@acme/wi/dg/widgets/1.2.3/${KEY}`);
+    expect(keylessEntryDir("@acme/widgets", "1.2.3")).toBe("@acme/wi/dg/widgets/1.2.3");
     expect(() => entryDir("solo", "1.0.0", "sha512-XYZ")).toThrow("not an npm integrity");
   });
 
@@ -58,22 +61,29 @@ describe("entry paths", () => {
     expect(bucketOf("@penguinharness/sandbox-bwrap")).toEqual(["sa", "nd"]);
   });
 
-  it("read back, scoped or not, in a bucket of one level or two", () => {
-    expect(parseEntryPath("@acme/wi/dg/widgets/1.2.3/fedcba9876543210/manifest.toml")).toEqual({
+  it("read back, scoped or not, in a bucket of one level or two, keyed or not", () => {
+    expect(parseEntryPath(`@acme/wi/dg/widgets/1.2.3/${KEY}/manifest.toml`)).toEqual({
       name: "@acme/widgets",
       bucket: ["wi", "dg"],
       version: "1.2.3",
-      key: "fedcba9876543210",
+      key: KEY,
       file: "manifest.toml",
     });
-    expect(parseEntryPath("2/fs/0.1.0/fedcba9876543210/package/dist/a.js")).toEqual({
+    expect(parseEntryPath(`2/fs/0.1.0/${KEY}/package/dist/a.js`)).toEqual({
       name: "fs",
       bucket: ["2"],
       version: "0.1.0",
-      key: "fedcba9876543210",
+      key: KEY,
       file: "package/dist/a.js",
     });
-    expect(parseEntryPath("so/lo/solo/0.1.0/manifest.toml")).toBeNull();
+    // One file segment after the version: a keyless entry.
+    expect(parseEntryPath("so/lo/solo/0.1.0/manifest.toml")).toEqual({
+      name: "solo",
+      bucket: ["so", "lo"],
+      version: "0.1.0",
+      file: "manifest.toml",
+    });
+    expect(parseEntryPath("so/lo/solo/0.1.0")).toBeNull();
   });
 });
 

@@ -77,14 +77,21 @@ export function strayFiles(root: string): string[] {
   });
 }
 
-/** An entry's directory (`packages/…/<name>/<version>/<key>`, as filed) for a file in it, or null. */
+/** An entry's directory (`packages/…/<name>/<version>/[<key>]`, as filed) for a file in it, or null. */
 export function entryDirOf(file: string): string | null {
   if (!file.startsWith(`${PACKAGES_DIR}/`)) return null;
   const entry = parseEntryPath(file.slice(PACKAGES_DIR.length + 1));
   if (entry === null) return null;
   const scope = entry.name.startsWith("@") ? [entry.name.split("/")[0]!] : [];
   const bare = entry.name.split("/").pop()!;
-  return [PACKAGES_DIR, ...scope, ...entry.bucket, bare, entry.version, entry.key].join("/");
+  return [
+    PACKAGES_DIR,
+    ...scope,
+    ...entry.bucket,
+    bare,
+    entry.version,
+    ...(entry.key !== undefined ? [entry.key] : []),
+  ].join("/");
 }
 
 /**
@@ -107,7 +114,7 @@ export type ChangeStatus = "added" | "modified" | "deleted" | "renamed";
 /** A change to one entry, named by its manifest's path. */
 export interface EntryChange {
   status: ChangeStatus;
-  /** The entry's manifest: `packages/…/<name>/<version>/<key>/manifest.toml`. */
+  /** The entry's manifest: `packages/…/<name>/<version>/[<key>]/manifest.toml`. */
   file: string;
   /** Only set for renames: where the manifest used to live. */
   from?: string;

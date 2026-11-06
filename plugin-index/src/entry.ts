@@ -4,7 +4,13 @@
  * The index repository's `packages/` subtree and a machine's plugin store
  * (`<data root>/plugin-store/packages/`) have one shape. An entry lives at
  *
- *   [<@scope>/]<bucket>/<name>/<version>/<first 16 hex digits of its integrity>/
+ *   [<@scope>/]<bucket>/<name>/<version>/
+ *
+ * — or [<@scope>/]<bucket>/<name>/<version>/<key>/ once more than one content shares
+ * that name and version. The keyless form is the ordinary one: a version has one
+ * content. The keyed form exists so a store can hold an older content beside a fresh
+ * one while it hot-updates; the key is the integrity's digest in base64url (`+` as `-`,
+ * `/` as `_`, no padding), 86 characters and path-safe, so the contents cannot collide.
  *
  * The bucket keeps every directory narrow however many plugins there are. It is read off
  * the name without its scope, lower-cased, the way the crates.io index files a crate: a
@@ -19,8 +25,8 @@
  * the repository ignores those two, so the repository is a store without package data and
  * a store is a checkout of it with the data filled in.
  *
- * The path spells the entry: its bucket, its name, its version and its content. Two versions
- * of one name, or two contents of one version, are two entries.
+ * The path spells the entry: its bucket, its name, its version and — keyed — its
+ * content. Two versions of one name, or two contents of one version, are two entries.
  */
 import fs from "node:fs";
 import fsp from "node:fs/promises";
@@ -34,8 +40,6 @@ export const STORED_FILE = ".stored";
 
 /** npm's integrity format: `sha512-` followed by the digest's base64 (88 chars, ending `==`). */
 export const INTEGRITY = /^sha512-([A-Za-z0-9+/]{86}==)$/;
-/** How many hex digits of the integrity name an entry's directory. */
-export const KEY_LENGTH = 16;
 
 const SCOPED_NAME = /^@[a-z0-9][a-z0-9-._]*\/[a-z0-9][a-z0-9-._]*$/;
 const PLAIN_NAME = /^[a-z0-9][a-z0-9-._]*$/;
@@ -46,11 +50,14 @@ export function isPackageName(name: string): boolean {
   return name.startsWith("@") ? SCOPED_NAME.test(name) : PLAIN_NAME.test(name);
 }
 
-/** The directory key of an integrity: the first 16 hex digits of its sha512 digest. */
+/**
+ * A keyed entry's directory key: the integrity's digest in base64url — `+` as `-`, `/`
+ * as `_`, no padding (86 characters, every one of them path-safe).
+ */
 export function entryKey(integrity: string): string | null {
   const match = INTEGRITY.exec(integrity);
   if (match === null) return null;
-  return Buffer.from(match[1]!, "base64").toString("hex").slice(0, KEY_LENGTH);
+  return Buffer.from(match[1]!, "base64").toString("base64url");
 }
 
 /** The bucket directories of a package name, as path segments (see the header). */
@@ -68,11 +75,20 @@ export function nameDir(name: string): string {
   return [...scope, ...bucketOf(name), parts[parts.length - 1]!].join("/");
 }
 
-/** An entry's directory, relative to the tree root: `<name's directory>/<version>/<key>`. */
+/**
+ * A keyed entry's directory, relative to the tree root:
+ * `<name's directory>/<version>/<key>`. Keyed is the form for several contents of one
+ * name and version; the ordinary entry has no key — see `keylessEntryDir`.
+ */
 export function entryDir(name: string, version: string, integrity: string): string {
   const key = entryKey(integrity);
   if (key === null) throw new Error(`'${integrity}' is not an npm integrity`);
   return `${nameDir(name)}/${version}/${key}`;
+}
+
+/** The ordinary entry's directory, relative to the tree root: `<name's directory>/<version>`. */
+export function keylessEntryDir(name: string, version: string): string {
+  return `${nameDir(name)}/${version}`;
 }
 
 /** Where an entry's parts sit, as read off a path relative to the tree root. */
@@ -81,17 +97,19 @@ export interface EntryPath {
   /** The bucket directories the path files the name under, as written. */
   bucket: string[];
   version: string;
-  key: string;
+  /** The content key; absent on a keyless entry — the only content of its name and version. */
+  key?: string;
   /** The path inside the entry: `manifest.toml`, `package-lock.json`, `package/…`. */
   file: string;
 }
 
 /**
- * Reads `[<@scope>/]<bucket>/<name>/<version>/<key>/<file…>` (posix, relative to the tree
- * root). The bucket is one directory when it is `1` or `2` and two otherwise. Null when
- * the path is too short to name an entry and a file in it. The segments are not validated
- * here — that is the manifest check's job, which reports what is wrong, a bucket the name
- * does not spell included.
+ * Reads `[<@scope>/]<bucket>/<name>/<version>/[<key>/]<file>` (posix, relative to the
+ * tree root). The bucket is one directory when it is `1` or `2` and two otherwise. One
+ * file segment after the version is a keyless entry; a longer tail names a keyed one.
+ * Null when the path is too short to name an entry and a file in it. The segments are
+ * not validated here — that is the manifest check's job, which reports what is wrong, a
+ * bucket the name does not spell included.
  */
 export function parseEntryPath(rel: string): EntryPath | null {
   const parts = rel.split("/");
@@ -100,14 +118,14 @@ export function parseEntryPath(rel: string): EntryPath | null {
   if (first === undefined) return null;
   const bucketParts = first === "1" || first === "2" ? 1 : 2;
   const at = scope.length + bucketParts;
-  if (parts.length < at + 4) return null;
-  return {
+  if (parts.length < at + 3) return null;
+  const shared = {
     name: [...scope, parts[at]!].join("/"),
     bucket: parts.slice(scope.length, at),
     version: parts[at + 1]!,
-    key: parts[at + 2]!,
-    file: parts.slice(at + 3).join("/"),
   };
+  if (parts.length === at + 3) return { ...shared, file: parts[at + 2]! };
+  return { ...shared, key: parts[at + 2]!, file: parts.slice(at + 3).join("/") };
 }
 
 interface PackageJson {

@@ -1,12 +1,14 @@
 /**
  * An entry's `manifest.toml`, and the only thing that decides whether one is well-formed.
  *
- * The manifest sits at `packages/[<@scope>/]<bucket>/<name>/<version>/<key>/manifest.toml`,
- * and the path is checked four ways: it spells the package's name, the bucket that name
- * files under (see the entry module), its version, and the first 16 hex digits of its
- * `integrity`. So a new version is a new directory, a new content of one
- * version is another directory beside it, and nothing about an entry can change without
- * the change showing up as a move.
+ * The manifest sits at `packages/[<@scope>/]<bucket>/<name>/<version>/manifest.toml`,
+ * and the path is checked three ways: it spells the package's name, the bucket that name
+ * files under (see the entry module), and its version. On the keyed form
+ * (`…/<version>/<key>/manifest.toml`, for more than one content of one name and
+ * version) the key is checked too: it must be the `integrity`'s digest in base64url. So
+ * a new version is a new directory, a new content of one version is another directory
+ * beside it, and nothing about an entry can change without the change showing up as a
+ * move.
  *
  * Validation collects every problem before throwing, because a contributor should see
  * the whole list once instead of discovering it one CI run at a time.
@@ -16,10 +18,10 @@ import semver from "semver";
 import { checkAuthor } from "./author.js";
 import {
   bucketOf,
-  entryDir,
   entryKey,
   INTEGRITY,
   isPackageName,
+  keylessEntryDir,
   MANIFEST_FILE,
   nameDir,
   parseEntryPath,
@@ -58,8 +60,8 @@ export interface Manifest {
   yanked?: boolean;
   yankedReason?: string;
   /** npm's own integrity (`sha512-<base64>`, the registry's `dist.integrity`) of the one
-   *  tarball the entry's channels serve — and the path's key. The release pipeline packs
-   *  what npm publishes, so every channel can serve the very same bytes. */
+   *  tarball the entry's channels serve — and, on a keyed path, the key. The release
+   *  pipeline packs what npm publishes, so every channel can serve the very same bytes. */
   integrity: string;
   /**
    * Where the package can be installed from, each serving that one tarball. npm is a
@@ -109,9 +111,9 @@ export class ManifestError extends Error {
   }
 }
 
-/** `@scope/widgets`, `1.2.3`, `sha256-…` ⇒ `packages/@scope/wi/dg/widgets/1.2.3/<key>/manifest.toml`. */
-export function manifestPathFor(name: string, version: string, integrity: string): string {
-  return `${PACKAGES_DIR}/${entryDir(name, version, integrity)}/${MANIFEST_FILE}`;
+/** `@scope/widgets`, `1.2.3` ⇒ `packages/@scope/wi/dg/widgets/1.2.3/manifest.toml`. */
+export function manifestPathFor(name: string, version: string): string {
+  return `${PACKAGES_DIR}/${keylessEntryDir(name, version)}/${MANIFEST_FILE}`;
 }
 
 function asStringArray(value: unknown): string[] | null {
@@ -171,18 +173,24 @@ export function parseManifest(source: string, file: string): Manifest {
           : `a manifest for "${name}" must live under ${under}`,
       );
     } else {
-      const [dirVersion, dirKey, leaf, ...rest] = posix.slice(under.length).split("/");
-      if (leaf !== MANIFEST_FILE || rest.length > 0) {
-        problems.push(`a manifest must be ${under}<version>/<key>/${MANIFEST_FILE}`);
+      const segments = posix.slice(under.length).split("/");
+      const keyless = segments.length === 2;
+      const [dirVersion, dirKey, leaf, ...rest] = segments;
+      if ((keyless ? dirKey : leaf) !== MANIFEST_FILE || (!keyless && rest.length > 0)) {
+        problems.push(
+          `a manifest must be ${under}<version>/${MANIFEST_FILE} or ${under}<version>/<key>/${MANIFEST_FILE}`,
+        );
       } else {
         if (version !== null && dirVersion !== version) {
           problems.push(`the path says version ${dirVersion}, the manifest says ${version}`);
         }
-        const key = integrity === null ? null : entryKey(integrity);
-        if (key !== null && dirKey !== key) {
-          problems.push(
-            `the path's key ${dirKey} is not the first 16 hex digits of "integrity" (${key})`,
-          );
+        if (!keyless) {
+          const key = integrity === null ? null : entryKey(integrity);
+          if (key !== null && dirKey !== key) {
+            problems.push(
+              `the path's key ${dirKey} is not "integrity"'s digest in base64url (${key})`,
+            );
+          }
         }
       }
     }

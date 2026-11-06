@@ -23,19 +23,22 @@ with scripts disabled and read them; they never import them.
 ## Layout
 
 ```
-packages/<entry>/manifest.toml       one entry; the path is the bucket, the name,
-packages/<entry>/package-lock.json   the version and the content's hash
+packages/<entry>/manifest.toml       one entry; the path is the bucket, the name and
+packages/<entry>/package-lock.json   the version — plus a content key when several
+                                     contents share the version
 plugin-index/                        the entry format as code, shared with the harness
 src/                                 the checks and the index builder
 docs/                                the submission rules in prose
 ```
 
-`<entry>` is `[<@scope>/]<bucket>/<name>/<version>/<key>`. The bucket keeps every
+`<entry>` is `[<@scope>/]<bucket>/<name>/<version>` — or
+`[<@scope>/]<bucket>/<name>/<version>/<key>` once more than one content shares the name
+and version, the key being the content hash's base64url. The bucket keeps every
 directory narrow however many plugins are listed: it is read off the name without its
 scope, the way the crates.io index files a crate — `1` or `2` for a name of that length,
 `3/<first character>` for three characters, `<characters 1–2>/<characters 3–4>`
 otherwise. `@penguinharness/sandbox-bwrap` 0.2.2 is under
-`packages/@penguinharness/sa/nd/sandbox-bwrap/0.2.2/<key>/`.
+`packages/@penguinharness/sa/nd/sandbox-bwrap/0.2.2/`.
 
 `packages/` has the shape of a PenguinHarness machine's plugin store, whose entries add
 the installed `package/` and a `.stored` marker beside the same two files. This

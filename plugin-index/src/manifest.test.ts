@@ -3,6 +3,9 @@ import { ManifestError, manifestPathFor, parseManifest } from "./manifest.js";
 
 // sha512 of 64 bytes of 0x01, npm base64 form; digest starts 0101….
 const INTEGRITY = `sha512-${Buffer.from("01".repeat(64), "hex").toString("base64")}`;
+// The same digest in base64url — the entry key on a keyed path.
+const KEY =
+  "AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQ";
 
 const FIELDS = `
 name = "@acme/widgets"
@@ -24,7 +27,8 @@ kind = "npm"
 
 const VALID = FIELDS + CHANNELS;
 
-const FILE = "packages/@acme/wi/dg/widgets/1.2.3/0101010101010101/manifest.toml";
+const FILE = "packages/@acme/wi/dg/widgets/1.2.3/manifest.toml";
+const KEYED_FILE = `packages/@acme/wi/dg/widgets/1.2.3/${KEY}/manifest.toml`;
 
 function problemsOf(source: string, file = FILE): string[] {
   try {
@@ -46,33 +50,47 @@ describe("parseManifest", () => {
   });
 
   it("requires the path to spell the name", () => {
-    expect(
-      problemsOf(VALID, "packages/wi/dg/widgets/1.2.3/0123456789abcdef/manifest.toml"),
-    ).toContainEqual(expect.stringContaining("must live under packages/@acme/wi/dg/widgets/"));
+    expect(problemsOf(VALID, `packages/wi/dg/widgets/1.2.3/${KEY}/manifest.toml`)).toContainEqual(
+      expect.stringContaining("must live under packages/@acme/wi/dg/widgets/"),
+    );
   });
 
   it("requires the path to spell the bucket", () => {
-    expect(
-      problemsOf(VALID, "packages/@acme/zz/zz/widgets/1.2.3/0123456789abcdef/manifest.toml"),
-    ).toEqual([expect.stringContaining("under bucket zz/zz, its name spells wi/dg")]);
+    expect(problemsOf(VALID, `packages/@acme/zz/zz/widgets/1.2.3/${KEY}/manifest.toml`)).toEqual([
+      expect.stringContaining("under bucket zz/zz, its name spells wi/dg"),
+    ]);
   });
 
   it("requires the path to spell the version", () => {
-    expect(
-      problemsOf(VALID, "packages/@acme/wi/dg/widgets/1.2.4/0101010101010101/manifest.toml"),
-    ).toEqual([expect.stringContaining("the path says version 1.2.4, the manifest says 1.2.3")]);
+    expect(problemsOf(VALID, `packages/@acme/wi/dg/widgets/1.2.4/${KEY}/manifest.toml`)).toEqual([
+      expect.stringContaining("the path says version 1.2.4, the manifest says 1.2.3"),
+    ]);
+    expect(problemsOf(VALID, "packages/@acme/wi/dg/widgets/1.2.4/manifest.toml")).toEqual([
+      expect.stringContaining("the path says version 1.2.4, the manifest says 1.2.3"),
+    ]);
   });
 
-  it("requires the path to spell the first 16 hex digits of the integrity", () => {
-    expect(
-      problemsOf(VALID, "packages/@acme/wi/dg/widgets/1.2.3/0123456789abcdee/manifest.toml"),
-    ).toEqual([expect.stringContaining("is not the first 16 hex digits")]);
+  it("requires a keyed path's key to spell the integrity", () => {
+    const wrong = KEY.slice(0, -1) + "B";
+    expect(problemsOf(VALID, `packages/@acme/wi/dg/widgets/1.2.3/${wrong}/manifest.toml`)).toEqual([
+      expect.stringContaining(`is not "integrity"'s digest in base64url (${KEY})`),
+    ]);
+    expect(problemsOf(VALID, KEYED_FILE)).toEqual([]);
   });
 
-  it("requires an entry directory between the version and the manifest", () => {
-    expect(problemsOf(VALID, "packages/@acme/wi/dg/widgets/1.2.3/manifest.toml")).toContainEqual(
-      expect.stringContaining("must be packages/@acme/wi/dg/widgets/<version>/<key>/manifest.toml"),
+  it("accepts a keyless path — the ordinary entry has no key segment", () => {
+    expect(problemsOf(VALID)).toEqual([]);
+  });
+
+  it("requires the manifest directly in the version directory, or one key below it", () => {
+    expect(problemsOf(VALID, "packages/@acme/wi/dg/widgets/1.2.3")).toContainEqual(
+      expect.stringContaining(
+        "must be packages/@acme/wi/dg/widgets/<version>/manifest.toml or packages/@acme/wi/dg/widgets/<version>/<key>/manifest.toml",
+      ),
     );
+    expect(
+      problemsOf(VALID, `packages/@acme/wi/dg/widgets/1.2.3/${KEY}/manifest.toml/extra`),
+    ).toContainEqual(expect.stringContaining("or packages/@acme/wi/dg/widgets/<version>/<key>/"));
   });
 
   it("requires a well-formed integrity", () => {
@@ -123,10 +141,8 @@ surprise = 1
   });
 
   it("names the one place an entry's manifest may live", () => {
-    expect(manifestPathFor("@acme/widgets", "1.2.3", INTEGRITY)).toBe(FILE);
-    expect(manifestPathFor("solo", "0.1.0", INTEGRITY)).toBe(
-      "packages/so/lo/solo/0.1.0/0101010101010101/manifest.toml",
-    );
+    expect(manifestPathFor("@acme/widgets", "1.2.3")).toBe(FILE);
+    expect(manifestPathFor("solo", "0.1.0")).toBe("packages/so/lo/solo/0.1.0/manifest.toml");
   });
 });
 

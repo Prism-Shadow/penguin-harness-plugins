@@ -9,8 +9,12 @@ Facts that outlive a single session, for anyone (human or agent) working here.
   `dist.integrity`. There is no second, channel-level integrity: a `[[channels]]` table
   may only carry `kind` and `url` (`url` absent for `npm`), and the tooling rejects a
   channel `integrity` outright.
-- An entry's directory key is the first 16 hex digits of that digest — of the _decoded_
-  digest, not of the base64 text.
+- An entry's directory key is that digest in base64url — `+` as `-`, `/` as `_`, no
+  padding: 86 characters, every one of them path-safe. The ordinary entry is keyless
+  (`…/<version>/manifest.toml`, no key segment): it claims its name and version have
+  exactly one content, and validation refuses a keyless entry beside any other entry of
+  the same name and version. The keyed form exists for a store holding an older content
+  beside a fresh one while it hot-updates.
 - Every channel must serve byte-identical tarballs. A GitHub-release channel publishes
   the same bytes `npm pack` produces; CI hashes what each URL serves against the one
   `integrity`. There is no archive-vs-lock content comparison anywhere: the lock (npm
@@ -19,9 +23,11 @@ Facts that outlive a single session, for anyone (human or agent) working here.
 ## The path rules are shared with another repository
 
 `plugin-index/src/entry.ts` computes `packages/…` paths by the same rule as
-PenguinHarness's `scripts/plugin-entry.mjs`, and the two share test vectors across
-repositories. Changing the hash format, the key length or the bucket rule here breaks
-the harness's plugin store unless the same change lands there at the same time.
+PenguinHarness's plugin store (`scripts/plugin-entry.mjs`), and the two share test
+vectors across repositories. Changing the hash format, the key encoding or the bucket
+rule here breaks the harness's plugin store unless the same change lands there at the
+same time. The base64url key and the keyless entry shape are newer here than there;
+syncing the harness's copy is pending on the harness side.
 
 ## How CI judges a submission
 

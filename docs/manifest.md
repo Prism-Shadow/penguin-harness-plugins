@@ -3,22 +3,28 @@
 An entry is one package at one version with one content. It is a directory:
 
 ```
-packages/[<@scope>/]<bucket>/<name>/<version>/<first 16 hex digits of integrity>/
+packages/[<@scope>/]<bucket>/<name>/<version>/
   manifest.toml
   package-lock.json
 ```
+
+— or `packages/[<@scope>/]<bucket>/<name>/<version>/<key>/` once more than one content
+shares the name and version. The keyless form is the ordinary one: a version has one
+content, and validation refuses a keyless entry beside any other entry of the same name
+and version. The keyed form exists for a store holding an older content beside a fresh
+one while it hot-updates; the key is the `integrity`'s digest in base64url.
 
 The bucket is read off the name without its scope, lower-cased: `1` or `2` for a name of
 that length, `3/<first character>` for three characters, and `<characters 1–2>/<characters
 3–4>` otherwise (the crates.io index's rule). It keeps every directory narrow however
 many plugins are listed.
 
-The path is not a convention the tooling tolerates — it is checked four ways. It
-spells the package's `name` (`@acme/widgets` lives under `packages/@acme/wi/dg/widgets/`
-and nowhere else), the bucket that name files under, its `version`, and the first 16 hex
-digits of its `integrity`'s digest. So a new
-version is a new directory, a new content of one version is another directory beside
-it, and nothing about a listed entry can change without showing up as a move.
+The path is not a convention the tooling tolerates — it is checked. It spells the
+package's `name` (`@acme/widgets` lives under `packages/@acme/wi/dg/widgets/` and
+nowhere else), the bucket that name files under, and its `version` — plus, on a keyed
+path, the base64url of the `integrity`'s digest. So a new version is a new directory, a
+new content of one version is another directory beside it, and nothing about a listed
+entry can change without showing up as a move.
 
 The tree has the shape of a PenguinHarness machine's plugin store. A store keeps the
 same two files and adds `package/` (the installed package) and `.stored` beside them;
@@ -30,22 +36,22 @@ silently ignore. Nothing else may live under `packages/`.
 
 ## Fields
 
-| Key             | Required      | Rule                                                                                                                                                                                                   |
-| --------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `name`          | yes           | The npm specifier, matching the path. Any valid npm package name, scoped or not.                                                                                                                       |
-| `version`       | yes           | An exact semantic version — never a range — matching the path. Must be published on npm.                                                                                                               |
-| `integrity`     | yes           | npm's content hash: `sha512-` followed by 86 base64 characters — the same value the registry reports as `dist.integrity` (see below). The first 16 hex digits of its digest are the entry's directory. |
-| `description`   | yes           | One line, at most 1000 characters, identical to the published package's `description`.                                                                                                                 |
-| `authors`       | yes           | Non-empty. See the format below.                                                                                                                                                                       |
-| `license`       | yes           | An [allowed](licensing.md) SPDX expression, identical to the published package's `license`.                                                                                                            |
-| `repository`    | yes           | `https://` URL of the source repository. Must agree with the published package's `repository`.                                                                                                         |
-| `homepage`      | no            | `https://` URL.                                                                                                                                                                                        |
-| `keywords`      | no            | At most 5, lowercase, alphanumeric with hyphens, at most 20 characters each. Use them for the target platforms (`linux`, `macos`, `windows`) and for search terms.                                     |
-| `categories`    | yes           | 1–3 values from the [category list](categories.md).                                                                                                                                                    |
-| `owners`        | yes           | GitHub handles allowed to change this entry and to add entries under its name.                                                                                                                         |
-| `channels`      | yes           | Where the package can be installed from, npm being one possible kind — see [Channels](#channels) below.                                                                                                |
-| `yanked`        | no            | `true` removes the entry from the published index. Requires `yanked_reason`.                                                                                                                           |
-| `yanked_reason` | with `yanked` | Why the entry was pulled.                                                                                                                                                                              |
+| Key             | Required      | Rule                                                                                                                                                                                                                                                       |
+| --------------- | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `name`          | yes           | The npm specifier, matching the path. Any valid npm package name, scoped or not.                                                                                                                                                                           |
+| `version`       | yes           | An exact semantic version — never a range — matching the path. Must be published on npm.                                                                                                                                                                   |
+| `integrity`     | yes           | npm's content hash: `sha512-` followed by 86 base64 characters — the same value the registry reports as `dist.integrity` (see below). Its digest in base64url is the entry directory's key, present only when several contents share the name and version. |
+| `description`   | yes           | One line, at most 1000 characters, identical to the published package's `description`.                                                                                                                                                                     |
+| `authors`       | yes           | Non-empty. See the format below.                                                                                                                                                                                                                           |
+| `license`       | yes           | An [allowed](licensing.md) SPDX expression, identical to the published package's `license`.                                                                                                                                                                |
+| `repository`    | yes           | `https://` URL of the source repository. Must agree with the published package's `repository`.                                                                                                                                                             |
+| `homepage`      | no            | `https://` URL.                                                                                                                                                                                                                                            |
+| `keywords`      | no            | At most 5, lowercase, alphanumeric with hyphens, at most 20 characters each. Use them for the target platforms (`linux`, `macos`, `windows`) and for search terms.                                                                                         |
+| `categories`    | yes           | 1–3 values from the [category list](categories.md).                                                                                                                                                                                                        |
+| `owners`        | yes           | GitHub handles allowed to change this entry and to add entries under its name.                                                                                                                                                                             |
+| `channels`      | yes           | Where the package can be installed from, npm being one possible kind — see [Channels](#channels) below.                                                                                                                                                    |
+| `yanked`        | no            | `true` removes the entry from the published index. Requires `yanked_reason`.                                                                                                                                                                               |
+| `yanked_reason` | with `yanked` | Why the entry was pulled.                                                                                                                                                                                                                                  |
 
 ## Channels
 
@@ -91,8 +97,9 @@ against the lock's own hashes. `pnpm new-entry` writes it; you do not.
 86 base64 characters, the value the registry reports as `dist.integrity` for that
 version. It pins the package's tarball bytes, and every channel must serve a tarball
 that hashes to exactly it — for a GitHub release channel that means publishing the same
-bytes `npm pack` produces. An entry's directory is the first 16 hex digits of that
-digest.
+bytes `npm pack` produces. An entry's directory carries that digest in base64url
+(`+` as `-`, `/` as `_`, no padding) as its key — but only when more than one content
+shares the name and version; the ordinary entry has no key segment at all.
 
 The install, the hash and the checks live in one small package,
 `@prismshadow/penguin-plugin-index`, which this repository's checks and the harness's
