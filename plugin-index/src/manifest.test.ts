@@ -130,22 +130,22 @@ surprise = 1
 
   it("takes an optional card title in either language", () => {
     const titled = parseManifest(
-      VALID + `title = "Widget Language Support"\ntitle_zh = "组件语言支持"\n`,
+      FIELDS + `title = "Widget Language Support"\ntitle_zh = "组件语言支持"\n` + CHANNELS,
       FILE,
     );
     expect(titled.title).toBe("Widget Language Support");
     expect(titled.title_zh).toBe("组件语言支持");
     expect(problemsOf(VALID)).toEqual([]);
-    expect(problemsOf(VALID + `title = ""\n`)).toContainEqual(
+    expect(problemsOf(FIELDS + `title = ""\n` + CHANNELS)).toContainEqual(
       expect.stringContaining('"title" must be a non-empty string'),
     );
-    expect(problemsOf(VALID + `title_zh = "   "\n`)).toContainEqual(
+    expect(problemsOf(FIELDS + `title_zh = "   "\n` + CHANNELS)).toContainEqual(
       expect.stringContaining('"title_zh" must be a non-empty string'),
     );
-    expect(problemsOf(VALID + `title = 3\n`)).toContainEqual(
+    expect(problemsOf(FIELDS + `title = 3\n` + CHANNELS)).toContainEqual(
       expect.stringContaining('"title" must be a non-empty string'),
     );
-    expect(problemsOf(VALID + `title = "${"x".repeat(1001)}"\n`)).toContainEqual(
+    expect(problemsOf(FIELDS + `title = "${"x".repeat(1001)}"\n` + CHANNELS)).toContainEqual(
       expect.stringContaining('"title" is longer than 1000 characters'),
     );
   });
