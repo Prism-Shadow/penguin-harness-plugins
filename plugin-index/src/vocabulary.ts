@@ -9,17 +9,18 @@
  */
 
 /**
- * Capability floors a plugin can provide on. These mirror the harness's own capability
- * stack (terminal → sandbox → tool → workflow); `integration` and `utility` are the
- * escape hatches for plugins that sit beside the stack rather than on one of its floors.
+ * The plugin page groups by audience, and this list mirrors the harness's own
+ * `PLUGIN_CATEGORIES` one for one — same ids, same order, same intent. The two lists
+ * must stay in sync: a category the index accepts but the page does not know lands the
+ * plugin in Other, and one the page knows but the index rejects is unlistable. Widening
+ * either is a pull request against both files at once.
  */
 export const CATEGORIES = [
+  "rsi",
+  "office-productivity",
+  "software-development",
+  "ai-app-development",
   "sandbox",
-  "tool",
-  "workflow",
-  "terminal",
-  "integration",
-  "utility",
 ] as const;
 
 /** A plugin declares at least one and at most this many categories. */

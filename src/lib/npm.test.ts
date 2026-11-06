@@ -64,7 +64,7 @@ beforeAll(async () => {
     authors: ["Ada <@ada>"],
     license: "MIT",
     repository: "https://github.com/acme/widgets",
-    categories: ["tool"],
+    categories: ["software-development"],
     owners: ["ada"],
     integrity: `sha512-${Buffer.from("ab".repeat(64), "hex").toString("base64")}`,
     channels: [{ kind: "npm" }],

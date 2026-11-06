@@ -6,7 +6,7 @@ license = "MIT"
 repository = "https://github.com/Prism-Shadow/penguin-harness-languages"
 homepage = "https://github.com/Prism-Shadow/penguin-harness-languages/tree/main/plugins/language-swift"
 keywords = ["syntax-highlighting", "swift"]
-categories = ["tool"]
+categories = ["software-development"]
 owners = ["Myriad-Dreamin"]
 integrity = "sha512-HyRCadQlPb9XBdg4E3eY6TzIGcrTs3GbW7VNEEbBvHVDIlSIJb6Vw6LCvP1fUT85pR7P2Z3X7GLGsJJJzrU46g=="
 

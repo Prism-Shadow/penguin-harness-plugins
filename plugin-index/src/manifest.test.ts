@@ -12,7 +12,7 @@ authors = ["Ada <@ada>"]
 license = "MIT"
 repository = "https://github.com/acme/widgets"
 keywords = ["widgets", "linux"]
-categories = ["tool"]
+categories = ["software-development"]
 owners = ["ada"]
 integrity = "${INTEGRITY}"
 `;
@@ -40,7 +40,7 @@ describe("parseManifest", () => {
   it("accepts a complete manifest", () => {
     const manifest = parseManifest(VALID, FILE);
     expect(manifest.name).toBe("@acme/widgets");
-    expect(manifest.categories).toEqual(["tool"]);
+    expect(manifest.categories).toEqual(["software-development"]);
     expect(manifest.integrity).toBe(INTEGRITY);
     expect(manifest.yanked).toBeUndefined();
   });
@@ -90,7 +90,7 @@ description = ""
 authors = ["Ada <not-an-email>"]
 license = "Commercial"
 repository = "http://example.com"
-categories = ["nonsense", "tool", "tool"]
+categories = ["nonsense", "software-development", "software-development"]
 owners = []
 integrity = "${INTEGRITY}"
 surprise = 1

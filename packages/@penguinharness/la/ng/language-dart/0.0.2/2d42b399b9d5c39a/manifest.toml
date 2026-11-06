@@ -6,7 +6,7 @@ license = "MIT"
 repository = "https://github.com/Prism-Shadow/penguin-harness-languages"
 homepage = "https://github.com/Prism-Shadow/penguin-harness-languages/tree/main/plugins/language-dart"
 keywords = ["syntax-highlighting", "dart"]
-categories = ["tool"]
+categories = ["software-development"]
 owners = ["Myriad-Dreamin"]
 integrity = "sha512-LUKzmbnVw5rUmt1XSl6Cgu26dB3a78OL8++ZKK+qEVIqlKyX+pDTs2U+fm4ggs1wQAXoPfws5Er7SjZbQTNL8w=="
 
