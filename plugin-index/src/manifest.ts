@@ -392,6 +392,8 @@ export function parseManifest(source: string, file: string): Manifest {
     license: license as string,
     repository: repository as string,
     ...(typeof raw.homepage === "string" ? { homepage: raw.homepage } : {}),
+    ...(typeof raw.title === "string" ? { title: raw.title } : {}),
+    ...(typeof raw.title_zh === "string" ? { title_zh: raw.title_zh } : {}),
     ...(keywords !== undefined ? { keywords } : {}),
     categories: categories as string[],
     owners: owners as string[],

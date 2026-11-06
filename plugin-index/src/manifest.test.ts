@@ -129,7 +129,10 @@ surprise = 1
   });
 
   it("takes an optional card title in either language", () => {
-    const titled = parseManifest(VALID + `title = "Widget Language Support"\ntitle_zh = "组件语言支持"\n`, FILE);
+    const titled = parseManifest(
+      VALID + `title = "Widget Language Support"\ntitle_zh = "组件语言支持"\n`,
+      FILE,
+    );
     expect(titled.title).toBe("Widget Language Support");
     expect(titled.title_zh).toBe("组件语言支持");
     expect(problemsOf(VALID)).toEqual([]);

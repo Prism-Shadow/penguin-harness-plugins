@@ -82,7 +82,8 @@ try {
     typeof pkg.penguin === "object" && pkg.penguin !== null
       ? (pkg.penguin as Record<string, unknown>)
       : {};
-  const title = typeof penguin.title === "string" && penguin.title.trim() !== "" ? penguin.title : undefined;
+  const title =
+    typeof penguin.title === "string" && penguin.title.trim() !== "" ? penguin.title : undefined;
   const titleZh =
     typeof penguin.title_zh === "string" && penguin.title_zh.trim() !== ""
       ? penguin.title_zh
