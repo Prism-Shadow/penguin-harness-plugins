@@ -88,6 +88,10 @@ try {
     typeof penguin.title_zh === "string" && penguin.title_zh.trim() !== ""
       ? penguin.title_zh
       : undefined;
+  const descriptionZh =
+    typeof penguin.description_zh === "string" && penguin.description_zh.trim() !== ""
+      ? penguin.description_zh
+      : undefined;
   const manifest = {
     name,
     version,
@@ -98,6 +102,7 @@ try {
     ...(typeof pkg.homepage === "string" ? { homepage: pkg.homepage } : {}),
     ...(title !== undefined ? { title } : {}),
     ...(titleZh !== undefined ? { title_zh: titleZh } : {}),
+    ...(descriptionZh !== undefined ? { description_zh: descriptionZh } : {}),
     ...(keywords.length > 0 ? { keywords } : {}),
     categories: [],
     owners: [],

@@ -58,6 +58,8 @@ export interface Manifest {
   title?: string;
   /** The card name in Chinese, beside `title`. */
   title_zh?: string;
+  /** The card description in Chinese, beside `description`. */
+  description_zh?: string;
   keywords?: string[];
   categories: string[];
   /** GitHub handles allowed to change this entry and to add entries under its name. */
@@ -96,6 +98,7 @@ const KNOWN_KEYS = new Set([
   "homepage",
   "title",
   "title_zh",
+  "description_zh",
   "keywords",
   "categories",
   "owners",
@@ -244,7 +247,7 @@ export function parseManifest(source: string, file: string): Manifest {
     }
   }
 
-  for (const key of ["title", "title_zh"] as const) {
+  for (const key of ["title", "title_zh", "description_zh"] as const) {
     if (raw[key] !== undefined) {
       if (typeof raw[key] !== "string" || (raw[key] as string).trim() === "") {
         problems.push(`"${key}" must be a non-empty string`);
@@ -394,6 +397,7 @@ export function parseManifest(source: string, file: string): Manifest {
     ...(typeof raw.homepage === "string" ? { homepage: raw.homepage } : {}),
     ...(typeof raw.title === "string" ? { title: raw.title } : {}),
     ...(typeof raw.title_zh === "string" ? { title_zh: raw.title_zh } : {}),
+    ...(typeof raw.description_zh === "string" ? { description_zh: raw.description_zh } : {}),
     ...(keywords !== undefined ? { keywords } : {}),
     categories: categories as string[],
     owners: owners as string[],
