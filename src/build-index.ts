@@ -29,7 +29,7 @@ interface IndexEntry {
   repository?: string;
   homepage?: string;
   title?: string;
-  title_zh?: string;
+  titleZh?: string;
   keywords?: string[];
   categories?: string[];
   integrity: string;
@@ -69,7 +69,9 @@ for (const file of listManifestFiles(root)) {
     repository: manifest.repository,
     ...(manifest.homepage !== undefined ? { homepage: manifest.homepage } : {}),
     ...(manifest.title !== undefined ? { title: manifest.title } : {}),
-    ...(manifest.title_zh !== undefined ? { title_zh: manifest.title_zh } : {}),
+    // The manifest spells the Chinese card name `title_zh` (the TOML convention); the published
+    // document spells it the way its consumer reads it — `titleZh`, the harness's field.
+    ...(manifest.title_zh !== undefined ? { titleZh: manifest.title_zh } : {}),
     ...(manifest.keywords !== undefined ? { keywords: manifest.keywords } : {}),
     categories: manifest.categories,
     integrity: manifest.integrity,
