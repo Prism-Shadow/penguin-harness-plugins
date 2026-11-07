@@ -1,0 +1,17 @@
+name = "@penguinharness/language-csharp"
+version = "0.0.3"
+description = "C# syntax highlighting for PenguinHarness."
+authors = ["Myriad-Dreamin <@Myriad-Dreamin>"]
+license = "MIT"
+repository = "https://github.com/Prism-Shadow/penguin-harness-languages"
+homepage = "https://github.com/Prism-Shadow/penguin-harness-languages/tree/main/plugins/language-csharp"
+title = "C# Language Support"
+title_zh = "C# 语言支持"
+keywords = ["syntax-highlighting", "csharp"]
+categories = ["software-development"]
+owners = ["Myriad-Dreamin"]
+integrity = "sha512-O4Yr+oCOhpjUuxJec5bXidXD3vMwRN9ub+M6IgRkFBTJGMjv3OeqF6w3BZOJvDdSKX7F3eMxQxXwlEUEnD7jpw=="
+
+[[channels]]
+kind = "github"
+url = "https://github.com/Prism-Shadow/penguin-harness-languages/releases/download/v0.0.3/penguinharness-language-csharp-0.0.3.tgz"

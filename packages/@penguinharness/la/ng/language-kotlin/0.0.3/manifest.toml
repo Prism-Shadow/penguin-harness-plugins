@@ -1,0 +1,17 @@
+name = "@penguinharness/language-kotlin"
+version = "0.0.3"
+description = "Kotlin syntax highlighting for PenguinHarness."
+authors = ["Myriad-Dreamin <@Myriad-Dreamin>"]
+license = "MIT"
+repository = "https://github.com/Prism-Shadow/penguin-harness-languages"
+homepage = "https://github.com/Prism-Shadow/penguin-harness-languages/tree/main/plugins/language-kotlin"
+title = "Kotlin Language Support"
+title_zh = "Kotlin 语言支持"
+keywords = ["syntax-highlighting", "kotlin"]
+categories = ["software-development"]
+owners = ["Myriad-Dreamin"]
+integrity = "sha512-kVYafHQzXJbcafqLzGUQXsMpR0W2ZhcwgqUI7pjYqryBzGrkc7DsTkF4+StuxSYovkhAILLBXwWjtNYppV816A=="
+
+[[channels]]
+kind = "github"
+url = "https://github.com/Prism-Shadow/penguin-harness-languages/releases/download/v0.0.3/penguinharness-language-kotlin-0.0.3.tgz"

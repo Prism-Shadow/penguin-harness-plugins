@@ -1,0 +1,17 @@
+name = "@penguinharness/language-dart"
+version = "0.0.3"
+description = "Dart syntax highlighting for PenguinHarness."
+authors = ["Myriad-Dreamin <@Myriad-Dreamin>"]
+license = "MIT"
+repository = "https://github.com/Prism-Shadow/penguin-harness-languages"
+homepage = "https://github.com/Prism-Shadow/penguin-harness-languages/tree/main/plugins/language-dart"
+title = "Dart Language Support"
+title_zh = "Dart 语言支持"
+keywords = ["syntax-highlighting", "dart"]
+categories = ["software-development"]
+owners = ["Myriad-Dreamin"]
+integrity = "sha512-ycVZ2cUC5tr5czXvlzey8+Ew9icxJj1gLV6QcuKiU6+bOJ7E09ol2FgruQT7d5npgXp2Y9ld90k6aF6r4DV34Q=="
+
+[[channels]]
+kind = "github"
+url = "https://github.com/Prism-Shadow/penguin-harness-languages/releases/download/v0.0.3/penguinharness-language-dart-0.0.3.tgz"
