@@ -14,3 +14,4 @@ scratch/
 /packages/*/*/*/*/*/.stored
 /packages/@*/*/*/*/*/*/package/
 /packages/@*/*/*/*/*/*/.stored
+/.assets/
