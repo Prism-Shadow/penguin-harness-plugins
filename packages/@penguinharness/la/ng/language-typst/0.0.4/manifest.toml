@@ -1,0 +1,18 @@
+name = "@penguinharness/language-typst"
+version = "0.0.4"
+description = "Typst syntax highlighting for PenguinHarness."
+authors = ["Myriad-Dreamin <@Myriad-Dreamin>"]
+license = "MIT"
+repository = "https://github.com/Prism-Shadow/penguin-harness-languages"
+homepage = "https://github.com/Prism-Shadow/penguin-harness-languages/tree/main/plugins/language-typst"
+title = "Typst Language Support"
+title_zh = "Typst 语言支持"
+description_zh = "为 PenguinHarness 提供 Typst 语法高亮：一个 TextMate 语法，装上后对话里的 Typst 代码块即着色。"
+keywords = ["syntax-highlighting", "typst"]
+categories = ["software-development"]
+owners = ["Myriad-Dreamin"]
+integrity = "sha512-ebOnRwgf6QllvZzzerP5NmvyrqSWN9YUIlxzIGrF//ny2YR/KeliZ1Y0vKjyWBuUefxQVff/u+5wG8jzzfVDnA=="
+
+[[channels]]
+kind = "github"
+url = "https://github.com/Prism-Shadow/penguin-harness-languages/releases/download/v0.0.4/penguinharness-language-typst-0.0.4.tgz"

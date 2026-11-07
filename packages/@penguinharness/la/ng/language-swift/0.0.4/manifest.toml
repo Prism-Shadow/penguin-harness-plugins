@@ -1,0 +1,18 @@
+name = "@penguinharness/language-swift"
+version = "0.0.4"
+description = "Swift syntax highlighting for PenguinHarness."
+authors = ["Myriad-Dreamin <@Myriad-Dreamin>"]
+license = "MIT"
+repository = "https://github.com/Prism-Shadow/penguin-harness-languages"
+homepage = "https://github.com/Prism-Shadow/penguin-harness-languages/tree/main/plugins/language-swift"
+title = "Swift Language Support"
+title_zh = "Swift 语言支持"
+description_zh = "为 PenguinHarness 提供 Swift 语法高亮：一个 TextMate 语法，装上后对话里的 Swift 代码块即着色。"
+keywords = ["syntax-highlighting", "swift"]
+categories = ["software-development"]
+owners = ["Myriad-Dreamin"]
+integrity = "sha512-RqkVaP+3NIBhsZXbLNOu4DIWPHY8EVwU5IdyQhX1jCGih1AzSoG2BC7F3rVqZC6YGAmxz0vzSDkS2PxAeiU6dg=="
+
+[[channels]]
+kind = "github"
+url = "https://github.com/Prism-Shadow/penguin-harness-languages/releases/download/v0.0.4/penguinharness-language-swift-0.0.4.tgz"
