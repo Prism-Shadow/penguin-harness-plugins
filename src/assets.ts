@@ -32,11 +32,9 @@ const MAX_TARBALL_BYTES = 64 * 1024 * 1024;
 const USER_AGENT = "penguin-harness-plugins (index build)";
 
 /** The site's own base URL: where the published tree is served. */
-export const PAGES_BASE_URL =
-  (process.env.PAGES_BASE_URL ?? "https://prism-shadow.github.io/penguin-harness-plugins").replace(
-    /\/+$/,
-    "",
-  );
+export const PAGES_BASE_URL = (
+  process.env.PAGES_BASE_URL ?? "https://prism-shadow.github.io/penguin-harness-plugins"
+).replace(/\/+$/, "");
 
 /** The two files an entry's card and detail view are drawn from, at the package root. */
 const WANTED = ["icon.svg", "README.md"] as const;
@@ -113,13 +111,15 @@ export async function collectAssets(
   if (!(await have("icon.svg")) && !(await have("README.md"))) {
     const bytes = await download(tarballUrl(manifest), fetchImpl);
     if (bytes.byteLength === 0 || integrityOf(bytes) !== manifest.integrity) {
-      throw new Error(`${manifest.name}@${manifest.version}: the served tarball is not the one the manifest pins`);
+      throw new Error(
+        `${manifest.name}@${manifest.version}: the served tarball is not the one the manifest pins`,
+      );
     }
     await extract(bytes, dir);
   }
   const base = `${PAGES_BASE_URL}/assets/${manifest.name}/${manifest.version}`;
   return {
-    ...(await have("icon.svg") ? { icon: `${base}/icon.svg` } : {}),
-    ...(await have("README.md") ? { readme: `${base}/README.md` } : {}),
+    ...((await have("icon.svg")) ? { icon: `${base}/icon.svg` } : {}),
+    ...((await have("README.md")) ? { readme: `${base}/README.md` } : {}),
   };
 }
