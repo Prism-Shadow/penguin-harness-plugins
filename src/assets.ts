@@ -37,7 +37,7 @@ export const PAGES_BASE_URL = (
 ).replace(/\/+$/, "");
 
 /** The files an entry's card and detail view are drawn from, at the package root. */
-const WANTED = ["icon.svg", "icon.png", "README.md"] as const;
+const WANTED = ["icon.svg", "icon.png", "README.md", "README.zh.md"] as const;
 
 export type WantedFile = (typeof WANTED)[number];
 
@@ -49,6 +49,8 @@ export interface EntryAssets {
   icon?: string;
   /** URL of the served `README.md`, when the package carries one. */
   readme?: string;
+  /** URL of the served `README.zh.md` — the package's own Chinese readme — when it carries one. */
+  readmeZh?: string;
 }
 
 /** sha512 as npm's integrity spells it, of the bytes the channel serves. */
@@ -130,5 +132,6 @@ export async function collectAssets(
         ? { icon: `${base}/icon.png` }
         : {}),
     ...((await have("README.md")) ? { readme: `${base}/README.md` } : {}),
+    ...((await have("README.zh.md")) ? { readmeZh: `${base}/README.zh.md` } : {}),
   };
 }

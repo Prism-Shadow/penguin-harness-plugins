@@ -90,6 +90,25 @@ describe("collectAssets", () => {
     );
   });
 
+  it("answers a readmeZh URL for a package that ships a Chinese README beside the English one", async () => {
+    const bytes = await tarballOf({
+      "README.md": "# Widgets",
+      "README.zh.md": "# 小部件（中文）",
+      "package.json": '{"name":"@acme/widgets"}',
+    });
+    const manifest = { ...MANIFEST, integrity: sha512(bytes) };
+    const { fetch, calls } = serving(bytes);
+    const assets = await collectAssets(manifest, cache, { fetchImpl: fetch });
+    expect(assets).toEqual({
+      readme: `${PAGES_BASE_URL}/assets/@acme/widgets/1.2.3/README.md`,
+      readmeZh: `${PAGES_BASE_URL}/assets/@acme/widgets/1.2.3/README.zh.md`,
+    });
+    expect(fs.readFileSync(path.join(cache, "@acme/widgets/1.2.3/README.zh.md"), "utf8")).toBe(
+      "# 小部件（中文）",
+    );
+    expect(calls).toHaveLength(1);
+  });
+
   it("answers an icon.png URL for a package that ships a PNG and no SVG", async () => {
     const bytes = await tarballOf({
       "icon.png": "not really a png, the cache stores bytes as they are",

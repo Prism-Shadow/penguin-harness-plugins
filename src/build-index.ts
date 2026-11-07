@@ -38,6 +38,8 @@ interface IndexEntry {
   title?: string;
   titleZh?: string;
   descriptionZh?: string;
+  /** The package's own Chinese readme, served from this site when it ships one. */
+  readmeZh?: string;
   keywords?: string[];
   categories?: string[];
   integrity: string;
