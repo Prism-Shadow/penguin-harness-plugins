@@ -36,13 +36,16 @@ export const PAGES_BASE_URL = (
   process.env.PAGES_BASE_URL ?? "https://prism-shadow.github.io/penguin-harness-plugins"
 ).replace(/\/+$/, "");
 
-/** The two files an entry's card and detail view are drawn from, at the package root. */
-const WANTED = ["icon.svg", "README.md"] as const;
+/** The files an entry's card and detail view are drawn from, at the package root. */
+const WANTED = ["icon.svg", "icon.png", "README.md"] as const;
 
 export type WantedFile = (typeof WANTED)[number];
 
 export interface EntryAssets {
-  /** URL of the served `icon.svg`, when the package carries one. */
+  /**
+   * URL of the served icon — the `icon.svg` the Web App inlines as markup, else the
+   * `icon.png` it draws as an image, when the package ships one.
+   */
   icon?: string;
   /** URL of the served `README.md`, when the package carries one. */
   readme?: string;
@@ -108,7 +111,7 @@ export async function collectAssets(
 ): Promise<EntryAssets> {
   const dir = path.join(cacheRoot, manifest.name, manifest.version);
   const have = async (file: WantedFile) => fs.existsSync(path.join(dir, file));
-  if (!(await have("icon.svg")) && !(await have("README.md"))) {
+  if (!(await have("icon.svg")) && !(await have("icon.png")) && !(await have("README.md"))) {
     const bytes = await download(tarballUrl(manifest), fetchImpl);
     if (bytes.byteLength === 0 || integrityOf(bytes) !== manifest.integrity) {
       throw new Error(
@@ -119,7 +122,13 @@ export async function collectAssets(
   }
   const base = `${PAGES_BASE_URL}/assets/${manifest.name}/${manifest.version}`;
   return {
-    ...((await have("icon.svg")) ? { icon: `${base}/icon.svg` } : {}),
+    // The markup-inlineable SVG is what a card prefers; a package that ships only a PNG
+    // still gets its icon, drawn as an image by the Web App instead of inlined.
+    ...((await have("icon.svg"))
+      ? { icon: `${base}/icon.svg` }
+      : (await have("icon.png"))
+        ? { icon: `${base}/icon.png` }
+        : {}),
     ...((await have("README.md")) ? { readme: `${base}/README.md` } : {}),
   };
 }

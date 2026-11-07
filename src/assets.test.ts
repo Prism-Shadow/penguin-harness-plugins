@@ -90,6 +90,25 @@ describe("collectAssets", () => {
     );
   });
 
+  it("answers an icon.png URL for a package that ships a PNG and no SVG", async () => {
+    const bytes = await tarballOf({
+      "icon.png": "not really a png, the cache stores bytes as they are",
+      "README.md": "# Widgets",
+      "package.json": '{"name":"@acme/widgets"}',
+    });
+    const manifest = { ...MANIFEST, integrity: sha512(bytes) };
+    const { fetch, calls } = serving(bytes);
+    const assets = await collectAssets(manifest, cache, { fetchImpl: fetch });
+    expect(assets).toEqual({
+      icon: `${PAGES_BASE_URL}/assets/@acme/widgets/1.2.3/icon.png`,
+      readme: `${PAGES_BASE_URL}/assets/@acme/widgets/1.2.3/README.md`,
+    });
+    expect(fs.readFileSync(path.join(cache, "@acme/widgets/1.2.3/icon.png"), "utf8")).toBe(
+      "not really a png, the cache stores bytes as they are",
+    );
+    expect(calls).toHaveLength(1);
+  });
+
   it("answers neither URL when the package ships neither file", async () => {
     const bytes = await tarballOf({ "package.json": '{"name":"@acme/widgets"}' });
     const manifest = { ...MANIFEST, integrity: sha512(bytes) };
