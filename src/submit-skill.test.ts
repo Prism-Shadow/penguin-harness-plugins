@@ -50,9 +50,9 @@ describe("submitting with the skill", () => {
     // Those scripts exist in this repository and do what the skill promises.
     const pkg = JSON.parse(
       readFileSync(path.join(repoRoot, "package.json"), "utf8"),
-    ) as Record<string, { validate?: string; "check-npm"?: string }>;
-    expect(pkg.scripts.validate).toBeDefined();
-    expect(pkg.scripts["check-npm"]).toBeDefined();
+    ) as { scripts?: Record<string, string> };
+    expect(pkg.scripts?.validate).toBeDefined();
+    expect(pkg.scripts?.["check-npm"]).toBeDefined();
   });
 
   it("opens one pull request with exactly one entry", () => {
