@@ -9,6 +9,10 @@ protocol step by step — see [docs/submitting-with-a-skill.md](docs/submitting-
 This page stays the authority: when the two disagree, this page wins, and the skill is
 updated in the same PR.
 
+Changing the protocol in this file means changing the skill with it
+(`skills/penguin-plugin-index/SKILL.md`) — one pull request carries both, so the
+step-by-step edition never drifts from the rules it drives.
+
 ## Before you open a pull request
 
 Your plugin must already be **published on npm**. This index points at npm; it does not
