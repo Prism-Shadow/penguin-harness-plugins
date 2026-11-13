@@ -55,7 +55,11 @@ data filled in.
 
 ## Submitting a plugin
 
-Read [CONTRIBUTING.md](CONTRIBUTING.md). The short version:
+Read [CONTRIBUTING.md](CONTRIBUTING.md) for the whole process. There is also a
+**plugin-submission skill** — the same protocol as step-by-step instructions a
+harness session can run with you; see
+[docs/submitting-with-a-skill.md](docs/submitting-with-a-skill.md). The short
+version:
 
 1. Publish your plugin to npm under any name (scoped is fine), with `"type": "module"`
    and a named `activate` export.

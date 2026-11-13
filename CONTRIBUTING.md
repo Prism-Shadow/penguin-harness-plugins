@@ -4,6 +4,15 @@ Thanks for building something for PenguinHarness. This page is the whole process
 rules each check enforces are spelled out in [docs/manifest.md](docs/manifest.md),
 [docs/categories.md](docs/categories.md) and [docs/licensing.md](docs/licensing.md).
 
+If you use the **plugin-submission skill** in a harness session, it walks this same
+protocol step by step — see [docs/submitting-with-a-skill.md](docs/submitting-with-a-skill.md).
+This page stays the authority: when the two disagree, this page wins, and the skill is
+updated in the same PR.
+
+Changing the protocol in this file means changing the skill with it
+(`skills/penguin-plugin-index/SKILL.md`) — one pull request carries both, so the
+step-by-step edition never drifts from the rules it drives.
+
 ## Before you open a pull request
 
 Your plugin must already be **published on npm**. This index points at npm; it does not
