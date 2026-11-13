@@ -1,0 +1,38 @@
+{
+ "image": "/home/yichen/vm-prep.qcow2",
+ "host": "streamview.web.hku.icu",
+ "null_mode": {
+  "exit": 0,
+  "output": "> > > PUBLIC=BLOCKED\nDNS=BLOCKED",
+  "netdev": "user,id=n0,restrict=on",
+  "policy_sha256": "17224c2ae1a89daf1576c65cbccfccce46a7ad8e17674bfbfdc5cd04311d02b1",
+  "holds": true
+ },
+ "guest_identity": {
+  "exit": 0,
+  "output": "> > > > > > > > rehash: warning: skipping ca-certificates.crt,it does not contain exactly one certificate or CRL\nRSI_GUEST_RELAY_IDENTITY_OK=1"
+ },
+ "target_mode": {
+  "exit": 0,
+  "output": "> > > > ALLOWED=FENCE-OK\nWRONG_HOST=421\nPUBLIC=BLOCKED",
+  "netdev": "user,id=n0,restrict=on,guestfwd=tcp:10.0.2.100:80-cmd:/usr/bin/python3 /home/yichen/penguin-harness-plugins/rsiagent/runtime/guest_relay.py 40541,guestfwd=tcp:10.0.2.100:443-cmd:/usr/bin/python3 /home/yichen/penguin-harness-plugins/rsiagent/runtime/guest_relay.py 41699",
+  "policy": {
+   "mode": "target",
+   "policy_sha256": "17224c2ae1a89daf1576c65cbccfccce46a7ad8e17674bfbfdc5cd04311d02b1",
+   "gateway_guest_ip": "10.0.2.100",
+   "gateway_ports": [
+    40541,
+    41699
+   ],
+   "gateway_ca_sha256": "41cbb10c6a68de1abbd0cd46fb963633a6201a8fab7c8ccc3eeacf54f320163c",
+   "gateway_leaf_spki_sha256": "798f0b17e9fb061a7ac1cd2e74bbc976bc1e80395517aa76486bfef6e06eaac9",
+   "pinned_upstream_ips": [
+    "127.0.0.1"
+   ]
+  },
+  "upstream_saw_host": [
+   "Host: streamview.web.hku.icu"
+  ],
+  "holds": true
+ }
+}

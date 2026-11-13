@@ -1,0 +1,91 @@
+{
+ "model": "deepseek-v4.1-flash",
+ "endpoint": "http://100.64.0.88:7864/v1",
+ "domain": "modular exponentiation (modpow)",
+ "verifier": "restricted Docker container, computed ground truth (environment evidence)",
+ "role_calls": {
+  "actor": 13,
+  "curriculum": 3
+ },
+ "wave": [
+  "6^7 mod 11 (compute 6^1, 6^2, 6^4 mod 11 then combine)",
+  "2^10 mod 13 (compute 2^1, 2^2, 2^4, 2^8 mod 13 then combine)"
+ ],
+ "wave_verdicts": [
+  "PASS",
+  "PASS"
+ ],
+ "deep_target": "7^13 mod 101",
+ "deep_verdict": "BUDGET_EXHAUSTED",
+ "frozen_digest": "e3968ce561996a7ff44011fae01c24b019276d5ead313e2e7a55d93889c95321",
+ "frozen_lessons": 7,
+ "baseline": [
+  {
+   "task": "9^11 mod 101",
+   "verdict": "PASS",
+   "answer": 49
+  },
+  {
+   "task": "5^17 mod 97",
+   "verdict": "PASS",
+   "answer": 83
+  },
+  {
+   "task": "2^21 mod 137",
+   "verdict": "PASS",
+   "answer": "93"
+  },
+  {
+   "task": "7^13 mod 101",
+   "verdict": "PASS",
+   "answer": 75
+  },
+  {
+   "task": "11^7 mod 97",
+   "verdict": "PASS",
+   "answer": 65
+  },
+  {
+   "task": "3^20 mod 137",
+   "verdict": "PASS",
+   "answer": 4
+  }
+ ],
+ "evolved": [
+  {
+   "task": "9^11 mod 101",
+   "verdict": "PASS",
+   "answer": 49
+  },
+  {
+   "task": "5^17 mod 97",
+   "verdict": "PASS",
+   "answer": 83
+  },
+  {
+   "task": "2^21 mod 137",
+   "verdict": "PASS",
+   "answer": 93
+  },
+  {
+   "task": "7^13 mod 101",
+   "verdict": "PASS",
+   "answer": 75
+  },
+  {
+   "task": "11^7 mod 97",
+   "verdict": "PASS",
+   "answer": 65
+  },
+  {
+   "task": "3^20 mod 137",
+   "verdict": "PASS",
+   "answer": 4
+  }
+ ],
+ "baseline_pass": 6,
+ "evolved_pass": 6,
+ "n_tasks": 6,
+ "frozen_unchanged": true,
+ "verifier_isolated_from_actor_memory": true
+}

@@ -1,0 +1,49 @@
+{
+ "role_calls": {
+  "curriculum": 4,
+  "actor": 10,
+  "verifier": 10
+ },
+ "lessons": 7,
+ "events": "[\n {\n  \"kind\": \"wave_plan\",\n  \"tasks\": [\n   \"Add two single-digit numbers, e.g. 7 + 5\",\n   \"Subtract one single-digit number from another, e.g. 9 - 4\"\n  ]\n },\n {\n  \"kind\": \"wave_verdicts\",\n  \"tasks\": [\n   \"Add two single-digit numbers, e.g. 7 + 5\",\n   \"Subtract one single-digit number from another, e.g. 9 - 4\"\n  ],\n  \"verdicts\": [\n   \"PASS\",\n   \"PASS\"\n  ]\n },\n {\n  \"kind\": \"deep\",\n  \"target\": \"12 * 7\",\n  \"verdict\": \"BUDGET_EXHAUSTED\"\n },\n {\n  \"kind\": \"freeze\",\n  \"digest\": \"fc290c190e5d1056d674a5f2908ed2c83a1c67d396268325ed7f0f3e282d9b46\",\n  \"lessons\": 7\n },\n {\n  \"kind\": \"eval\",\n  \"task\": \"9 * 6\",\n  \"verdict\": \"PASS\"\n },\n {\n  \"kind\": \"eval\",\n  \"task\": \"13 + 29\",\n  \"verdict\": \"PASS\"\n },\n {\n  \"kind\": \"eval\",\n  \"task\": \"100 - 45\",\n  \"verdict\": \"PASS\"\n }\n]",
+ "deviations": [
+  "single shared environment; branches run sequentially, not in independent VMs",
+  "role isolation is API-level (Verifier never receives Actor memory or reasoning), not OS-level",
+  "no QEMU rollback; the Docker verifier boundary is available but not used for these calls"
+ ],
+ "model": "deepseek-v4.1-flash",
+ "endpoint": "http://100.64.0.88:7864/v1",
+ "domain": "single-digit arithmetic",
+ "target": "12 * 7",
+ "target_verdict": "BUDGET_EXHAUSTED",
+ "frozen_digest": "fc290c190e5d1056d674a5f2908ed2c83a1c67d396268325ed7f0f3e282d9b46",
+ "held_out_evolved": [
+  {
+   "task": "9 * 6",
+   "verdict": "PASS"
+  },
+  {
+   "task": "13 + 29",
+   "verdict": "PASS"
+  },
+  {
+   "task": "100 - 45",
+   "verdict": "PASS"
+  }
+ ],
+ "held_out_baseline": [
+  {
+   "task": "9 * 6",
+   "verdict": "PASS"
+  },
+  {
+   "task": "13 + 29",
+   "verdict": "PASS"
+  },
+  {
+   "task": "100 - 45",
+   "verdict": "PASS"
+  }
+ ],
+ "frozen_unchanged_after_eval": true
+}

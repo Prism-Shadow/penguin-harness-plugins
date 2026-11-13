@@ -1,0 +1,70 @@
+{
+  "name": "@penguinharness/rsiagent",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "RSIAgent for PenguinHarness: Curriculum, Actor and Verifier agents run broad-then-deep exploration and freeze causal memory for held-out reuse (arXiv:2609.15364).",
+  "license": "Apache-2.0",
+  "author": "KeBbboy",
+  "keywords": [
+    "penguin-plugin",
+    "penguinharness",
+    "skills",
+    "rsi"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KeBbboy/penguin-harness-plugins.git",
+    "directory": "rsiagent"
+  },
+  "main": "./dist/index.js",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "files": [
+    "LICENSE",
+    "README.md",
+    "icon.svg",
+    "dist",
+    "skills",
+    "runtime",
+    "EXPERIMENT_NOTES.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "penguin": {
+    "title": "RSIAgent",
+    "title_zh": "RSIAgent",
+    "description": "RSIAgent (arXiv:2609.15364) as a PenguinHarness plugin: Curriculum, Actor and Verifier agents explore an environment broad-then-deep, consolidating verified experience into a versioned frozen causal memory that held-out tasks reuse without updates. Includes a protocol core with memory-integrity invariants and a restricted-container verifier boundary. Not the original runtime; deviations are disclosed in the Skill.",
+    "description_zh": "将 RSIAgent（arXiv:2609.15364）实现为 PenguinHarness 插件：由 Curriculum、Actor、Verifier 三个智能体执行先广度后深度的环境探索，把验证过的经验固化为带版本、可校验的冻结因果记忆，供留出任务在只读条件下复用。附带协议核心（记忆完整性不变量）与受限容器验证器边界。非原论文运行时的完整复现，偏差在 Skill 中如实披露。",
+    "short_description": "Broad-then-deep exploration and frozen causal memory.",
+    "short_description_zh": "先广后深探索，冻结因果记忆。",
+    "category": "rsi",
+    "preinstall": false,
+    "icon": "icon.svg",
+    "references": [
+      "https://arxiv.org/abs/2609.15364",
+      "https://aetherlabsai.github.io/RSIAgent/",
+      "https://github.com/AetherLabsAI/RSIAgent"
+    ],
+    "quick_start": {
+      "prompt": "Use the rsiagent skill to run broad-then-deep exploration over the supplied training tasks, freeze the resulting causal memory, and evaluate held-out tasks with the frozen memory read-only. Report deviations from the paper and their reasons.",
+      "prompt_zh": "使用 rsiagent 技能，对给定的训练任务执行先广后深探索，冻结得到的因果记忆，并在只读条件下用冻结记忆评估留出任务。如实报告与论文的偏差及原因。",
+      "skills": [
+        "rsiagent"
+      ]
+    },
+    "mcp_servers": [
+      {
+        "name": "rsiagent",
+        "config": {
+          "command": "python3",
+          "args": [
+            "${PLUGIN_ROOT}/runtime/mcp_server.py"
+          ],
+          "timeoutMs": 910000
+        }
+      }
+    ]
+  }
+}
