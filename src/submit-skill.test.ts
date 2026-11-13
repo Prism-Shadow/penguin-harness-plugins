@@ -3,16 +3,10 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 
-const repoRoot = path.resolve(
-  path.dirname(fileURLToPath(import.meta.url)),
-  "..",
-);
+const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 function readSkill(): string {
-  return readFileSync(
-    path.join(repoRoot, "skills/penguin-plugin-index/SKILL.md"),
-    "utf8",
-  );
+  return readFileSync(path.join(repoRoot, "skills/penguin-plugin-index/SKILL.md"), "utf8");
 }
 
 function readContributing(): string {
@@ -48,9 +42,9 @@ describe("submitting with the skill", () => {
     const contributing = readContributing();
     expect(skill).toContain("pnpm validate && pnpm check-npm");
     // Those scripts exist in this repository and do what the skill promises.
-    const pkg = JSON.parse(
-      readFileSync(path.join(repoRoot, "package.json"), "utf8"),
-    ) as { scripts?: Record<string, string> };
+    const pkg = JSON.parse(readFileSync(path.join(repoRoot, "package.json"), "utf8")) as {
+      scripts?: Record<string, string>;
+    };
     expect(pkg.scripts?.validate).toBeDefined();
     expect(pkg.scripts?.["check-npm"]).toBeDefined();
   });
