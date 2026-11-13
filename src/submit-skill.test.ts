@@ -5,7 +5,7 @@ import path from "node:path";
 
 const repoRoot = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
-  "../..",
+  "..",
 );
 
 function readSkill(): string {
