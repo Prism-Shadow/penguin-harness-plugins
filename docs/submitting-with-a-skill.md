@@ -9,9 +9,9 @@ disagree, CONTRIBUTING.md wins, and the skill is updated in the same PR.
 
 `SKILL.md` for a session: it carries the submission protocol as executable
 steps — prerequisites, `pnpm new-entry`, the metadata you fill in, the local
-checks, and the pull-request shape. It lives in the harness plugin tree
-(`plugins/agent-development/skills/penguin-plugin/`), so a session that already
-knows how to write a plugin also knows how to submit it.
+checks, and the pull-request shape. It lives in this repository, at
+`skills/penguin-plugin-index/SKILL.md`, so the skill ships with the very
+repository whose protocol it teaches.
 
 ## What the skill does, step by step
 
