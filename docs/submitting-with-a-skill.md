@@ -15,14 +15,14 @@ repository whose protocol it teaches.
 
 ## What the skill does, step by step
 
-1. **Prerequisites** — it checks before touching the index: the package is
-   published on npm, `"type": "module"`, a named `activate` export, an allowed
-   license in `package.json` and as a license file, a public source repository.
-2. **One entry** — it runs `pnpm new-entry <name>@<version>` in a checkout of
-   this repository. That resolves the lock against npm, installs with scripts
-   disabled, computes the content hash, and writes
-   `packages/<bucket>/<name>/<version>/` with `package-lock.json` and a
-   `manifest.toml` filled from the package.
+1. **One channel** — the entry needs at least one: npm (published there), or a
+   GitHub release / any tarball URL via `[[channels]]` tables. The skill checks
+   each channel URL serves bytes that hash to the entry's `integrity`.
+   Entry-side facts are CI's job — you fix what the checks report.
+2. **One entry** — npm channel: it runs `pnpm new-entry <name>@<version>` in a
+   checkout of this repository, which writes `packages/<bucket>/<name>/<version>/`
+   with `package-lock.json` and a `manifest.toml`. Channels-only entry: it writes
+   the `manifest.toml` from docs/manifest.md (no lock file).
 3. **Metadata you own** — it asks you for `categories` (1–3, from
    [docs/categories.md](categories.md)) and `owners` (GitHub handles allowed to
    change the entry later); it never edits `integrity`.
@@ -31,11 +31,11 @@ repository whose protocol it teaches.
 5. **The pull request** — it opens one PR with exactly one entry, and stops
    there: review is human, and CI decides the mechanical questions.
 
-## Beyond npm
+## Channels
 
-`pnpm new-entry` writes the npm channel. If your plugin is also reachable from
-a GitHub release or a mirror, the skill adds a `[[channels]]` table per source
-and CI fetches each URL to check the bytes hash to `integrity` — see
+An entry needs at least one channel; npm is one option, not a requirement. A
+GitHub release works the same way — the skill adds a `[[channels]]` table per
+source, and CI fetches each URL to check the bytes hash to `integrity` — see
 [docs/manifest.md](manifest.md).
 
 ## New versions, yanking, ownership
