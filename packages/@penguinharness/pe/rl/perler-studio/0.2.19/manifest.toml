@@ -1,0 +1,18 @@
+name = "@penguinharness/perler-studio"
+version = "0.2.19"
+description = "Turns a picture into a perler-bead pattern with a bead grid, a colour legend, per-colour bead counts, the number of boards and the finished size."
+authors = ["Prism-Shadow <https://github.com/Prism-Shadow>"]
+license = "Apache-2.0"
+repository = "https://github.com/Prism-Shadow/penguin-harness-apps"
+homepage = "https://github.com/Prism-Shadow/penguin-harness-apps/tree/1373b0f74c7a19606a95e4a16e1626986c0ec173/plugins/perler-studio"
+title = "Perler Studio"
+title_zh = "拼豆创作工作台"
+description_zh = "上传一张图片即可生成拼豆图纸：豆形网格、色号图例、每色颗数、拼板数量与成品尺寸，可导出 PNG、CSV、JSON 与打印页。"
+keywords = ["workbench", "perler-beads", "pixel-art", "crafts"]
+categories = ["entertainment"]
+owners = ["hiyouga"]
+integrity = "sha512-PsQB6pfGRjfFW+3vRogbwSEnxcFdCYpk79KI9eStG099vsjDITQUs3LmJvD6cKq/dnsy7o6GPeUwrU6Jy44xGA=="
+
+[[channels]]
+kind = "github"
+url = "https://raw.githubusercontent.com/Prism-Shadow/penguin-harness-apps/1373b0f74c7a19606a95e4a16e1626986c0ec173/archives/perler-studio-0.2.19.tgz"
