@@ -3,8 +3,8 @@ version = "0.2.18"
 description = "AI character chat: a stage where an original character with a face, moods, a scene and a memory book talks with you, a card editor for characters of your own, and a Skill that lets the Agent play a character in the ordinary chat."
 authors = ["Prism-Shadow <https://github.com/Prism-Shadow>"]
 license = "Apache-2.0"
-repository = "https://github.com/Prism-Shadow/penguin-harness-showcases"
-homepage = "https://github.com/Prism-Shadow/penguin-harness-showcases/tree/59839727c9b08255dcf29fe639d783945f52c9fd/plugins/character-chat"
+repository = "https://github.com/Prism-Shadow/penguin-harness-apps"
+homepage = "https://github.com/Prism-Shadow/penguin-harness-apps/tree/59839727c9b08255dcf29fe639d783945f52c9fd/plugins/character-chat"
 title = "AI Character Chat"
 title_zh = "AI 角色对话"
 description_zh = "AI 角色对话：角色有表情、有场景，会记住你们聊过的事，友谊随天数加深。自带四个原创角色，也可以自己写角色卡，或让 Agent 替你写。Skill 让 Agent 在普通对话里也能用角色的口吻说话和做事。"
@@ -15,4 +15,4 @@ integrity = "sha512-kklBiGqvTHVP6PQ/i5gYd5pLloMm/2U7+lP6JXfhmMXpTq2vbaDvci0cHY3q
 
 [[channels]]
 kind = "github"
-url = "https://raw.githubusercontent.com/Prism-Shadow/penguin-harness-showcases/59839727c9b08255dcf29fe639d783945f52c9fd/archives/character-chat-0.2.18.tgz"
+url = "https://raw.githubusercontent.com/Prism-Shadow/penguin-harness-apps/59839727c9b08255dcf29fe639d783945f52c9fd/archives/character-chat-0.2.18.tgz"
