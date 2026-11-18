@@ -42,7 +42,7 @@ beforeEach(() => {
     },
   });
   put("workbenches/board/ui/index.html", "<title>Board</title>");
-  put("skills/study/SKILL.md", "# Study");
+  put("skills/study/SKILL.md", "---\nname: study\nversion: 2026.11.19.1\n---\n# Study");
   table({ "PluginLibraryModule.workbenches": [board], "PluginLibraryModule.skills": [skill] });
 });
 afterEach(() => fs.rmSync(root, { recursive: true, force: true }));
@@ -59,6 +59,11 @@ describe("resource-only packages", () => {
     fs.unlinkSync(path.join(root, rel));
     expect(probePackage(root).join(" ")).toContain(path.basename(rel));
   });
+  it("rejects a Skill file without its identifying frontmatter", () => {
+    put("skills/study/SKILL.md", "# A Markdown file");
+    expect(probePackage(root).join(" ")).toContain("frontmatter");
+  });
+
   it("refuses card metadata, unregistered modules and out-of-package resources", () => {
     table({ "PluginLibraryModule.cards": [{ id: "only" }] });
     expect(probePackage(root)).not.toEqual([]);

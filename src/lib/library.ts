@@ -2,6 +2,7 @@
  * Only modules reached from ifaces.json#plugin contribute. Never import an installed package. */
 import fs from "node:fs";
 import path from "node:path";
+import { parse } from "yaml";
 
 type Row = Record<string, unknown>;
 function row(value: unknown): Row {
@@ -35,10 +36,21 @@ function file(root: string, rel: unknown): string {
 const json = (root: string, rel: string) =>
   row(JSON.parse(fs.readFileSync(file(root, rel), "utf8")));
 
+const dated = /^\d{4}\.\d{2}\.\d{2}\.\d+$/;
+
+function skill(root: string): void {
+  const content = fs.readFileSync(file(root, "SKILL.md"), "utf8").replace(/^\uFEFF/, "");
+  const block = /^---[ \t]*\r?\n([\s\S]*?)\r?\n---[ \t]*(?:\r?\n|$)/.exec(content);
+  if (!block) throw new Error("SKILL.md needs YAML frontmatter");
+  const data = row(parse(block[1]!));
+  if (typeof data.name !== "string" || !data.name.trim() || !dated.test(String(data.version)))
+    throw new Error("SKILL.md needs a name and a dated version");
+}
+
 function workbench(root: string): void {
   file(root, "index.ts");
   const penguin = row(json(root, "package.json").penguin);
-  if (typeof penguin.version !== "string" || !/^\d{4}\.\d{2}\.\d{2}\.\d+$/.test(penguin.version))
+  if (typeof penguin.version !== "string" || !dated.test(penguin.version))
     throw new Error("workbench package.json needs a dated penguin.version");
   if (penguin.appCenter && row(penguin.appCenter).icon) file(root, row(penguin.appCenter).icon);
   const modules = list(penguin.modules).map(row);
@@ -79,7 +91,10 @@ export function probeLibrary(root: string): string[] {
       if (visited.has(name)) continue;
       visited.add(name);
       const module = row(modules[name]);
-      if (module.name !== name || (module.kind !== "component" && module.kind !== "group"))
+      if (
+        module.name !== name ||
+        (module.kind !== undefined && module.kind !== "component" && module.kind !== "module")
+      )
         throw new Error(`invalid registered module: ${name}`);
       for (const child of list(module.children ?? []))
         pending.push(typeof child === "string" ? child : row(child).keyed);
@@ -88,6 +103,8 @@ export function probeLibrary(root: string): string[] {
         for (const entry of list(contributions[`PluginLibraryModule.${kind}`] ?? [])) {
           const resource = row(entry);
           if (
+            typeof resource.id !== "string" ||
+            !resource.id.trim() ||
             typeof resource.name !== "string" ||
             !(kind === "skills" ? /^[\w-]+$/ : /^[A-Za-z0-9][\w-]{0,63}$/).test(resource.name) ||
             typeof resource.path !== "string" ||
@@ -95,7 +112,7 @@ export function probeLibrary(root: string): string[] {
           )
             throw new Error(`invalid ${kind} resource name or path`);
           const dir = inside(root, resource.path);
-          if (kind === "skills") file(dir, "SKILL.md");
+          if (kind === "skills") skill(dir);
           else workbench(dir);
           resources++;
         }
