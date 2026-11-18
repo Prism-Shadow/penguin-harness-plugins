@@ -61,9 +61,10 @@ harness session can run with you; see
 [docs/submitting-with-a-skill.md](docs/submitting-with-a-skill.md). The short
 version:
 
-1. Publish your plugin to npm under any name (scoped is fine), with `"type": "module"`
-   and a named `activate` export.
-2. Run `pnpm new-entry <name>@<version>` and fill in `categories` and `owners` — see
+1. Package your plugin under its npm name (scopes work). Code plugins provide an ESM
+   `activate` export. Resource-only plugins declare Skills or workbenches in `ifaces.json`.
+   Publish to npm or serve the same `.tgz` from an HTTPS channel.
+2. For npm, run `pnpm new-entry <name>@<version>`. For HTTPS-only packages, create the manifest directly. Fill in `categories` and `owners` — see
    [docs/manifest.md](docs/manifest.md).
 3. Open a pull request. CI checks the entry and the published package; a maintainer
    reviews the rest.

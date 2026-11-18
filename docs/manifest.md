@@ -147,8 +147,10 @@ owners may edit it.
 
 **Against npm** (`pnpm check-npm`): the version exists and is not deprecated; license,
 description and repository match the published package; installing the lock yields a
-package of at most 64 MiB; and the package is ESM whose entry point declares an
-`activate` export.
+package of at most 64 MiB. A JavaScript plugin must expose an ESM entry with an `activate`
+export. A resource-only package can instead declare Skills and workbenches in its
+generated `ifaces.json`. The check follows registered modules to verify their declared
+Skill files, workbench manifests, TypeScript entry points, and local iframe pages.
 
 That last check is **static**: the install runs no scripts and the entry file is read,
 never imported. Executing submitted code in CI would hand every contributor a shell on
