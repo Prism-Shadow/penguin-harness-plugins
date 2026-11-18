@@ -20,6 +20,9 @@ export const CATEGORIES = [
   "office-productivity",
   "software-development",
   "ai-app-development",
+  "learning-life",
+  "utilities",
+  "entertainment",
   "sandbox",
 ] as const;
 

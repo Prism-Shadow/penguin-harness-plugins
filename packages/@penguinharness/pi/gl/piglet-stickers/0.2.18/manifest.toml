@@ -1,0 +1,18 @@
+name = "@penguinharness/piglet-stickers"
+version = "0.2.18"
+description = "A sticker-scene game starring an original emoji-style piglet: arrange 208 stickers on 13 scenes, clear 10 themed levels and keep the little worlds you make."
+authors = ["Prism-Shadow <https://github.com/Prism-Shadow>"]
+license = "Apache-2.0"
+repository = "https://github.com/Prism-Shadow/penguin-harness-showcases"
+homepage = "https://github.com/Prism-Shadow/penguin-harness-showcases/tree/68f2ef1ed5fec6ac892aee7c9aa94d96bd457006/plugins/piglet-stickers"
+title = "Piggy Sticker World"
+title_zh = "猪猪的摸鱼小世界"
+description_zh = "一款粉嫩的贴纸小游戏，主角是一只 emoji 风格的小猪：用小猪、家具和小零食布置小房间和小花园，再把它们存成图片。"
+keywords = ["workbench", "game", "stickers"]
+categories = ["entertainment"]
+owners = ["hiyouga"]
+integrity = "sha512-G7YdvhLrUx/MOU/VtvftmmrYjLkbpniq4z45cNUiROi+04ylNwg/CMyNtXmP3+7YEb/Wji7tOKYQ+AltWrGY+w=="
+
+[[channels]]
+kind = "github"
+url = "https://raw.githubusercontent.com/Prism-Shadow/penguin-harness-showcases/68f2ef1ed5fec6ac892aee7c9aa94d96bd457006/archives/piglet-stickers-0.2.18.tgz"
