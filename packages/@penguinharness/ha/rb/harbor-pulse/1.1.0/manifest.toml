@@ -11,6 +11,8 @@ description_zh = "打开原作者托管的运输船游戏，或导入自己的�
 keywords = ["workbench", "game"]
 categories = ["entertainment"]
 owners = ["hiyouga"]
+yanked = true
+yanked_reason = "This version loads the hosted game on startup. Version 1.1.1 opens a local HTML file in the workbench."
 integrity = "sha512-thymi7yQd20IRqrS2MBo7OaiM4So5IqA+Q4/loXdpvCXYRTy23rGwDfPYM8azWl1cvNuo64Z/GyEmXRJFIWSDg=="
 
 [[channels]]
