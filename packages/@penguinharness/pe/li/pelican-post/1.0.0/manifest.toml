@@ -1,0 +1,18 @@
+name = "@penguinharness/pelican-post"
+version = "1.0.0"
+description = "Cycle the boardwalk, collect wind-blown letters and deliver them to seaside postboxes."
+authors = ["Prism-Shadow <https://github.com/Prism-Shadow>"]
+license = "Apache-2.0"
+repository = "https://github.com/Prism-Shadow/penguin-harness-apps"
+homepage = "https://github.com/Prism-Shadow/penguin-harness-apps/tree/19813263c69b1e8385ec00a3eb38f9370aa077e4/plugins/pelican-post"
+title = "Pelican Post"
+title_zh = "鹈鹕邮路"
+description_zh = "骑车穿过海岸栈道，收集风中的信件，再送到沿途邮筒。"
+keywords = ["workbench", "game"]
+categories = ["entertainment"]
+owners = ["hiyouga"]
+integrity = "sha512-Lu4tXXoAd2rY5/D1FiWnWI41lkD+M/X3l6AIpULMglzKyH2cdEfexZjrs/Wda4KCCt5GITZ0u0xvDFttabHiiQ=="
+
+[[channels]]
+kind = "github"
+url = "https://raw.githubusercontent.com/Prism-Shadow/penguin-harness-apps/19813263c69b1e8385ec00a3eb38f9370aa077e4/archives/pelican-post-1.0.0.tgz"

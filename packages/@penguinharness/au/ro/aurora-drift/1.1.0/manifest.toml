@@ -1,0 +1,18 @@
+name = "@penguinharness/aurora-drift"
+version = "1.1.0"
+description = "Race four tracks in the original 3D fan game. Choose a kart, drift, use items and boost past your rivals."
+authors = ["Prism-Shadow <https://github.com/Prism-Shadow>"]
+license = "Apache-2.0 AND ISC AND MIT"
+repository = "https://github.com/Prism-Shadow/penguin-harness-apps/tree/fbb61358dda168fbf844fff96acd8fbb4b61c4f5/plugins/aurora-drift"
+homepage = "https://github.com/Prism-Shadow/penguin-harness-apps/blob/fbb61358dda168fbf844fff96acd8fbb4b61c4f5/plugins/aurora-drift/README.md"
+title = "Aurora Drift 3D"
+title_zh = "极光漂移 3D"
+description_zh = "原版 3D 同人赛车游戏。选择赛车和四条赛道，使用漂移、小喷、氮气和道具与对手竞速。"
+keywords = ["workbench", "game"]
+categories = ["entertainment"]
+owners = ["hiyouga"]
+integrity = "sha512-63qh+uRJ8QL91QQ2mpRNF72ZOzTeTA328Pmwh8SpVdFudNMvRXMxNxtRF8NZ/jEDk/SFJScG51ZMM89TX1sL5A=="
+
+[[channels]]
+kind = "github"
+url = "https://raw.githubusercontent.com/Prism-Shadow/penguin-harness-apps/fbb61358dda168fbf844fff96acd8fbb4b61c4f5/archives/aurora-drift-1.1.0.tgz"

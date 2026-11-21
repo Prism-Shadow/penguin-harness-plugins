@@ -1,0 +1,18 @@
+name = "@penguinharness/english-workbench"
+version = "0.2.21"
+description = "An English study workbench: read public-domain classics and pasted articles aloud word by word, keep a word and sentence library with spaced review, and practise speaking and exam tasks."
+authors = ["Prism-Shadow <https://github.com/Prism-Shadow>"]
+license = "Apache-2.0"
+repository = "https://github.com/Prism-Shadow/penguin-harness-apps"
+homepage = "https://github.com/Prism-Shadow/penguin-harness-apps/tree/6776a44a9933c3895804f19cfbab3354c2e26a56/plugins/english-workbench"
+title = "English Learning Workbench"
+title_zh = "英语学习工作台"
+description_zh = "英语学习工作台：名著原文点读、新闻与 TED 导读、粘贴文章精读、可选的每日外刊，配词句库与间隔复习、跟读录音和考试微练。"
+keywords = ["workbench", "english", "language-learning", "reading"]
+categories = ["utilities"]
+owners = ["hiyouga"]
+integrity = "sha512-8Q+sOK6KMz7RMEjgiZ5hTYgDflS1Gxdyk09evjUS6RxFxze5uMGPd8lfwU+Ia05GVrkcuW/cxIX4ks1E8etIOw=="
+
+[[channels]]
+kind = "github"
+url = "https://raw.githubusercontent.com/Prism-Shadow/penguin-harness-apps/6776a44a9933c3895804f19cfbab3354c2e26a56/archives/english-workbench-0.2.21.tgz"

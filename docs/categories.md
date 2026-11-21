@@ -15,6 +15,9 @@ not fit.
 | `office-productivity`  | serve office work: documents, slides, data, the company mode and its kin.                     |
 | `software-development` | serve people writing code: engineering practice, syntax highlighting, build and test tooling. |
 | `ai-app-development`   | serve building AI apps: agents, prompts, model plumbing.                                      |
+| `learning-life`        | support personal learning, making things, and everyday activities.                            |
+| `utilities`            | help with specific everyday tasks, including study and practice.                              |
+| `entertainment`        | offer games, creative play, or recreational activities.                                       |
 | `sandbox`              | provide a sandbox backend — the confinement applied to spawned processes.                     |
 
 Pick the floor your plugin _provides on_, not the one it consumes. A tool that happens to

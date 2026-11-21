@@ -1,0 +1,20 @@
+name = "@penguinharness/harbor-pulse"
+version = "1.1.0"
+description = "Open the original hosted game, or import your own Transport Ship HTML. For the audio fix, choose the copy you patched locally."
+authors = ["Prism-Shadow <https://github.com/Prism-Shadow>"]
+license = "Apache-2.0"
+repository = "https://github.com/Prism-Shadow/penguin-harness-apps/tree/fbb61358dda168fbf844fff96acd8fbb4b61c4f5/plugins/harbor-pulse"
+homepage = "https://github.com/Prism-Shadow/penguin-harness-apps/blob/fbb61358dda168fbf844fff96acd8fbb4b61c4f5/plugins/harbor-pulse/README.md"
+title = "Transport Ship"
+title_zh = "运输船"
+description_zh = "打开原作者托管的运输船游戏，或导入自己的游戏 HTML。要使用修复后的音效，请选择你已在本地修复的文件。"
+keywords = ["workbench", "game"]
+categories = ["entertainment"]
+owners = ["hiyouga"]
+yanked = true
+yanked_reason = "This version loads the hosted game on startup. Version 1.1.1 opens a local HTML file in the workbench."
+integrity = "sha512-thymi7yQd20IRqrS2MBo7OaiM4So5IqA+Q4/loXdpvCXYRTy23rGwDfPYM8azWl1cvNuo64Z/GyEmXRJFIWSDg=="
+
+[[channels]]
+kind = "github"
+url = "https://raw.githubusercontent.com/Prism-Shadow/penguin-harness-apps/fbb61358dda168fbf844fff96acd8fbb4b61c4f5/archives/harbor-pulse-1.1.0.tgz"

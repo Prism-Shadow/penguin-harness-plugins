@@ -1,0 +1,18 @@
+name = "@penguinharness/pelican-post"
+version = "1.1.0"
+description = "Ride the original coastal 3D world as a pelican. Catch fish, change cameras and pedal from sunset into the night."
+authors = ["Prism-Shadow <https://github.com/Prism-Shadow>"]
+license = "Apache-2.0 AND ISC AND MIT"
+repository = "https://github.com/Prism-Shadow/penguin-harness-apps/tree/fbb61358dda168fbf844fff96acd8fbb4b61c4f5/plugins/pelican-post"
+homepage = "https://github.com/Prism-Shadow/penguin-harness-apps/blob/fbb61358dda168fbf844fff96acd8fbb4b61c4f5/plugins/pelican-post/README.md"
+title = "Pelican Bike"
+title_zh = "鹈鹕骑行"
+description_zh = "在原版 3D 海岸公路上扮演鹈鹕骑行，抓鱼、切换镜头、展翅，从日落骑到星夜。"
+keywords = ["workbench", "game"]
+categories = ["entertainment"]
+owners = ["hiyouga"]
+integrity = "sha512-su9YyYnV0JhtK+pf8dnHsq4hUVRLLZ87IZjI4XZfzG2eut7H3VhpFoFYITse57iqE899nKfvu6eV4H2KZaBY/g=="
+
+[[channels]]
+kind = "github"
+url = "https://raw.githubusercontent.com/Prism-Shadow/penguin-harness-apps/fbb61358dda168fbf844fff96acd8fbb4b61c4f5/archives/pelican-post-1.1.0.tgz"

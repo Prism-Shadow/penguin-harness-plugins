@@ -27,6 +27,7 @@ import {
   type Manifest,
   type NpmRunner,
 } from "@prismshadow/penguin-plugin-index";
+import { probeLibrary } from "./library.js";
 import { MAX_ENTRY_BYTES } from "./vocabulary.js";
 
 /** The flags of any install — the lock's `npm ci` and a channel's tarball alike. */
@@ -130,6 +131,15 @@ export function probePackage(root: string): string[] {
   if (!fs.existsSync(manifestPath)) return ["the installed package has no package.json"];
   const problems: string[] = [];
   const published = JSON.parse(fs.readFileSync(manifestPath, "utf8")) as PackumentVersion;
+  // Resource-only libraries install into an Agent from their generated table. Packages
+  // advertising a JavaScript entry still go through the original ESM activation check.
+  if (
+    published.main === undefined &&
+    published.exports === undefined &&
+    !fs.existsSync(path.join(root, "index.js")) &&
+    fs.existsSync(path.join(root, "ifaces.json"))
+  )
+    return probeLibrary(root);
   if (published.type !== "module") {
     problems.push(`package.json must declare "type": "module"; the harness imports plugins as ESM`);
   }
