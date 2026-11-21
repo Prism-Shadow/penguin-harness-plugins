@@ -1,0 +1,18 @@
+name = "@penguinharness/study-map"
+version = "1.0.0"
+description = "Explore a codebase or reading as a diagram linked to its original lines, with optional explanations from your Agent."
+authors = ["Prism-Shadow <https://github.com/Prism-Shadow>"]
+license = "Apache-2.0"
+repository = "https://github.com/Prism-Shadow/penguin-harness-apps"
+homepage = "https://github.com/Prism-Shadow/penguin-harness-apps/tree/b4c7324f2a84bb908331db19288c31d93aa9f741/plugins/study-map"
+title = "Study Map"
+title_zh = "学习框图"
+description_zh = "把代码仓库或学习文档拆成框图，点击节点核对源码和原文，也可让 Agent 解释关键联系。"
+keywords = ["workbenches", "learning", "source-code", "diagrams"]
+categories = ["utilities"]
+owners = ["hiyouga"]
+integrity = "sha512-Wv5+JoL3b73v49bCOKq2BX20wi0k+vCit19r7xIW2/rnV8ieEj65KX/8ykou4wF4yp7bZAYjABIofuJ2FHPJmg=="
+
+[[channels]]
+kind = "github"
+url = "https://raw.githubusercontent.com/Prism-Shadow/penguin-harness-apps/b4c7324f2a84bb908331db19288c31d93aa9f741/archives/study-map-1.0.0.tgz"
