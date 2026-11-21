@@ -1,0 +1,18 @@
+name = "ontology-rsi-toolkit"
+version = "0.1.0"
+description = "The Ontology RSI Toolkit: learn a typed model of an agent's working domain (entities, relations, lifecycles, source precedence, action contracts, constraints) from its own Traces through evidence-gated edits, and measure the frozen model on held-out tasks."
+authors = ["EonHao <@EonHao>"]
+license = "Apache-2.0"
+repository = "https://github.com/EonHao/ontology-rsi-toolkit"
+homepage = "https://github.com/EonHao/ontology-rsi-toolkit"
+title = "Ontology RSI Toolkit"
+title_zh = "本体自进化工具包"
+description_zh = "本体 RSI 工具包：从 Agent 自己的执行轨迹中学习其工作领域的类型化模型（实体、关系、生命周期、数据源优先级、动作契约、约束），每条修改都须逐字引用轨迹并通过确定性校验，冻结后在独立测试上评测。"
+keywords = ["rsi", "ontology", "self-evolution"]
+categories = ["rsi"]
+owners = ["EonHao"]
+integrity = "sha512-0qNMHPgv3Iz+z2f0R9nF342BlEM4Ww+nGLQOeIBrK7irgHvaNSth3rcPm6AUfpFVfCUpVHC3lG636SQakdOGew=="
+
+[[channels]]
+kind = "github"
+url = "https://github.com/EonHao/ontology-rsi-toolkit/releases/download/v0.1.0/ontology-rsi-toolkit-0.1.0.tgz"
