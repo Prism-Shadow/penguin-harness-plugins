@@ -1,0 +1,18 @@
+name = "@penguinharness/kaoyan-flashcards"
+version = "0.2.20"
+description = "Flashcards for China's postgraduate entrance exam: a question bank with spaced review, recitation notes, and import from PDF, Word or text."
+authors = ["Prism-Shadow <https://github.com/Prism-Shadow>"]
+license = "Apache-2.0"
+repository = "https://github.com/Prism-Shadow/penguin-harness-apps"
+homepage = "https://github.com/Prism-Shadow/penguin-harness-apps/tree/v2026.11.23-rc.1/plugins/kaoyan-flashcards"
+title = "Kaoyan Flashcards"
+title_zh = "考研记忆卡"
+description_zh = "考研公共课与专业课的题库、刷题与背诵工作台：内置 295 道示例题和 9 篇背诵资料，按间隔排期复习，可导入 PDF、Word 和文本。"
+keywords = ["workbench", "flashcards", "spaced-repetition", "exam-prep"]
+categories = ["utilities"]
+owners = ["hiyouga"]
+integrity = "sha512-aQm8YvXDIOo70oTgUSP74bJPzMGo+urYFYSlpEEJJu3lLYn2ImiF5045DNCbHp/RM7fTwR7Bmlutm9po0otInw=="
+
+[[channels]]
+kind = "github"
+url = "https://github.com/Prism-Shadow/penguin-harness-apps/releases/download/v2026.11.23-rc.1/kaoyan-flashcards-0.2.20.tgz"
