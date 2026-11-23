@@ -1,0 +1,14 @@
+name = "@penguinharness/rsiagent"
+version = "0.1.0"
+description = "RSIAgent for PenguinHarness: Curriculum, Actor and Verifier agents run broad-then-deep exploration and freeze causal memory for held-out reuse (arXiv:2609.15364)."
+authors = ["KeBbboy <@KeBbboy>"]
+license = "Apache-2.0"
+repository = "https://github.com/KeBbboy/penguin-harness-plugins"
+keywords = ["penguin-plugin", "penguinharness", "skills", "rsi"]
+categories = ["rsi"]
+owners = ["KeBbboy"]
+integrity = "sha512-HQ4nqlRuHBCJTUlx+KO0pffvZjTU0drvWc0GmInHgqzf+1gm3PMy1oPWW0EFx2/Hq/we7M77kykm4I6lndq1kA=="
+
+[[channels]]
+kind = "github"
+url = "https://github.com/KeBbboy/penguin-harness-plugins/releases/download/rsiagent-v0.1.0/rsiagent-0.1.0-final.tgz"
