@@ -13,6 +13,9 @@ categories = ["entertainment"]
 owners = ["hiyouga"]
 integrity = "sha512-9n+aJRmbr49DzSQOl5VznDAFhJfsvipwR9NsCLP8xAD0YNBe7Q8EwaBPdb/FREUJ6DFH+7Rxic100oBYTkPijA=="
 
+yanked = true
+yanked_reason = "Superseded by the bundled offline edition, 1.4.0."
+
 [[channels]]
 kind = "github"
 url = "https://github.com/Prism-Shadow/penguin-harness-apps/releases/download/v2026.11.23-rc.4/harbor-pulse-1.3.0.tgz"

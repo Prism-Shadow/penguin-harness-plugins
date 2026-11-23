@@ -18,6 +18,16 @@ Not accepted: parenthesised expressions, the `+` suffix (`GPL-2.0+`), `WITH` exc
 one of these, open an issue rather than a submission — the list is meant to grow when
 there is a real case.
 
+## Transport Ship 1.4.0
+
+The maintainers approved the specific GitHub Release archive of
+`@penguinharness/harbor-pulse@1.4.0` from the apps repository under its published
+declaration, `SEE LICENSE IN THIRD-PARTY-NOTICES.txt`. The original Transport Ship
+game has no stated license. Apache-2.0 covers the PenguinHarness workbench and audio
+adapter, and MIT covers Three.js. The entry links to the notices and pins the
+reviewed source, release channel and SHA-512. All other packages and versions
+follow the ordinary license rules above. [Package notices](https://github.com/Prism-Shadow/penguin-harness-apps/blob/3d0ada9e67abf495ea3c47ea2835c0644d671444/plugins/harbor-pulse/THIRD-PARTY-NOTICES.txt)
+
 ## What must agree
 
 The `license` in your manifest, the `license` in the published `package.json`, and the
