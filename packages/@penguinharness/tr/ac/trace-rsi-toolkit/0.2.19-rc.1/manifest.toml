@@ -1,6 +1,6 @@
 name = "@penguinharness/trace-rsi-toolkit"
 version = "0.2.19-rc.1"
-description = "TRACE RSI Toolkit: evolve skills from contrasting trajectories."
+description = "The TRACE RSI Toolkit: organize container training and evaluation, refine a modular skill bank from contrasting trajectories, and test the checkpoint selected by training scores."
 authors = ["Prism-Shadow <https://github.com/Prism-Shadow>"]
 license = "Apache-2.0"
 repository = "https://github.com/Prism-Shadow/penguin-harness-rsi-platform"
