@@ -1,0 +1,18 @@
+name = "@penguinharness/opro-rsi-toolkit"
+version = "0.2.19-rc.1"
+description = "OPRO RSI Toolkit: optimize an instruction from scores."
+authors = ["Prism-Shadow <https://github.com/Prism-Shadow>"]
+license = "Apache-2.0"
+repository = "https://github.com/Prism-Shadow/penguin-harness-rsi-platform"
+homepage = "https://github.com/Prism-Shadow/penguin-harness-rsi-platform/tree/v0.1.0-rc.2/plugins/opro-rsi-toolkit"
+title = "OPRO RSI Toolkit"
+title_zh = "OPRO 自进化工具包"
+description_zh = "OPRO RSI 工具包：由分数优化指令。"
+keywords = ["penguin-plugin", "penguinharness", "skills"]
+categories = ["rsi"]
+owners = ["hiyouga"]
+integrity = "sha512-6/iivl8G9oQo0tIX4z1ij5ApuabwUyHLxIQz9SSLH6fUkScyWeAv/Iwp06Iq6lGeq2D6hTTTprFden0PqYs7wg=="
+
+[[channels]]
+kind = "github"
+url = "https://github.com/Prism-Shadow/penguin-harness-rsi-platform/releases/download/v0.1.0-rc.2/penguinharness-opro-rsi-toolkit-0.2.19-rc.1.tgz"
