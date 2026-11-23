@@ -15,4 +15,4 @@ integrity = "sha512-G5vaLr9pclptorwCIV5JhcHVkZvLEmhtONQ5Cl7IIEKuocyNvAr8W8VCqpCQ
 
 [[channels]]
 kind = "github"
-url = "https://raw.githubusercontent.com/Prism-Shadow/penguin-harness-apps/baa62a1dbd1efaedb2452207c24b22880c01b224/archives/aurora-drift-1.1.1.tgz"
+url = "https://github.com/Prism-Shadow/penguin-harness-apps/releases/download/v2026.11.23-rc.1/aurora-drift-1.1.1.tgz"

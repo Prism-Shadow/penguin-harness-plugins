@@ -15,4 +15,4 @@ integrity = "sha512-AGQTRlJk0LB01Ixljn2pRNwJldMttW0cXibTibP1rfNDJwgKWjTsj6b3a8ll
 
 [[channels]]
 kind = "github"
-url = "https://raw.githubusercontent.com/Prism-Shadow/penguin-harness-apps/aa6918252e605b7b1e576fdd82650d6087aa3253/archives/character-chat-0.2.20.tgz"
+url = "https://github.com/Prism-Shadow/penguin-harness-apps/releases/download/v2026.11.23-rc.1/character-chat-0.2.20.tgz"

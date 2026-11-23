@@ -15,4 +15,4 @@ integrity = "sha512-su9YyYnV0JhtK+pf8dnHsq4hUVRLLZ87IZjI4XZfzG2eut7H3VhpFoFYITse
 
 [[channels]]
 kind = "github"
-url = "https://raw.githubusercontent.com/Prism-Shadow/penguin-harness-apps/fbb61358dda168fbf844fff96acd8fbb4b61c4f5/archives/pelican-post-1.1.0.tgz"
+url = "https://github.com/Prism-Shadow/penguin-harness-apps/releases/download/v2026.11.23-rc.1/pelican-post-1.1.0.tgz"

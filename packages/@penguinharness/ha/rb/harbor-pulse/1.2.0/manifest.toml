@@ -15,4 +15,4 @@ integrity = "sha512-3n/Ru18kjNjM5mNt0UBYrZbWlpIvkhjWnKBEECgCpAIMypCQHblFuq/Ruq9R
 
 [[channels]]
 kind = "github"
-url = "https://raw.githubusercontent.com/Prism-Shadow/penguin-harness-apps/04d2cdac91ca4467c7cfe5b625bf4833cd424b98/archives/harbor-pulse-1.2.0.tgz"
+url = "https://github.com/Prism-Shadow/penguin-harness-apps/releases/download/v2026.11.23-rc.1/harbor-pulse-1.2.0.tgz"
