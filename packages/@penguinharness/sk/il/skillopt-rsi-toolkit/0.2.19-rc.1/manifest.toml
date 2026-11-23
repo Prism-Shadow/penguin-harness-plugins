@@ -1,6 +1,6 @@
 name = "@penguinharness/skillopt-rsi-toolkit"
 version = "0.2.19-rc.1"
-description = "SkillOpt RSI Toolkit: bounded Skill edits with score-based selection."
+description = "SkillOpt RSI Toolkit: evolve a reusable Skill through bounded edits, candidate evaluation and cross-epoch reflection, then compare frozen baseline and final States."
 authors = ["Prism-Shadow <https://github.com/Prism-Shadow>"]
 license = "Apache-2.0"
 repository = "https://github.com/Prism-Shadow/penguin-harness-rsi-platform"
