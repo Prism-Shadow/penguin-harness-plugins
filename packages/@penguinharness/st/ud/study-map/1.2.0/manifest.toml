@@ -1,0 +1,18 @@
+name = "@penguinharness/study-map"
+version = "1.2.0"
+description = "Read code and documents in an interactive Archify architecture or chapter diagram, with source lines and explanations side by side."
+authors = ["Prism-Shadow <https://github.com/Prism-Shadow>"]
+license = "Apache-2.0"
+repository = "https://github.com/Prism-Shadow/penguin-harness-apps"
+homepage = "https://github.com/Prism-Shadow/penguin-harness-apps/tree/v2026.11.23-rc.3/plugins/study-map"
+title = "Study Map"
+title_zh = "学习框图"
+description_zh = "用 Archify 生成代码架构图和文档章节树，点击节点核对原文，也可让 Agent 解释它们的联系。"
+keywords = ["workbenches", "learning", "source-code", "diagrams", "archify"]
+categories = ["utilities"]
+owners = ["hiyouga"]
+integrity = "sha512-xpeLf2XjzjfVHDc3zfnuxhrxLv+tAx7lvHGLfiPyiKl9+biamVqQf/n+kb8DbfMUG9EH+sBZO+P8wp2Egq6DkA=="
+
+[[channels]]
+kind = "github"
+url = "https://github.com/Prism-Shadow/penguin-harness-apps/releases/download/v2026.11.23-rc.3/study-map-1.2.0.tgz"
