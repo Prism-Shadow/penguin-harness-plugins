@@ -1,0 +1,154 @@
+{
+ "model": "deepseek-v4.1-flash",
+ "endpoint": "http://100.64.0.88:7864/v1",
+ "design": "clean: train/holdout disjoint, deep target from training, corrected exclusive-endpoint oracle, container ground truth",
+ "verifier": "runtime/evidence.py container ground truth",
+ "train_tasks": [
+  "days between 2026-01-01 and 2026-01-05 (inclusive of neither)",
+  "days between 2025-02-14 and 2025-03-14 (inclusive of neither)",
+  "days between 2026-07-01 and 2026-07-08 (inclusive of neither)",
+  "days between 2026-04-15 and 2026-06-15 (inclusive of neither)",
+  "days between 2025-09-20 and 2025-11-05 (inclusive of neither)"
+ ],
+ "held_out": [
+  "days between 2026-03-15 and 2026-11-04 (inclusive of neither)",
+  "days between 2025-06-10 and 2026-02-17 (inclusive of neither)",
+  "days between 2024-01-05 and 2024-12-30 (inclusive of neither)"
+ ],
+ "role_calls_explore": {
+  "actor": 21,
+  "curriculum": 1
+ },
+ "role_calls_baseline": {
+  "actor": 3
+ },
+ "wave_verdicts": [
+  "FAIL",
+  "FAIL",
+  "FAIL",
+  "FAIL"
+ ],
+ "retry_verdicts": [
+  "FAIL",
+  "FAIL",
+  "FAIL",
+  "FAIL"
+ ],
+ "deep_target": "days between 2025-09-20 and 2025-11-05 (inclusive of neither)",
+ "deep_verdict": "PASS",
+ "frozen_digest": "118205ea1e59b9ebaa68093b007bebdf8640e7cab4d8aa3d4a2873f1fbed4043",
+ "frozen_lessons": 9,
+ "frozen_memory": [
+  {
+   "action": "The candidate interpreted the instruction as excluding both endpoints as whole dates, counted only Jan 2, Jan 3, and Jan 4, and answered 3.",
+   "condition": "Date-difference task: days between 2026-01-01 and 2026-01-05 with 'inclusive of neither'.",
+   "outcome": "The verifier marked the answer FAIL.",
+   "source_task": "days between 2026-01-01 and 2026-01-05 (inclusive of neither)",
+   "support": "The supplied verifier verdict is FAIL, with no correct answer or rationale provided. This shows the candidate's strictly-interior-date enumeration was not accepted under the verifier's expected convention; the exact required convention is uncertain, though it may be the arithmetic difference end-minus-start.",
+   "verdict": "FAIL"
+  },
+  {
+   "action": "The candidate treated the answer as the end-minus-start span minus one, excluding both endpoint dates, answering 27 for 2025-02-14 to 2025-03-14.",
+   "condition": "Date-difference questions asking for the days between two dates with the phrase 'inclusive of neither'.",
+   "outcome": "The verifier marked the attempt FAIL.",
+   "source_task": "days between 2025-02-14 and 2025-03-14 (inclusive of neither)",
+   "support": "The supplied verifier verdict is FAIL with no correct answer or rationale. Prior memory shows a similar strictly-interior-date count also failed for 2026-01-01 to 2026-01-05 (answer 3). This supports avoiding the 'difference minus one' convention for 'inclusive of neither' prompts and considering an arithmetic end-minus-start difference instead, but the expected convention remains uncertain.",
+   "verdict": "FAIL"
+  },
+  {
+   "action": "The candidate counted only strictly interior calendar dates, July 2–7, and answered 6.",
+   "condition": "Date-difference question phrased as days between two dates with 'inclusive of neither', such as 2026-07-01 to 2026-07-08.",
+   "outcome": "The verifier marked the attempt FAIL.",
+   "source_task": "days between 2026-07-01 and 2026-07-08 (inclusive of neither)",
+   "support": "The supplied verdict is FAIL with no correct answer or rationale. Prior memory also shows similar strictly-interior/difference-minus-one counts failed for other date pairs, so this supports avoiding that convention for 'inclusive of neither' prompts and considering an arithmetic end-minus-start difference instead; the exact expected convention remains uncertain.",
+   "verdict": "FAIL"
+  },
+  {
+   "action": "The candidate counted only strictly interior calendar dates, excluding both endpoint dates, and answered 60 by summing 15 April days, 31 May days, and 14 June days.",
+   "condition": "Date-difference questions asking for the number of days between two dates with the phrase 'inclusive of neither', such as 2026-04-15 to 2026-06-15.",
+   "outcome": "The verifier marked the attempt FAIL.",
+   "source_task": "days between 2026-04-15 and 2026-06-15 (inclusive of neither)",
+   "support": "The supplied verdict is FAIL with no correct answer or rationale. Prior memory shows repeated failures for the same strictly-interior / subtract-one convention on other 'inclusive of neither' date pairs, which suggests avoiding that convention and considering an arithmetic end-minus-start difference instead; however, the verifier's exact expected convention remains uncertain.",
+   "verdict": "FAIL"
+  },
+  {
+   "action": "The candidate excluded both endpoint dates, counted only January 2, January 3, and January 4, 2026, and answered 3.",
+   "condition": "Date-difference task asking for days between 2026-01-01 and 2026-01-05 with 'inclusive of neither'.",
+   "outcome": "The verifier marked the attempt FAIL.",
+   "source_task": "days between 2026-01-01 and 2026-01-05 (inclusive of neither). Method hint: compute each date's day-of-year ordinal, add 366 or 365 for each full calendar year crossed, then subtract the smaller from the larger. Do not count either endpoint.",
+   "support": "The supplied verdict is FAIL with no correct answer or rationale. Prior memory shows repeated failures for similar strictly-interior/difference-minus-one counts on 'inclusive of neither' date prompts, which supports avoiding that convention and considering an arithmetic end-minus-start difference instead; however, the verifier's exact expected convention remains uncertain.",
+   "verdict": "FAIL"
+  },
+  {
+   "action": "The candidate excluded both endpoint dates as whole dates and counted Feb 15–28 plus Mar 1–13, answering 27.",
+   "condition": "Date-difference question asking for days between 2025-02-14 and 2025-03-14 with 'inclusive of neither' and a method hint to compute day-of-year ordinals and subtract the smaller from the larger without counting either endpoint.",
+   "outcome": "The verifier marked the attempt FAIL.",
+   "source_task": "days between 2025-02-14 and 2025-03-14 (inclusive of neither). Method hint: compute each date's day-of-year ordinal, add 366 or 365 for each full calendar year crossed, then subtract the smaller from the larger. Do not count either endpoint.",
+   "support": "The supplied verdict is FAIL with no correct answer or rationale. Prior memory shows repeated failures for the same strictly-interior/subtract-one convention on other 'inclusive of neither' date pairs, which supports avoiding that convention and considering an arithmetic end-minus-start difference instead; however, the verifier's exact expected convention remains uncertain.",
+   "verdict": "FAIL"
+  },
+  {
+   "action": "The candidate interpreted 'inclusive of neither' as excluding both endpoint dates as whole dates, counted only July 2 through July 7, and answered 6.",
+   "condition": "Date-difference task asking for days between 2026-07-01 and 2026-07-08 with 'inclusive of neither', plus a method hint to use day-of-year ordinals and subtract the smaller from the larger without counting either endpoint.",
+   "outcome": "The verifier marked the attempt FAIL.",
+   "source_task": "days between 2026-07-01 and 2026-07-08 (inclusive of neither). Method hint: compute each date's day-of-year ordinal, add 366 or 365 for each full calendar year crossed, then subtract the smaller from the larger. Do not count either endpoint.",
+   "support": "The supplied verdict is FAIL with no correct answer or rationale. Prior memory shows repeated failures for the same strictly-interior/subtract-one convention on other 'inclusive of neither' date pairs, which supports avoiding that convention and considering an arithmetic end-minus-start difference instead; however, the verifier's exact expected convention remains uncertain.",
+   "verdict": "FAIL"
+  },
+  {
+   "action": "The candidate computed the ordinal difference as 166 - 105 = 61, then subtracted 1 more to exclude both endpoints and answered 60.",
+   "condition": "Date-difference task asking for days between 2026-04-15 and 2026-06-15 with 'inclusive of neither' and a method hint to subtract day-of-year ordinals without counting either endpoint.",
+   "outcome": "The verifier marked the attempt FAIL.",
+   "source_task": "days between 2026-04-15 and 2026-06-15 (inclusive of neither). Method hint: compute each date's day-of-year ordinal, add 366 or 365 for each full calendar year crossed, then subtract the smaller from the larger. Do not count either endpoint.",
+   "support": "The supplied verdict is FAIL with no correct answer or rationale. Prior memory shows repeated failures for the same subtract-one/strictly-interior convention on other 'inclusive of neither' date pairs, which supports avoiding an extra endpoint-exclusion subtraction after the ordinal difference and considering the arithmetic end-minus-start difference instead; however, the verifier's exact expected convention remains uncertain.",
+   "verdict": "FAIL"
+  },
+  {
+   "action": "The candidate used day-of-year ordinals 263 for 2025-09-20 and 309 for 2025-11-05, then answered 46 as the direct ordinal difference without subtracting an additional 1.",
+   "condition": "Date-difference task asking for days between 2025-09-20 and 2025-11-05 (inclusive of neither), with a method hint to compute day-of-year ordinals and subtract the smaller from the larger without counting either endpoint.",
+   "outcome": "The verifier marked the attempt PASS.",
+   "source_task": "days between 2025-09-20 and 2025-11-05 (inclusive of neither). Method hint: compute each date's day-of-year ordinal, add 366 or 365 for each full calendar year crossed, then subtract the smaller from the larger. Do not count either endpoint.",
+   "support": "The supplied verifier verdict is PASS, and the candidate's evidence states the ordinal subtraction 309 - 263 = 46. Prior memory repeatedly shows FAIL for subtract-one/strictly-interior counts on similar 'inclusive of neither' date prompts, so this PASS supports using the direct end-minus-start ordinal difference under the given method hint; however, a single PASS and the lack of verifier rationale mean the expected convention is not fully established.",
+   "verdict": "PASS"
+  }
+ ],
+ "snapshot_file": "clean-frozen-memory.json",
+ "baseline": [
+  {
+   "task": "days between 2026-03-15 and 2026-11-04 (inclusive of neither)",
+   "verdict": "FAIL",
+   "answer": 233
+  },
+  {
+   "task": "days between 2025-06-10 and 2026-02-17 (inclusive of neither)",
+   "verdict": "FAIL",
+   "answer": 251
+  },
+  {
+   "task": "days between 2024-01-05 and 2024-12-30 (inclusive of neither)",
+   "verdict": "FAIL",
+   "answer": 359
+  }
+ ],
+ "evolved": [
+  {
+   "task": "days between 2026-03-15 and 2026-11-04 (inclusive of neither)",
+   "verdict": "PASS",
+   "answer": 234
+  },
+  {
+   "task": "days between 2025-06-10 and 2026-02-17 (inclusive of neither)",
+   "verdict": "PASS",
+   "answer": 252
+  },
+  {
+   "task": "days between 2024-01-05 and 2024-12-30 (inclusive of neither)",
+   "verdict": "PASS",
+   "answer": 360
+  }
+ ],
+ "baseline_pass": 0,
+ "evolved_pass": 3,
+ "n_tasks": 3,
+ "frozen_unchanged": true
+}

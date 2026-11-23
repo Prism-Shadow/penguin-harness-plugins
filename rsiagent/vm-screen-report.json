@@ -1,0 +1,6 @@
+{
+ "image": "/home/yichen/vm-prep.qcow2",
+ "png_bytes": 1805339,
+ "png_path": "/home/yichen/penguin-harness-plugins/rsiagent/vm-screen.png",
+ "vision_answer": "Visible text: “Activities” (top-left), “Nov 12 14:15” (top-center), and “Home” (bottom-right). This is not a login prompt or console; it shows a desktop."
+}

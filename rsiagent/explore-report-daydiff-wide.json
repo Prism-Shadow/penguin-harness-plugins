@@ -1,0 +1,89 @@
+{
+ "model": "deepseek-v4.1-flash",
+ "endpoint": "http://100.64.0.88:7864/v1",
+ "domain": "day-count differences (exclusive of both endpoints)",
+ "verifier": "runtime/evidence.py container ground truth",
+ "role_calls": {
+  "actor": 20,
+  "curriculum": 3
+ },
+ "waves": [
+  {
+   "tasks": [
+    "days between 2026-01-01 and 2026-01-05 (inclusive of neither)",
+    "days between 2025-02-14 and 2025-03-14 (inclusive of neither)",
+    "days between 2026-07-01 and 2026-07-08 (inclusive of neither)",
+    "days between 2025-12-30 and 2026-01-03 (inclusive of neither)"
+   ],
+   "verdicts": [
+    "FAIL",
+    "FAIL",
+    "FAIL",
+    "FAIL"
+   ]
+  },
+  {
+   "tasks": [
+    "days between 2026-04-15 and 2026-06-15 (inclusive of neither)",
+    "days between 2025-09-20 and 2025-11-05 (inclusive of neither)",
+    "days between 2026-02-10 and 2026-05-10 (inclusive of neither)",
+    "days between 2024-11-11 and 2025-02-11 (inclusive of neither)"
+   ],
+   "verdicts": [
+    "FAIL",
+    "FAIL",
+    "FAIL",
+    "FAIL"
+   ]
+  }
+ ],
+ "retry_verdicts": [
+  "FAIL",
+  "FAIL",
+  "FAIL",
+  "FAIL"
+ ],
+ "deep_target": "days between 2026-03-15 and 2026-11-04 (inclusive of neither)",
+ "deep_verdict": "BUDGET_EXHAUSTED",
+ "frozen_digest": "c8b26bf4d7afbf48c56cfe846d217c1b7c03b70fc076ddfc2fbe84599842ef15",
+ "frozen_lessons": 17,
+ "correct_lessons": 0,
+ "baseline": [
+  {
+   "task": "days between 2026-03-15 and 2026-11-04 (inclusive of neither)",
+   "verdict": "FAIL",
+   "answer": 233
+  },
+  {
+   "task": "days between 2025-06-10 and 2026-02-17 (inclusive of neither)",
+   "verdict": "FAIL",
+   "answer": 251
+  },
+  {
+   "task": "days between 2024-01-05 and 2024-12-30 (inclusive of neither)",
+   "verdict": "FAIL",
+   "answer": 359
+  }
+ ],
+ "evolved": [
+  {
+   "task": "days between 2026-03-15 and 2026-11-04 (inclusive of neither)",
+   "verdict": "PASS",
+   "answer": 234
+  },
+  {
+   "task": "days between 2025-06-10 and 2026-02-17 (inclusive of neither)",
+   "verdict": "PASS",
+   "answer": 252
+  },
+  {
+   "task": "days between 2024-01-05 and 2024-12-30 (inclusive of neither)",
+   "verdict": "FAIL",
+   "answer": 359
+  }
+ ],
+ "baseline_pass": 0,
+ "evolved_pass": 2,
+ "n_tasks": 3,
+ "frozen_unchanged": true
+}

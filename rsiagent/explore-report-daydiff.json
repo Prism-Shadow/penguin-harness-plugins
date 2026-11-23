@@ -1,0 +1,105 @@
+{
+ "model": "deepseek-v4.1-flash",
+ "endpoint": "http://100.64.0.88:7864/v1",
+ "domain": "day-count differences (exclusive of both endpoints)",
+ "verifier": "restricted Docker container, computed ground truth (environment evidence)",
+ "role_calls": {
+  "actor": 10,
+  "curriculum": 3
+ },
+ "train_tasks": [
+  "days between 2026-01-01 and 2026-01-05 (inclusive of neither)",
+  "days between 2025-02-14 and 2025-03-14 (inclusive of neither)"
+ ],
+ "wave_verdicts": [
+  "FAIL",
+  "FAIL"
+ ],
+ "deep_target": "days between 2026-03-15 and 2026-11-04 (inclusive of neither)",
+ "deep_verdict": "BUDGET_EXHAUSTED",
+ "frozen_digest": "372b07612ce9f019988b65e2a969578ea1e2191b8553a31e911539273fd0b008",
+ "frozen_lessons": 7,
+ "frozen_memory": [
+  {
+   "answer": 3,
+   "evidence": "Excluding both endpoints, the days are Jan 2, Jan 3, and Jan 4, totaling 3 days.",
+   "task": "days between 2026-01-01 and 2026-01-05 (inclusive of neither)",
+   "verdict": "FAIL"
+  },
+  {
+   "answer": 27,
+   "evidence": "Excluding both endpoints, the days are Feb 15–28 (14 days) plus Mar 1–13 (13 days), totaling 27.",
+   "task": "days between 2025-02-14 and 2025-03-14 (inclusive of neither)",
+   "verdict": "FAIL"
+  },
+  {
+   "answer": 233,
+   "evidence": "Excluding both endpoints gives Mar 16–31 (16) plus Apr–Oct (214) plus Nov 1–3 (3), totaling 233 days.",
+   "task": "days between 2026-03-15 and 2026-11-04 (inclusive of neither)",
+   "verdict": "FAIL"
+  },
+  {
+   "answer": 3,
+   "evidence": "Excluding both endpoints leaves Jan 31, Feb 1, and Feb 2, totaling 3 days.",
+   "task": "days between 2025-01-30 and 2025-02-03 (inclusive of neither)",
+   "verdict": "FAIL"
+  },
+  {
+   "answer": 233,
+   "evidence": "Excluding both endpoints counts Mar 16–31 (16), all of April–October (214), and Nov 1–3 (3), totaling 233.",
+   "task": "days between 2026-03-15 and 2026-11-04 (inclusive of neither)",
+   "verdict": "FAIL"
+  },
+  {
+   "answer": 74,
+   "evidence": "Excluding both endpoints counts Apr 19–30 (12), May (31), June (30), and Jul 1 (1), totaling 74 days.",
+   "task": "Days between 2026-04-18 and 2026-07-02 (inclusive of neither).",
+   "verdict": "FAIL"
+  },
+  {
+   "answer": 234,
+   "evidence": "2026-11-04 is day 308 and 2026-03-15 is day 74, giving 308 - 74 = 234 days.",
+   "task": "days between 2026-03-15 and 2026-11-04 (inclusive of neither)",
+   "verdict": "PASS"
+  }
+ ],
+ "baseline": [
+  {
+   "task": "days between 2026-03-15 and 2026-11-04 (inclusive of neither)",
+   "verdict": "FAIL",
+   "answer": 233
+  },
+  {
+   "task": "days between 2025-06-10 and 2026-02-17 (inclusive of neither)",
+   "verdict": "FAIL",
+   "answer": 251
+  },
+  {
+   "task": "days between 2024-01-05 and 2024-12-30 (inclusive of neither)",
+   "verdict": "FAIL",
+   "answer": 359
+  }
+ ],
+ "evolved": [
+  {
+   "task": "days between 2026-03-15 and 2026-11-04 (inclusive of neither)",
+   "verdict": "PASS",
+   "answer": 234
+  },
+  {
+   "task": "days between 2025-06-10 and 2026-02-17 (inclusive of neither)",
+   "verdict": "FAIL",
+   "answer": 251
+  },
+  {
+   "task": "days between 2024-01-05 and 2024-12-30 (inclusive of neither)",
+   "verdict": "FAIL",
+   "answer": 359
+  }
+ ],
+ "baseline_pass": 0,
+ "evolved_pass": 1,
+ "n_tasks": 3,
+ "frozen_unchanged": true,
+ "verifier_isolated_from_actor_memory": true
+}
