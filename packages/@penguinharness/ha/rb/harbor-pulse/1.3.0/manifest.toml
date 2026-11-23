@@ -1,0 +1,18 @@
+name = "@penguinharness/harbor-pulse"
+version = "1.3.0"
+description = "Play the original Transport Ship on its 3D cargo deck. The first launch downloads the game from its author for offline play."
+authors = ["Prism-Shadow <https://github.com/Prism-Shadow>"]
+license = "Apache-2.0"
+repository = "https://github.com/Prism-Shadow/penguin-harness-apps/tree/6749f54f0656f8f69d18502a1ef6f4f1e619009d/plugins/harbor-pulse"
+homepage = "https://github.com/Prism-Shadow/penguin-harness-apps/blob/6749f54f0656f8f69d18502a1ef6f4f1e619009d/plugins/harbor-pulse/README.md"
+title = "Transport Ship"
+title_zh = "运输船"
+description_zh = "在 3D 甲板上游玩原版运输船。首次启动从作者网站下载游戏，之后即可离线游玩。"
+keywords = ["workbench", "game"]
+categories = ["entertainment"]
+owners = ["hiyouga"]
+integrity = "sha512-9n+aJRmbr49DzSQOl5VznDAFhJfsvipwR9NsCLP8xAD0YNBe7Q8EwaBPdb/FREUJ6DFH+7Rxic100oBYTkPijA=="
+
+[[channels]]
+kind = "github"
+url = "https://github.com/Prism-Shadow/penguin-harness-apps/releases/download/v2026.11.23-rc.4/harbor-pulse-1.3.0.tgz"
