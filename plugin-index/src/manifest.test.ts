@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { ManifestError, manifestPathFor, parseManifest } from "./manifest.js";
 
@@ -233,5 +234,50 @@ url = "https://github.com/acme/widgets/releases/download/v1.2.3/widgets-1.2.3.tg
     expect(
       problemsOf(`${VALID}\n[[channels]]\nkind = "GitHub"\nurl = "https://x/y.tgz"\n`),
     ).toContainEqual(expect.stringContaining("channels[1].kind must be lowercase"));
+  });
+});
+
+describe("the reviewed Transport Ship release", () => {
+  const directory = "packages/@penguinharness/ha/rb/harbor-pulse/1.4.0";
+  const file = directory + "/manifest.toml";
+  const source = readFileSync(new URL("../../" + file, import.meta.url), "utf8");
+
+  it("accepts the notice, immutable source and exact published archive", () => {
+    expect(parseManifest(source, file).license).toBe("SEE LICENSE IN THIRD-PARTY-NOTICES.txt");
+  });
+
+  it("does not extend the notice declaration to other names or versions", () => {
+    const otherName = source.replace('@penguinharness/harbor-pulse"', '@acme/harbor-pulse"');
+    const laterVersion = source.replace('version = "1.4.0"', 'version = "1.4.1"');
+    for (const [manifest, path] of [
+      [otherName, file.replace("@penguinharness", "@acme")],
+      [laterVersion, file.replace("1.4.0", "1.4.1")],
+    ] as const) {
+      expect(problemsOf(manifest, path)).toEqual([
+        expect.stringContaining("not in this index's allowed list"),
+      ]);
+    }
+  });
+
+  it.each([
+    [
+      "an SPDX license for the whole package",
+      source.replace("SEE LICENSE IN THIRD-PARTY-NOTICES.txt", "Apache-2.0"),
+    ],
+    ["different contents", source.replace(/^integrity = .*$/m, `integrity = "${INTEGRITY}"`)],
+    ["another release", source.replace("v2026.11.23-rc.5", "v2026.11.23-rc.6")],
+    ["a moving source reference", source.replace(/\/tree\/[0-9a-f]{40}\//, "/tree/main/")],
+    [
+      "a different notice",
+      source.replace("harbor-pulse/THIRD-PARTY-NOTICES.txt", "harbor-pulse/LICENSE"),
+    ],
+    [
+      "an extra channel",
+      source + '\n[[channels]]\nkind = "mirror"\nurl = "https://example.org/harbor-pulse.tgz"\n',
+    ],
+  ])("rejects %s in place of the reviewed release", (_, changed) => {
+    expect(problemsOf(changed, file)).toEqual([
+      expect.stringContaining("must identify its reviewed release"),
+    ]);
   });
 });

@@ -47,7 +47,7 @@ export interface Manifest {
   version: string;
   description: string;
   authors: string[];
-  /** SPDX expression, restricted to the list in docs/licensing.md. */
+  /** License declaration accepted by the registry policy in docs/licensing.md. */
   license: string;
   /** Source repository; required, because an unreadable plugin is not reviewable. */
   repository: string;
@@ -229,9 +229,6 @@ export function parseManifest(source: string, file: string): Manifest {
   const license = typeof raw.license === "string" ? raw.license : null;
   if (license === null) {
     problems.push(`"license" is required and must be a string`);
-  } else {
-    const problem = checkLicense(license);
-    if (problem !== null) problems.push(problem);
   }
 
   const repository = typeof raw.repository === "string" ? raw.repository : null;
@@ -382,6 +379,33 @@ export function parseManifest(source: string, file: string): Manifest {
           channels.push(isNpm ? { kind } : { kind, url: url as string });
         }
       }
+    }
+  }
+
+  if (license !== null) {
+    // This release is reviewed by its exact source, notice and content. All other
+    // entries continue to use the registry's SPDX policy.
+    if (name === "@penguinharness/harbor-pulse" && version === "1.4.0") {
+      const upstream = "https://github.com/Prism-Shadow/penguin-harness-apps";
+      const source = "3d0ada9e67abf495ea3c47ea2835c0644d671444";
+      const archive = upstream + "/releases/download/v2026.11.23-rc.5/harbor-pulse-1.4.0.tgz";
+      if (
+        license !== "SEE LICENSE IN THIRD-PARTY-NOTICES.txt" ||
+        repository !== upstream + "/tree/" + source + "/plugins/harbor-pulse" ||
+        raw.homepage !==
+          upstream + "/blob/" + source + "/plugins/harbor-pulse/THIRD-PARTY-NOTICES.txt" ||
+        integrity !==
+          "sha512-8OJACnTm3QverTgT4NNbrEw4D760/C6SBhsD61Fr4Z5lNxthl0LqZ4aq2BuU8k4wEI8NDgcCexH5ScvEHgYSGA==" ||
+        channels.length !== 1 ||
+        channels[0]?.kind !== "github" ||
+        channels[0]?.url !== archive
+      )
+        problems.push(
+          "Transport Ship 1.4.0 must identify its reviewed release, digest, source and third-party notice (see docs/licensing.md)",
+        );
+    } else {
+      const problem = checkLicense(license);
+      if (problem !== null) problems.push(problem);
     }
   }
 
