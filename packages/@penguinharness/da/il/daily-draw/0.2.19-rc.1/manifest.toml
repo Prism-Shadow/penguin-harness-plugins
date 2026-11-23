@@ -1,0 +1,18 @@
+name = "@penguinharness/daily-draw"
+version = "0.2.19-rc.1"
+description = "Draw a daily prompt and keep a short journal alongside past draws."
+authors = ["Prism-Shadow <https://github.com/Prism-Shadow>"]
+license = "Apache-2.0"
+repository = "https://github.com/Prism-Shadow/penguin-harness-apps"
+homepage = "https://github.com/Prism-Shadow/penguin-harness-apps/tree/v2026.11.23-rc.6/plugins/daily-draw"
+title = "Daily Draw"
+title_zh = "每日一签"
+description_zh = "每天抽一支签，写一句感想，随时回看。"
+keywords = ["penguin-plugin", "penguinharness", "workbench"]
+categories = ["entertainment"]
+owners = ["hiyouga"]
+integrity = "sha512-x3asHWGA+k5Jby8VGJY30ofBnRdAqZPke218oezWzL92VuBg2YMRRyc0kIxz8ZErDi7lXOnqpsFrULo8ah8e1Q=="
+
+[[channels]]
+kind = "github"
+url = "https://github.com/Prism-Shadow/penguin-harness-apps/releases/download/v2026.11.23-rc.6/daily-draw-0.2.19-rc.1.tgz"
