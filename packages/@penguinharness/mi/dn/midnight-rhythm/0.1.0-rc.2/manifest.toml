@@ -1,0 +1,18 @@
+name = "@penguinharness/midnight-rhythm"
+version = "0.1.0-rc.2"
+description = "Fly to the high notes and ride a sled to the low notes in an original two-lane rhythm game."
+authors = ["Prism-Shadow <https://github.com/Prism-Shadow>"]
+license = "Apache-2.0"
+repository = "https://github.com/Prism-Shadow/penguin-harness-apps"
+homepage = "https://github.com/Prism-Shadow/penguin-harness-apps/tree/v2026.11.23-rc.3/plugins/midnight-rhythm"
+title = "Midnight Rhythm"
+title_zh = "企鹅午夜节拍"
+description_zh = "跟着原创乐曲接住两条轨道上的音符。高音起飞，低音滑雪橇。"
+keywords = ["penguin-plugin", "workbench", "game"]
+categories = ["entertainment"]
+owners = ["hiyouga"]
+integrity = "sha512-ZgaDy9ll5ChiiTuYaRMWVc4XIPTXf8pEsGrfwXiPYfjPDzwW8Ouqww2LwZuebH4MC22se/biRnLOeTv5aQX4dw=="
+
+[[channels]]
+kind = "github"
+url = "https://github.com/Prism-Shadow/penguin-harness-apps/releases/download/v2026.11.23-rc.3/midnight-rhythm-0.1.0-rc.2.tgz"
