@@ -1,6 +1,6 @@
 name = "@penguinharness/openskill-rsi-toolkit"
 version = "0.2.22-rc.1"
-description = "OpenSkill RSI Toolkit: learn skills through research and virtual tests."
+description = "OpenSkill RSI: retrieve independent knowledge, refine reusable skills with virtual tests, freeze the final library, then evaluate native Project Benchmarks."
 authors = ["Prism-Shadow <https://github.com/Prism-Shadow>"]
 license = "Apache-2.0"
 repository = "https://github.com/Prism-Shadow/penguin-harness-rsi-platform"
