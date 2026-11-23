@@ -1,0 +1,18 @@
+name = "@penguinharness/humanizer"
+version = "0.2.19-rc.1"
+description = "Rewrite or edit prose in any language so it reads like edited human writing in the register of books, newspapers and encyclopedias rather than default AI output. A small drafting core — vary every pattern, build density from anchored facts in whole grammar, cap the quotables, put a real writer with real material behind the text, let structure serve content, write each language from inside its idiom and typography, verify what you assert, and aim for the natural distribution of edited prose rather than a perfect scorecard — backed by a three-layer tell catalog, per-language cue files for six languages and a seven-round measured case study shipped as reference files for the diagnostic census."
+authors = ["Prism-Shadow <https://github.com/Prism-Shadow>"]
+license = "Apache-2.0"
+repository = "https://github.com/Prism-Shadow/penguin-harness-apps"
+homepage = "https://github.com/Prism-Shadow/penguin-harness-apps/tree/v2026.11.23-rc.6/plugins/humanizer"
+title = "Humanizer"
+title_zh = "去 AI 味写作"
+description_zh = "去除文本的 AI 味，把行文改成书籍、报纸、百科式的风格，任何语言通用。"
+keywords = ["penguin-plugin", "penguinharness", "skills"]
+categories = ["office-productivity"]
+owners = ["hiyouga"]
+integrity = "sha512-sY3x2kDWPXyZ2tLaNyQHQUir9f5FQirGswFrG3o/4kepBCL0jPx2UqyPgSeELnysUSRnGmTW1NpF5dZik0e6lg=="
+
+[[channels]]
+kind = "github"
+url = "https://github.com/Prism-Shadow/penguin-harness-apps/releases/download/v2026.11.23-rc.6/humanizer-0.2.19-rc.1.tgz"
