@@ -15,9 +15,6 @@ yanked = true
 yanked_reason = "This version loads the hosted game on startup. Version 1.1.1 opens a local HTML file in the workbench."
 integrity = "sha512-thymi7yQd20IRqrS2MBo7OaiM4So5IqA+Q4/loXdpvCXYRTy23rGwDfPYM8azWl1cvNuo64Z/GyEmXRJFIWSDg=="
 
-yanked = true
-yanked_reason = "Superseded by the bundled offline edition, 1.4.0."
-
 [[channels]]
 kind = "github"
 url = "https://raw.githubusercontent.com/Prism-Shadow/penguin-harness-apps/fbb61358dda168fbf844fff96acd8fbb4b61c4f5/archives/harbor-pulse-1.1.0.tgz"
