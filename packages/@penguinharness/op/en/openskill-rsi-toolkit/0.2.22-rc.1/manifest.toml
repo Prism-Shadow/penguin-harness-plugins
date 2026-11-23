@@ -1,0 +1,18 @@
+name = "@penguinharness/openskill-rsi-toolkit"
+version = "0.2.22-rc.1"
+description = "OpenSkill RSI: retrieve independent knowledge, refine reusable skills with virtual tests, freeze the final library, then evaluate native Project Benchmarks."
+authors = ["Prism-Shadow <https://github.com/Prism-Shadow>"]
+license = "Apache-2.0"
+repository = "https://github.com/Prism-Shadow/penguin-harness-rsi-platform"
+homepage = "https://github.com/Prism-Shadow/penguin-harness-rsi-platform/tree/v0.1.0-rc.2/plugins/openskill-rsi-toolkit"
+title = "OpenSkill RSI Toolkit"
+title_zh = "OpenSkill 自进化工具包"
+description_zh = "OpenSkill RSI 工具包：通过检索与虚拟测试学习技能。"
+keywords = ["penguin-plugin", "penguinharness", "skills"]
+categories = ["rsi"]
+owners = ["hiyouga"]
+integrity = "sha512-LDiWg9ZU+lz6hWCjOVJ/zO+PzbxUEPp2uEztTSI0FDb1OkDk7XDCBKF9bsyiA1yHxNtRnGmYLH/FEE/sCv9xMA=="
+
+[[channels]]
+kind = "github"
+url = "https://github.com/Prism-Shadow/penguin-harness-rsi-platform/releases/download/v0.1.0-rc.2/penguinharness-openskill-rsi-toolkit-0.2.22-rc.1.tgz"

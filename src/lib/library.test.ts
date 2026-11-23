@@ -64,6 +64,23 @@ describe("resource-only packages", () => {
     expect(probePackage(root).join(" ")).toContain("frontmatter");
   });
 
+  it("checks registered hook commands as packaged files without evaluating them", () => {
+    const hooks = { id: "learning.hooks", path: "hooks", version: "2026.11.23.1" };
+    put("hooks/stop.mjs", 'throw new Error("must never run during inspection");');
+    for (const point of ["stop", "pre_tool_use", "user_prompt"]) {
+      table({ "PluginLibraryModule.hooks": [{ ...hooks, [point]: [{ command: "stop.mjs" }] }] });
+      expect(probePackage(root)).toEqual([]);
+    }
+    for (const command of ["absent.mjs", "../package.json"]) {
+      table({ "PluginLibraryModule.hooks": [{ ...hooks, stop: [{ command }] }] });
+      expect(probePackage(root)).not.toEqual([]);
+    }
+    table({ "PluginLibraryModule.hooks": [hooks] });
+    expect(probePackage(root).join(" ")).toContain("supported hook point");
+    table({ "PluginLibraryModule.hooks": [{ ...hooks, stop: [{ command: "stop.mjs" }] }] }, []);
+    expect(probePackage(root)).not.toEqual([]);
+  });
+
   it("refuses card metadata, unregistered modules and out-of-package resources", () => {
     table({ "PluginLibraryModule.cards": [{ id: "only" }] });
     expect(probePackage(root)).not.toEqual([]);

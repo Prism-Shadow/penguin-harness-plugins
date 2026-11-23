@@ -1,0 +1,18 @@
+name = "@penguinharness/party-charades"
+version = "0.2.19-rc.1"
+description = "Pass one screen between two teams for timed rounds of charades."
+authors = ["Prism-Shadow <https://github.com/Prism-Shadow>"]
+license = "Apache-2.0"
+repository = "https://github.com/Prism-Shadow/penguin-harness-apps"
+homepage = "https://github.com/Prism-Shadow/penguin-harness-apps/tree/v2026.11.23-rc.6/plugins/party-charades"
+title = "Party Charades"
+title_zh = "派对猜词"
+description_zh = "两队轮流看词比划，限时猜词计分。"
+keywords = ["penguin-plugin", "penguinharness", "workbench"]
+categories = ["entertainment"]
+owners = ["hiyouga"]
+integrity = "sha512-Q0/mall6ms5lAk/km5Zg7zqonL/iIWcyz5YFIkiNqBTf4ho1sVvHnJMW6mF9V1bfYEG7ntgu89YH8450ZxB9vw=="
+
+[[channels]]
+kind = "github"
+url = "https://github.com/Prism-Shadow/penguin-harness-apps/releases/download/v2026.11.23-rc.6/party-charades-0.2.19-rc.1.tgz"
