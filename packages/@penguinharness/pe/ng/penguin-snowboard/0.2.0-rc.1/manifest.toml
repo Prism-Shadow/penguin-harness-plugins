@@ -1,0 +1,18 @@
+name = "@penguinharness/penguin-snowboard"
+version = "0.2.0-rc.1"
+description = "A downhill snowboard game. Ride an Antarctic swell, spin above the ridges and land a penguin on its board."
+authors = ["Prism-Shadow <https://github.com/Prism-Shadow>"]
+license = "Apache-2.0"
+repository = "https://github.com/Prism-Shadow/penguin-harness-apps"
+homepage = "https://github.com/Prism-Shadow/penguin-harness-apps/tree/v2026.11.23-rc.10/plugins/penguin-snowboard"
+title = "Frostline"
+title_zh = "雪线滑手"
+description_zh = "企鹅单板滑雪。跳过雪脊，腾空做出翻转，顺着坡面着陆得分，摔倒后可以爬起继续。"
+keywords = ["penguin-plugin", "penguinharness", "workbench", "snowboard", "game"]
+categories = ["entertainment"]
+owners = ["hiyouga"]
+integrity = "sha512-N/NKuYzTQxhzgjr3B854TprPLM7V0WOswaJX15z3RoQGGWxhlrgXVNUdRImzEb1qivpps8g6oRIA2CKGoZT64A=="
+
+[[channels]]
+kind = "github"
+url = "https://github.com/Prism-Shadow/penguin-harness-apps/releases/download/v2026.11.23-rc.10/penguin-snowboard-0.2.0-rc.1.tgz"
