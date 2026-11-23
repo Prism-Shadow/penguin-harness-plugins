@@ -1,4 +1,4 @@
-/** Static counterpart of PenguinHarness's PluginLibraryModule Skill and workbench slots.
+/** Static counterpart of PenguinHarness's PluginLibraryModule resource slots.
  * Only modules reached from ifaces.json#plugin contribute. Never import an installed package. */
 import fs from "node:fs";
 import path from "node:path";
@@ -75,6 +75,38 @@ function workbench(root: string): void {
   }
 }
 
+function hookPackage(root: string, entry: unknown): void {
+  const resource = row(entry);
+  if (
+    typeof resource.id !== "string" ||
+    !resource.id.trim() ||
+    typeof resource.version !== "string" ||
+    !dated.test(resource.version)
+  )
+    throw new Error("hook package needs an id and a dated version");
+  const dir = inside(root, resource.path);
+  let commands = 0;
+  for (const point of ["stop", "pre_tool_use", "user_prompt"]) {
+    for (const item of list(resource[point] ?? [])) {
+      const command = row(item);
+      file(dir, command.command);
+      if (
+        command.timeout !== undefined &&
+        (typeof command.timeout !== "number" || command.timeout <= 0)
+      )
+        throw new Error("hook timeout must be positive");
+      if (
+        command.trigger !== undefined &&
+        command.trigger !== "prompt" &&
+        command.trigger !== "host"
+      )
+        throw new Error("invalid hook trigger");
+      commands++;
+    }
+  }
+  if (!commands) throw new Error("hook package needs a command at a supported hook point");
+}
+
 export function probeLibrary(root: string): string[] {
   try {
     const table = json(root, "ifaces.json");
@@ -85,6 +117,7 @@ export function probeLibrary(root: string): string[] {
     const pending = [...list(plugin.modules ?? []), ...list(plugin.replaces ?? [])];
     const visited = new Set<string>();
     let resources = 0;
+    let hasHooks = false;
     while (pending.length) {
       const name = pending.pop();
       if (typeof name !== "string") throw new Error("invalid registered module name");
@@ -99,6 +132,12 @@ export function probeLibrary(root: string): string[] {
       for (const child of list(module.children ?? []))
         pending.push(typeof child === "string" ? child : row(child).keyed);
       const contributions = row(module.contributes ?? {});
+      for (const hooks of list(contributions["PluginLibraryModule.hooks"] ?? [])) {
+        if (hasHooks) throw new Error("only one hook package may be registered");
+        hookPackage(root, hooks);
+        hasHooks = true;
+        resources++;
+      }
       for (const kind of ["skills", "workbenches"]) {
         for (const entry of list(contributions[`PluginLibraryModule.${kind}`] ?? [])) {
           const resource = row(entry);
@@ -118,7 +157,7 @@ export function probeLibrary(root: string): string[] {
         }
       }
     }
-    if (!resources) return ["ifaces.json declares no reachable Skills or workbenches"];
+    if (!resources) return ["ifaces.json declares no reachable Skills, hooks or workbenches"];
     return [];
   } catch (err) {
     return [
