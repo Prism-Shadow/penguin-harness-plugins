@@ -1,6 +1,6 @@
 name = "@penguinharness/skilladam-rsi-toolkit"
 version = "0.2.19-rc.1"
-description = "SkillAdam RSI Toolkit: evolve a Skill from execution feedback."
+description = "SkillAdam RSI Toolkit: organize benchmark experiments and evolve a target Skill through trajectory feedback, an evolving issue tracker, paired evaluation and a variance-controlled edit budget."
 authors = ["Prism-Shadow <https://github.com/Prism-Shadow>"]
 license = "Apache-2.0"
 repository = "https://github.com/Prism-Shadow/penguin-harness-rsi-platform"
