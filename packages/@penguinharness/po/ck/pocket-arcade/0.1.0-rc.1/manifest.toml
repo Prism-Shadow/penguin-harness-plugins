@@ -1,0 +1,18 @@
+name = "@penguinharness/pocket-arcade"
+version = "0.1.0-rc.1"
+description = "Ten original offline arcade and puzzle games in one pocket-sized collection."
+authors = ["Prism-Shadow <https://github.com/Prism-Shadow>"]
+license = "Apache-2.0"
+repository = "https://github.com/Prism-Shadow/penguin-harness-apps"
+homepage = "https://github.com/Prism-Shadow/penguin-harness-apps/tree/v2026.11.23-rc.2/plugins/pocket-arcade"
+title = "Pocket Arcade"
+title_zh = "口袋街机厅"
+description_zh = "十款原创像素小游戏，支持键盘、触屏和离线游玩。"
+keywords = ["penguin-plugin", "workbench", "game"]
+categories = ["entertainment"]
+owners = ["hiyouga"]
+integrity = "sha512-98PRaKasWojolms1XTvKh47RIOrcBHJqk4knMbcpUd8Epk/qWSEm81Df8NdmBfDe5NLfznaAWNhadn3X/BeDzw=="
+
+[[channels]]
+kind = "github"
+url = "https://github.com/Prism-Shadow/penguin-harness-apps/releases/download/v2026.11.23-rc.2/pocket-arcade-0.1.0-rc.1.tgz"
