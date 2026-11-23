@@ -1,6 +1,6 @@
 name = "@penguinharness/default-rsi-toolkit"
 version = "0.2.19-rc.1"
-description = "Default RSI Toolkit: trial, reflect, improve."
+description = "The Default RSI Toolkit: the trial → reflect → improve loop as one Skill — improve an agent from its measured Benchmark results, round after round, with a snapshot before every round. It measures through the agent-evaluation Skill of the Agent Evaluation plugin."
 authors = ["Prism-Shadow <https://github.com/Prism-Shadow>"]
 license = "Apache-2.0"
 repository = "https://github.com/Prism-Shadow/penguin-harness-rsi-platform"
