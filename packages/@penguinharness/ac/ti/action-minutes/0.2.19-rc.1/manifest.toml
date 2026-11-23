@@ -1,0 +1,18 @@
+name = "@penguinharness/action-minutes"
+version = "0.2.19-rc.1"
+description = "Record decisions and follow up on action items by owner and due date."
+authors = ["Prism-Shadow <https://github.com/Prism-Shadow>"]
+license = "Apache-2.0"
+repository = "https://github.com/Prism-Shadow/penguin-harness-apps"
+homepage = "https://github.com/Prism-Shadow/penguin-harness-apps/tree/v2026.11.23-rc.6/plugins/action-minutes"
+title = "Action Minutes"
+title_zh = "会议行动簿"
+description_zh = "整理会议决定，按负责人和截止日期跟进行动项。"
+keywords = ["penguin-plugin", "penguinharness", "workbench"]
+categories = ["utilities"]
+owners = ["hiyouga"]
+integrity = "sha512-7J9LGMkmQUwkkzn57mXJD6cXGL5P94Uy9j8PlA0fm8udIzCMpwLa7jWh9BwE7fMYNgPSK18QZa7pgdWescp5yw=="
+
+[[channels]]
+kind = "github"
+url = "https://github.com/Prism-Shadow/penguin-harness-apps/releases/download/v2026.11.23-rc.6/action-minutes-0.2.19-rc.1.tgz"
