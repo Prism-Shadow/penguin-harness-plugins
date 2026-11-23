@@ -1,0 +1,18 @@
+name = "@penguinharness/ace-rsi-toolkit"
+version = "0.2.19-rc.1"
+description = "The ACE RSI Toolkit: Agentic Context Engineering (Zhang et al., 2025, https://arxiv.org/abs/2510.04618), the sequential offline algorithm — a Reflector reads each training Trace, a Curator folds the lessons into a playbook of rules the Target reads before every task, and the final playbook is measured on the frozen Benchmark. Self-contained: it creates the Target's playbook Skill, evaluates its own cells and writes the Evaluation Center's scoreboard."
+authors = ["Prism-Shadow <https://github.com/Prism-Shadow>"]
+license = "Apache-2.0"
+repository = "https://github.com/Prism-Shadow/penguin-harness-rsi-platform"
+homepage = "https://github.com/Prism-Shadow/penguin-harness-rsi-platform/tree/v0.1.0-rc.2/plugins/ace-rsi-toolkit"
+title = "ACE RSI Toolkit"
+title_zh = "ACE 自进化工具包"
+description_zh = "ACE RSI 工具包：从轨迹进化规则手册。"
+keywords = ["penguin-plugin", "penguinharness", "skills"]
+categories = ["rsi"]
+owners = ["hiyouga"]
+integrity = "sha512-DpBCmhf7WMe8nWpY72HSqn0QOzX0GQmz0B68JKkgWi2vAn0YZ3WEYjRvgYESJyw+52c15uLK9n9TKZCDILQ/5A=="
+
+[[channels]]
+kind = "github"
+url = "https://github.com/Prism-Shadow/penguin-harness-rsi-platform/releases/download/v0.1.0-rc.2/penguinharness-ace-rsi-toolkit-0.2.19-rc.1.tgz"
