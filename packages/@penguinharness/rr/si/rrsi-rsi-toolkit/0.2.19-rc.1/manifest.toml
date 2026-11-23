@@ -1,0 +1,18 @@
+name = "@penguinharness/rrsi-rsi-toolkit"
+version = "0.2.19-rc.1"
+description = "RRSI RSI Toolkit: evolve a harness without overfitting."
+authors = ["Prism-Shadow <https://github.com/Prism-Shadow>"]
+license = "Apache-2.0"
+repository = "https://github.com/Prism-Shadow/penguin-harness-rsi-platform"
+homepage = "https://github.com/Prism-Shadow/penguin-harness-rsi-platform/tree/v0.1.0-rc.2/plugins/rrsi-rsi-toolkit"
+title = "RRSI RSI Toolkit"
+title_zh = "RRSI 自进化工具包"
+description_zh = "RRSI RSI 工具包：演化 harness 且不致基准过拟合。"
+keywords = ["penguin-plugin", "penguinharness", "skills"]
+categories = ["rsi"]
+owners = ["hiyouga"]
+integrity = "sha512-COEVelrAsmkwjFYez/F8g5FqlmFW106zhZdFk32DUIzLoDIagdfLMPcBRhGrn4lZEMb4C2hmI70hexjOD+9gZw=="
+
+[[channels]]
+kind = "github"
+url = "https://github.com/Prism-Shadow/penguin-harness-rsi-platform/releases/download/v0.1.0-rc.2/penguinharness-rrsi-rsi-toolkit-0.2.19-rc.1.tgz"
