@@ -1,0 +1,18 @@
+name = "@penguinharness/fridge-keeper"
+version = "0.2.19-rc.1"
+description = "Track quantities, storage locations and best-before dates."
+authors = ["Prism-Shadow <https://github.com/Prism-Shadow>"]
+license = "Apache-2.0"
+repository = "https://github.com/Prism-Shadow/penguin-harness-apps"
+homepage = "https://github.com/Prism-Shadow/penguin-harness-apps/tree/v2026.11.23-rc.6/plugins/fridge-keeper"
+title = "Fridge Keeper"
+title_zh = "冰箱管家"
+description_zh = "按存放位置、数量和保质期管理食材。"
+keywords = ["penguin-plugin", "penguinharness", "workbench"]
+categories = ["utilities"]
+owners = ["hiyouga"]
+integrity = "sha512-LBTGCoMP4E5MenlhZs5lbHyfijMJJVCieXxLTUp5/zxTZly9rsKPN7wXQ1AaTYRRvqbfYuRSnrD8frVx8UAYQg=="
+
+[[channels]]
+kind = "github"
+url = "https://github.com/Prism-Shadow/penguin-harness-apps/releases/download/v2026.11.23-rc.6/fridge-keeper-0.2.19-rc.1.tgz"
