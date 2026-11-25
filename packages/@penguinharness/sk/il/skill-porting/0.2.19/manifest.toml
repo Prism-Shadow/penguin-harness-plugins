@@ -1,0 +1,18 @@
+name = "@penguinharness/skill-porting"
+version = "0.2.19"
+description = "Port from external ecosystems after reviewing every file: skills into this agent's agent_state/skills/ (Claude Code plugin marketplaces, the Codex plugin repo, skills.sh registry names, GitHub repos, local folders), or a whole plugin (a Codex or Claude Code plugin, a skills repository, a folder in a GitHub repository) into a PenguinHarness plugin package installed on the server with penguin plugin install, or a whole agent from another coding tool (Claude Code, Codex, DeepSeek Harness, Qoder, Qwen Code, WorkBuddy) into a new Agent with penguin agent import."
+authors = ["Prism-Shadow <https://github.com/Prism-Shadow>"]
+license = "Apache-2.0"
+repository = "https://github.com/Prism-Shadow/penguin-harness-apps"
+homepage = "https://github.com/Prism-Shadow/penguin-harness-apps/tree/v2026.11.25/plugins/skill-porting"
+title = "External Plugin Porting"
+title_zh = "外部插件移植"
+description_zh = "审阅每个文件后从外部生态移植：把 Skill 装进本 Agent 的 agent_state/skills/（Claude Code 插件市场、Codex 插件仓库、skills.sh 注册名、GitHub 仓库、本地文件夹），或把整个插件（Codex 或 Claude Code 插件、Skill 仓库、GitHub 仓库中的文件夹）转成 PenguinHarness 插件包，用 penguin plugin install 装到服务端，或把其他编码 Agent（Claude Code、Codex、DeepSeek Harness、Qoder、Qwen Code、WorkBuddy）整体迁移成新的 Agent，用 penguin agent import 导入。"
+keywords = ["penguin-plugin", "penguinharness", "skills"]
+categories = ["ai-app-development"]
+owners = ["hiyouga"]
+integrity = "sha512-CGebKi3AxWRz9qg6vcfYHipsfjFuGfaVDXuKw/BaZl5yhBoQs6u01XJ5Co9+xe8OwA+t6dvo9QOTSfwETZIQnQ=="
+
+[[channels]]
+kind = "github"
+url = "https://github.com/Prism-Shadow/penguin-harness-apps/releases/download/v2026.11.25/skill-porting-0.2.19.tgz"
