@@ -16,3 +16,6 @@ integrity = "sha512-xpeLf2XjzjfVHDc3zfnuxhrxLv+tAx7lvHGLfiPyiKl9+biamVqQf/n+kb8D
 [[channels]]
 kind = "github"
 url = "https://github.com/Prism-Shadow/penguin-harness-apps/releases/download/v2026.11.23-rc.3/study-map-1.2.0.tgz"
+
+[[channels]]
+kind = "npm"

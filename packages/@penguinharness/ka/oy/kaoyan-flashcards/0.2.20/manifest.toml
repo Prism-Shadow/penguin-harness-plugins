@@ -16,3 +16,6 @@ integrity = "sha512-aQm8YvXDIOo70oTgUSP74bJPzMGo+urYFYSlpEEJJu3lLYn2ImiF5045DNCb
 [[channels]]
 kind = "github"
 url = "https://github.com/Prism-Shadow/penguin-harness-apps/releases/download/v2026.11.23-rc.1/kaoyan-flashcards-0.2.20.tgz"
+
+[[channels]]
+kind = "npm"

@@ -16,3 +16,6 @@ integrity = "sha512-fAhGMrOJxzwMwtHUfchAIvOHMjg/ukO+sST2sTCDiWKMo66v3K0lrQe0ItE1
 [[channels]]
 kind = "github"
 url = "https://github.com/Prism-Shadow/penguin-harness-apps/releases/download/v2026.11.23-rc.1/piglet-stickers-0.2.19.tgz"
+
+[[channels]]
+kind = "npm"

@@ -16,3 +16,6 @@ integrity = "sha512-D5hL6GH9HmrjqtoD2Nys+y8lygUzDN131uOAeElAlqHJsxWT2mOBUkx2no7+
 [[channels]]
 kind = "github"
 url = "https://github.com/Prism-Shadow/penguin-harness-apps/releases/download/v2026.11.23-rc.6/tabletop-desk-0.2.19-rc.1.tgz"
+
+[[channels]]
+kind = "npm"

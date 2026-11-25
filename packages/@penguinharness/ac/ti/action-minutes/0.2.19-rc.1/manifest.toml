@@ -16,3 +16,6 @@ integrity = "sha512-7J9LGMkmQUwkkzn57mXJD6cXGL5P94Uy9j8PlA0fm8udIzCMpwLa7jWh9BwE
 [[channels]]
 kind = "github"
 url = "https://github.com/Prism-Shadow/penguin-harness-apps/releases/download/v2026.11.23-rc.6/action-minutes-0.2.19-rc.1.tgz"
+
+[[channels]]
+kind = "npm"

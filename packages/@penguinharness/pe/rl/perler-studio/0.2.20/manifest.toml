@@ -16,3 +16,6 @@ integrity = "sha512-THsulBa7B1XwDDmSe1jGMQhxp6rNDxJErOqOJM76bVl0WIIY6rhoD2RtNkpn
 [[channels]]
 kind = "github"
 url = "https://github.com/Prism-Shadow/penguin-harness-apps/releases/download/v2026.11.23-rc.1/perler-studio-0.2.20.tgz"
+
+[[channels]]
+kind = "npm"
