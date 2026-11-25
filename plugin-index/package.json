@@ -30,7 +30,7 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "prepack": "tsc -p tsconfig.build.json"
+    "prepack": "node -e \"require('node:fs').copyFileSync('../LICENSE', 'LICENSE')\" && tsc -p tsconfig.build.json"
   },
   "dependencies": {
     "semver": "^7.6.3",

@@ -15,3 +15,6 @@ scratch/
 /packages/@*/*/*/*/*/*/package/
 /packages/@*/*/*/*/*/*/.stored
 /.assets/
+
+# Copied from the repository root when the package is packed.
+plugin-index/LICENSE
