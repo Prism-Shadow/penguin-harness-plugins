@@ -1,0 +1,18 @@
+name = "@penguinharness/continual-learning"
+version = "0.2.20"
+description = "Continual learning: a stop hook that, when the task that just ended ran more than 30 completed turns, hands a condensed excerpt of that task to a background subagent, which folds the durable findings into the agent's own skills."
+authors = ["Prism-Shadow <https://github.com/Prism-Shadow>"]
+license = "Apache-2.0"
+repository = "https://github.com/Prism-Shadow/penguin-harness-apps"
+homepage = "https://github.com/Prism-Shadow/penguin-harness-apps/tree/v2026.11.26/plugins/continual-learning"
+title = "Continual Learning"
+title_zh = "持续学习"
+description_zh = "持续学习：一个 stop hook，刚结束的任务跑了超过 30 个完成的轮次时，就把该任务的浓缩摘录交给一个后台子会话，由它把值得沉淀的发现写进 Agent 自己的 Skill。"
+keywords = ["penguin-plugin", "penguinharness", "hooks"]
+categories = ["office-productivity"]
+owners = ["hiyouga"]
+integrity = "sha512-GHpNNWO6rQ3wPYc2l/Et4PBqG3rCuPQThqrV8BglBv8juUmergxxSJy3faqs5AYYOF+qme5K+D2EqfF1FsOyow=="
+
+[[channels]]
+kind = "github"
+url = "https://github.com/Prism-Shadow/penguin-harness-apps/releases/download/v2026.11.26/continual-learning-0.2.20.tgz"
