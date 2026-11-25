@@ -16,3 +16,6 @@ integrity = "sha512-LBTGCoMP4E5MenlhZs5lbHyfijMJJVCieXxLTUp5/zxTZly9rsKPN7wXQ1Aa
 [[channels]]
 kind = "github"
 url = "https://github.com/Prism-Shadow/penguin-harness-apps/releases/download/v2026.11.23-rc.6/fridge-keeper-0.2.19-rc.1.tgz"
+
+[[channels]]
+kind = "npm"

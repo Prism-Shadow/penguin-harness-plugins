@@ -16,3 +16,6 @@ integrity = "sha512-LDiWg9ZU+lz6hWCjOVJ/zO+PzbxUEPp2uEztTSI0FDb1OkDk7XDCBKF9bsyi
 [[channels]]
 kind = "github"
 url = "https://github.com/Prism-Shadow/penguin-harness-rsi-platform/releases/download/v0.1.0-rc.2/penguinharness-openskill-rsi-toolkit-0.2.22-rc.1.tgz"
+
+[[channels]]
+kind = "npm"

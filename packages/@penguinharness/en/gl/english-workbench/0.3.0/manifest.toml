@@ -16,3 +16,6 @@ integrity = "sha512-cv95FSomGw8yl9mg/nFedf5Rz6kFsV/fEPZffSO3d4Uq/Q+4tqASu0h9Ck7+
 [[channels]]
 kind = "github"
 url = "https://github.com/Prism-Shadow/penguin-harness-apps/releases/download/v2026.11.23-rc.1/english-workbench-0.3.0.tgz"
+
+[[channels]]
+kind = "npm"

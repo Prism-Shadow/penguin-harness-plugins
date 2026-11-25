@@ -16,3 +16,6 @@ integrity = "sha512-MmNqEgyzDFOETrfr7P3K58ZgmXPhWlZ+xrRQDH7JJ6M1pR+VZXzCdZnk/LUa
 [[channels]]
 kind = "github"
 url = "https://github.com/Prism-Shadow/penguin-harness-apps/releases/download/v2026.11.23-rc.10/midnight-rhythm-0.2.0-rc.2.tgz"
+
+[[channels]]
+kind = "npm"

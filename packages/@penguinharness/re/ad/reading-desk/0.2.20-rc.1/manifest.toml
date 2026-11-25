@@ -16,3 +16,6 @@ integrity = "sha512-T05sqSKexXuzolnNzDd3rcGmC+iSp1Dg8IVzJUa5iyNnRpMh82N8swB9PF2J
 [[channels]]
 kind = "github"
 url = "https://github.com/Prism-Shadow/penguin-harness-apps/releases/download/v2026.11.23-rc.6/reading-desk-0.2.20-rc.1.tgz"
+
+[[channels]]
+kind = "npm"
