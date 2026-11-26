@@ -200,6 +200,22 @@ describe("checkAgainstNpm", () => {
     );
   });
 
+  it("passes a registry that serves the tarball where index.json says it does", async () => {
+    const fetchImpl = registry({
+      dist: { tarball: "https://registry.npmjs.org/@acme/widgets/-/widgets-1.2.3.tgz" },
+    });
+    expect(await checkAgainstNpm(MANIFEST, LOCK, { fetchImpl, npm: fakeNpm(GOOD) })).toEqual([]);
+  });
+
+  it("reports a registry that serves the tarball elsewhere than index.json says", async () => {
+    const fetchImpl = registry({
+      dist: { tarball: "https://registry.npmjs.org/@acme/widgets/-/widgets-1.2.3-moved.tgz" },
+    });
+    expect(await checkAgainstNpm(MANIFEST, LOCK, { fetchImpl, npm: fakeNpm(GOOD) })).toEqual([
+      expect.stringContaining("the address index.json publishes for the npm channel"),
+    ]);
+  });
+
   it("reports a version that is not published", async () => {
     const problems = await checkAgainstNpm({ ...MANIFEST, version: "9.9.9" }, LOCK, {
       fetchImpl: registry(),

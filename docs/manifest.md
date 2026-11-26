@@ -74,10 +74,10 @@ kind = "github"
 url = "https://github.com/acme/widgets/releases/download/v1.2.3/widgets-1.2.3.tgz"
 ```
 
-| Key    | Required            | Rule                                                                               |
-| ------ | ------------------- | ---------------------------------------------------------------------------------- |
-| `kind` | yes                 | Lowercase alphanumeric with hyphens, at most 20 characters. `npm` is the registry. |
-| `url`  | unless `kind="npm"` | `https://` URL of the tarball as the channel serves it. Must be absent for `npm`.  |
+| Key    | Required            | Rule                                                                                   |
+| ------ | ------------------- | -------------------------------------------------------------------------------------- |
+| `kind` | yes                 | Lowercase alphanumeric with hyphens, at most 20 characters. `npm` is the registry.     |
+| `url`  | unless `kind="npm"` | `https://` URL of the tarball as the channel serves it. Omitted for `npm` (see below). |
 
 Kinds and URLs must not repeat, and there is at most one `npm` channel. An entry with an
 `npm` channel carries a `package-lock.json` and is checked against the registry —
@@ -86,6 +86,13 @@ checked by fetching its tarball, hashing it against `integrity`, installing it (
 disabled) and running the same static probe on it. An entry need not have an `npm`
 channel at all; it must have some channel, because an installable-from-nowhere entry is
 not listable.
+
+In the published `index.json`, every channel carries a `url`. The npm channel's is written by
+the build: the registry's tarball address of exactly the entry's name and version
+(`https://registry.npmjs.org/@acme/widgets/-/widgets-1.2.3.tgz`), the address the registry
+reports as `dist.tarball` — which `pnpm check-npm` compares it with. A harness installs an npm
+channel by name and ignores the address; it is there because PenguinHarness 0.2.19 refuses the
+whole index when any channel has no `url`.
 
 ## The lock
 
@@ -154,7 +161,14 @@ Skill files, hook command files, workbench manifests, TypeScript entry points, a
 A hook package declares a dated version and at least one package-local command at a host-supported
 hook point (`stop`, `pre_tool_use` or `user_prompt`).
 
-That last check is **static**: the install runs no scripts and the entry file is read,
+**Against the harness** (`pnpm check-harness`, after `pnpm build`): the built `index.json` is
+parsed by the index reader of every PenguinHarness release from the floor in
+`src/harness-readers.ts` up — each release's own published `@prismshadow/penguin-core/plugin-index`
+— and by the harness's `main` branch. A harness refuses the whole document over a single row it
+does not accept, so any reader refusing it fails CI, and the Deploy and Nightly workflows run the
+same check before they replace the published index.
+
+That last npm check is **static**: the install runs no scripts and the entry file is read,
 never imported. Executing submitted code in CI would hand every contributor a shell on
 the machine that publishes this index. If your plugin is bundled in a way that hides the
 export from a source-level read, say so in the pull request.

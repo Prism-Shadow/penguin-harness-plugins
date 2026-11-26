@@ -10,6 +10,8 @@
  *   package that ships neither yields neither.
  * - The cache is content-addressed by name and version: a second call for an entry whose
  *   files are already cached fetches nothing.
+ * - The tarball comes from the first channel that names an address; an entry with only the
+ *   npm channel is fetched from the registry's address of its name and version.
  */
 import fs from "node:fs";
 import os from "node:os";
@@ -114,6 +116,16 @@ describe("collectAssets", () => {
         fetchImpl: dead,
       }),
     ).rejects.toThrow(/HTTP 404/);
+  });
+
+  it("fetches an npm-only entry's tarball from the registry's address of its version", async () => {
+    const bytes = await tarballOf({ "README.md": "# Widgets" });
+    const manifest = { ...MANIFEST, integrity: sha512(bytes), channels: [{ kind: "npm" }] };
+    const { fetch, calls } = serving(bytes);
+    await collectAssets(manifest, cache, { fetchImpl: fetch });
+    expect(calls).toEqual([
+      { url: "https://registry.npmjs.org/@acme/widgets/-/widgets-1.2.3.tgz" },
+    ]);
   });
 
   it("copies from the cache instead of fetching again for an entry it already has", async () => {

@@ -15,6 +15,7 @@
     "check-npm": "tsx src/check-npm.ts",
     "new-entry": "tsx src/new-entry.ts",
     "build": "tsx src/build-index.ts",
+    "check-harness": "tsx src/check-harness.ts",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },

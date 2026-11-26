@@ -51,6 +51,7 @@ data filled in.
 | `pnpm validate`                   | Schema, path and change-level rules (paths, deletions, ownership). Offline.                                                                             |
 | `pnpm check-npm`                  | Checks the npm channel against the registry when an entry has one, and fetches each URL channel to verify its hash and content. `--all` for everything. |
 | `pnpm build`                      | Rebuilds `dist/index.json` from every entry.                                                                                                            |
+| `pnpm check-harness`              | Parses the built `dist/index.json` with the index reader of each supported harness release, and of harness `main` when `HARNESS_MAIN_READER` is set.    |
 | `pnpm test`                       | Unit tests for the checks and the shared package.                                                                                                       |
 
 ## Submitting a plugin
@@ -87,14 +88,18 @@ flat JSON array of entries — the same shape a machine's plugin store writes to
     "keywords": ["widgets", "linux"],
     "categories": ["software-development"],
     "integrity": "sha512-O7Eu2jwpjbXeJVl/VNkk8uF+eKJq2JU+2CGO5oLwu76QIeLzAJ0VLJEb8fJexoOpAnFBZnZ6+9jlvQ+wEk7Lig==",
+    "channels": [
+      { "kind": "npm", "url": "https://registry.npmjs.org/@acme/widgets/-/widgets-1.2.3.tgz" }
+    ],
     "updatedAt": 1755000000
   }
 ]
 ```
 
-A name may appear more than once — several versions, or several contents of one version
-— and the consumer picks by semver. Before it stores a package it fetched, it hashes the
-tarball against `integrity`; a package whose hash differs is refused.
+Every channel carries a `url`: a release asset's, or for `npm` the registry's tarball
+address of that version. A name may appear more than once — several versions, or several
+contents of one version — and the consumer picks by semver. Before it stores a package it
+fetched, it hashes the tarball against `integrity`; a package whose hash differs is refused.
 
 Consumers should ignore fields they do not know: new optional fields are added without
 a schema break, and an entry's name, version and integrity never change — a new

@@ -1,6 +1,8 @@
 node_modules/
 dist/
 scratch/
+# The harness's index reader, checked out by CI for `pnpm check-harness`.
+.harness-main/
 
 # An entry keeps its manifest and its lock; a plugin store keeps the package and its
 # completion marker beside them. So a store is a checkout of this tree with the package

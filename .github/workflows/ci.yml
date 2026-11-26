@@ -57,3 +57,23 @@ jobs:
 
       - name: Build the index
         run: pnpm build
+
+      # A harness reads this index with one strict reader and refuses the WHOLE document over a
+      # single row it does not accept, emptying its plugin market. So the built index is parsed
+      # with the reader of every harness release from the floor in src/harness-readers.ts up,
+      # each the release's own published code, and with the harness's main branch, whose reader
+      # the next release ships. Any of them refusing it fails the check and blocks the merge.
+      - name: Check out the harness's index reader (main)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: Prism-Shadow/penguin-harness
+          ref: main
+          path: .harness-main
+          sparse-checkout: /packages/core/src/plugin/index-document.ts
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+
+      - name: Check the index against every harness reader
+        run: pnpm check-harness
+        env:
+          HARNESS_MAIN_READER: .harness-main/packages/core/src/plugin/index-document.ts
