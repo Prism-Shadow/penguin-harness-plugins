@@ -63,7 +63,7 @@ harness session can run with you; see
 version:
 
 1. Package your plugin under its npm name (scopes work). Code plugins provide an ESM
-   `activate` export. Resource-only plugins declare Skills or workbenches in `ifaces.json`.
+   entry. Resource-only plugins declare Skills or workbenches in `ifaces.json`.
    Publish to npm or serve the same `.tgz` from an HTTPS channel.
 2. For npm, run `pnpm new-entry <name>@<version>`. For HTTPS-only packages, create the manifest directly. Fill in `categories` and `owners` — see
    [docs/manifest.md](docs/manifest.md).

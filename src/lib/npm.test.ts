@@ -4,13 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { packageIntegrity, type Manifest, type NpmRunner } from "@prismshadow/penguin-plugin-index";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import {
-  checkAgainstNpm,
-  checkChannels,
-  declaresActivate,
-  entryPointOf,
-  repositoryUrl,
-} from "./npm.js";
+import { checkAgainstNpm, checkChannels, entryPointOf, repositoryUrl } from "./npm.js";
 
 const workDir = fs.mkdtempSync(path.join(os.tmpdir(), "npm-test-"));
 afterAll(() => fs.rmSync(workDir, { recursive: true, force: true }));
@@ -107,16 +101,6 @@ describe("repositoryUrl", () => {
   });
 });
 
-describe("declaresActivate", () => {
-  it("recognises the shapes a bundler emits", () => {
-    expect(declaresActivate("export function activate(ctx) {}")).toBe(true);
-    expect(declaresActivate("export async function activate(ctx) {}")).toBe(true);
-    expect(declaresActivate("const a = 1;\nexport { a as activate };")).toBe(true);
-    expect(declaresActivate("exports.activate = activate;")).toBe(true);
-    expect(declaresActivate("export function deactivate() {}")).toBe(false);
-  });
-});
-
 describe("checkAgainstNpm", () => {
   it("passes an entry whose lock installs a loadable package", async () => {
     expect(
@@ -138,14 +122,12 @@ describe("checkAgainstNpm", () => {
     ).toEqual([]);
   });
 
-  it("reports an entry point that does not probe clean", async () => {
-    const changed = {
-      ...GOOD,
-      "node_modules/@acme/widgets/dist/index.js": "export const x = 1;\n",
-    };
+  it("reports an entry point missing from the package", async () => {
+    const { "node_modules/@acme/widgets/dist/index.js": _entry, ...changed } = GOOD;
+    const manifest = { ...MANIFEST, integrity: await integrityOf(changed) };
     expect(
-      await checkAgainstNpm(MANIFEST, LOCK, { fetchImpl: registry(), npm: fakeNpm(changed) }),
-    ).toEqual([expect.stringContaining('declares no "activate" export')]);
+      await checkAgainstNpm(manifest, LOCK, { fetchImpl: registry(), npm: fakeNpm(changed) }),
+    ).toEqual([expect.stringContaining("is missing from the published package")]);
   });
 
   it("reports a lock npm cannot install", async () => {
@@ -157,15 +139,15 @@ describe("checkAgainstNpm", () => {
     ]);
   });
 
-  it("reports a missing activate export", async () => {
+  it("accepts an entry that exports no activate function", async () => {
     const files = {
       ...GOOD,
-      "node_modules/@acme/widgets/dist/index.js": "export function deactivate() {}\n",
+      "node_modules/@acme/widgets/dist/index.js": "export default { modules: [] };\n",
     };
     const manifest = { ...MANIFEST, integrity: await integrityOf(files) };
     expect(
       await checkAgainstNpm(manifest, LOCK, { fetchImpl: registry(), npm: fakeNpm(files) }),
-    ).toEqual([expect.stringContaining('declares no "activate" export')]);
+    ).toEqual([]);
   });
 
   it("reports a CommonJS package", async () => {
@@ -174,7 +156,7 @@ describe("checkAgainstNpm", () => {
         name: NAME,
         main: "./dist/index.js",
       }),
-      "node_modules/@acme/widgets/dist/index.js": "exports.activate = () => {};\n",
+      "node_modules/@acme/widgets/dist/index.js": "exports.value = 1;\n",
     };
     const manifest = { ...MANIFEST, integrity: await integrityOf(files) };
     expect(

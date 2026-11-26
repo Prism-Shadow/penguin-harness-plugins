@@ -19,7 +19,7 @@ I am submitting
 
 For a new plugin, I confirm that I have:
 
-- [ ] published the package on npm, with `"type": "module"` and a named `activate` export
+- [ ] published the package on npm, with `"type": "module"`
 - [ ] used a name that names my implementation rather than claiming a whole category
 - [ ] chosen an [allowed license](../docs/licensing.md) and used the same identifier in
       `package.json`, in the manifest, and in my repository's license file
