@@ -94,4 +94,18 @@ describe("resource-only packages", () => {
     put("index.js", "export const unrelated = 1;");
     expect(probePackage(root)).toEqual([]);
   });
+  it("treats a package whose exports only map subpaths as resource-only", () => {
+    put("package.json", {
+      name: "game",
+      version: "1.0.0",
+      exports: { "./format": "./format.js", "./package.json": "./package.json" },
+    });
+    expect(probePackage(root)).toEqual([]);
+  });
+  it("still demands the entry file when exports name the package root", () => {
+    put("package.json", { name: "game", version: "1.0.0", exports: "./dist/index.js" });
+    expect(probePackage(root).join(" ")).toContain("./dist/index.js");
+    put("package.json", { name: "game", version: "1.0.0", exports: { ".": "./dist/index.js" } });
+    expect(probePackage(root).join(" ")).toContain("./dist/index.js");
+  });
 });

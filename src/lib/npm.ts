@@ -89,21 +89,33 @@ export function repositoryUrl(repository: unknown): string | null {
     .replace(/\/+$/, "");
 }
 
+/** Resolves the module an `exports` value names for `"."`, through conditions. */
+function exportsEntry(value: unknown): string | null {
+  if (typeof value === "string") return value;
+  if (typeof value !== "object" || value === null) return null;
+  const record = value as Record<string, unknown>;
+  for (const key of [".", "import", "node", "default"]) {
+    if (key in record) {
+      const resolved = exportsEntry(record[key]);
+      if (resolved !== null) return resolved;
+    }
+  }
+  return null;
+}
+
+/**
+ * True when `exports` is absent or only maps subpaths (`./format`), so nothing names the
+ * package root. A bare string or a conditions object means `"."` and is not subpath-only.
+ */
+function hasNoRootExport(exported: unknown): boolean {
+  if (exported === undefined) return true;
+  if (typeof exported !== "object" || exported === null || Array.isArray(exported)) return false;
+  return Object.keys(exported).every((key) => key.startsWith("./"));
+}
+
 /** Resolves the module the harness would import, from `exports` or `main`. */
 export function entryPointOf(pkg: PackumentVersion): string | null {
-  const fromExports = (value: unknown): string | null => {
-    if (typeof value === "string") return value;
-    if (typeof value !== "object" || value === null) return null;
-    const record = value as Record<string, unknown>;
-    for (const key of [".", "import", "node", "default"]) {
-      if (key in record) {
-        const resolved = fromExports(record[key]);
-        if (resolved !== null) return resolved;
-      }
-    }
-    return null;
-  };
-  const exported = fromExports(pkg.exports);
+  const exported = exportsEntry(pkg.exports);
   if (exported !== null) return exported;
   if (typeof pkg.main === "string") return pkg.main;
   return "index.js";
@@ -119,10 +131,11 @@ export function probePackage(root: string): string[] {
   const problems: string[] = [];
   const published = JSON.parse(fs.readFileSync(manifestPath, "utf8")) as PackumentVersion;
   // Resource-only libraries install into an Agent from their generated table. Packages
-  // advertising a JavaScript entry still go through the ESM entry check below.
+  // advertising a JavaScript entry still go through the ESM entry check below; a package
+  // whose `exports` only map subpaths (for example `./format`) has no root entry.
   if (
     published.main === undefined &&
-    published.exports === undefined &&
+    hasNoRootExport(published.exports) &&
     !fs.existsSync(path.join(root, "index.js")) &&
     fs.existsSync(path.join(root, "ifaces.json"))
   )
