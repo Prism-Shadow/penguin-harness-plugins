@@ -41,7 +41,8 @@ syncing the harness's copy is pending on the harness side.
   `@prismshadow/penguin-core/plugin-index`, found on the registry at each run), plus the
   harness's `main` when `HARNESS_MAIN_READER` names a checkout's
   `packages/core/src/plugin/index-document.ts` — CI checks one out into `.harness-main/`.
-  CI runs it after the build; Deploy and Nightly run it before they publish.
+  CI runs it after the build, `main` included; Deploy and Nightly run it before they publish,
+  with the released readers only, so an unreleased harness change never stops publishing.
 - A new field or shape in `index.json` has to be one every listed reader already accepts.
   Raising the floor is a decision to stop supporting the releases below it, never a way to
   turn the check green.

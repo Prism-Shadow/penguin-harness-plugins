@@ -9,8 +9,9 @@
  *
  * The readers are every version of READER_PACKAGE published on npm from READER_FLOOR up, found on
  * the registry at each run — a new harness release is checked from the moment it is published,
- * with nothing to add here — plus the harness's `main` branch, which the workflows check out and
- * pass as HARNESS_MAIN_READER.
+ * with nothing to add here — plus, on pull requests only, the harness's `main` branch, which CI
+ * checks out and passes as HARNESS_MAIN_READER. Deploy and Nightly gate on the released readers
+ * alone, so an unreleased reader change never stops the index publishing.
  *
  * Why the floor is 0.2.19, and what raising it means:
  *

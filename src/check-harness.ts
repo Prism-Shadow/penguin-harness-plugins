@@ -10,8 +10,9 @@
  * and so does one that will not load: a harness refuses the whole document over a single row, so
  * publishing what any of them refuses empties that release's plugin market.
  *
- * CI runs this after `pnpm build` on every pull request, and the Deploy and Nightly workflows run
- * it before they replace the live document.
+ * CI runs this after `pnpm build` on every pull request, with harness `main` included. The Deploy
+ * and Nightly workflows run it before they replace the live document with the released readers
+ * only: those are what deployments run, and an unreleased reader change must not stop publishing.
  */
 import { execFileSync } from "node:child_process";
 import fs from "node:fs";

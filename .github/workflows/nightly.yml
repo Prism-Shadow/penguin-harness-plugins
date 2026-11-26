@@ -53,22 +53,11 @@ jobs:
       # A build that produced nothing readable must not replace a working asset: every
       # deployment reads this file, and a harness refuses the whole document over one row it
       # does not accept, which empties its listing. So the built index is parsed with the
-      # reader of every harness release from the floor in src/harness-readers.ts up, and with
-      # the harness's main branch, before it replaces anything.
-      - name: Check out the harness's index reader (main)
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          repository: Prism-Shadow/penguin-harness
-          ref: main
-          path: .harness-main
-          sparse-checkout: /packages/core/src/plugin/index-document.ts
-          sparse-checkout-cone-mode: false
-          persist-credentials: false
-
-      - name: Check the index against every harness reader
+      # reader of every harness release from the floor in src/harness-readers.ts up before it
+      # replaces anything. Released readers only, as in deploy.yml: harness `main` is checked on
+      # pull requests (ci.yml), so an unreleased reader change can never stop the index publishing.
+      - name: Check the index against every released harness reader
         run: pnpm check-harness
-        env:
-          HARNESS_MAIN_READER: .harness-main/packages/core/src/plugin/index-document.ts
 
       # `--clobber` replaces the asset in place; the release and its tag are untouched.
       # Created on first run so the workflow is self-sufficient in a fresh fork.

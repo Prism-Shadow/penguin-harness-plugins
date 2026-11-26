@@ -63,6 +63,7 @@ jobs:
       # with the reader of every harness release from the floor in src/harness-readers.ts up,
       # each the release's own published code, and with the harness's main branch, whose reader
       # the next release ships. Any of them refusing it fails the check and blocks the merge.
+      # Only here: Deploy and Nightly gate on the released readers alone.
       - name: Check out the harness's index reader (main)
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

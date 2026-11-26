@@ -164,9 +164,9 @@ hook point (`stop`, `pre_tool_use` or `user_prompt`).
 **Against the harness** (`pnpm check-harness`, after `pnpm build`): the built `index.json` is
 parsed by the index reader of every PenguinHarness release from the floor in
 `src/harness-readers.ts` up — each release's own published `@prismshadow/penguin-core/plugin-index`
-— and by the harness's `main` branch. A harness refuses the whole document over a single row it
-does not accept, so any reader refusing it fails CI, and the Deploy and Nightly workflows run the
-same check before they replace the published index.
+— and, on pull requests, by the harness's `main` branch. A harness refuses the whole document over
+a single row it does not accept, so any reader refusing it fails CI, and the Deploy and Nightly
+workflows run the same check with the released readers before they replace the published index.
 
 That last npm check is **static**: the install runs no scripts and the entry file is read,
 never imported. Executing submitted code in CI would hand every contributor a shell on

@@ -38,22 +38,12 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
 
-      # Nothing every harness reader would not accept replaces the published index: a harness
+      # Nothing a released harness would not accept replaces the published index: a harness
       # refuses the whole document over one row (see the CI workflow and src/harness-readers.ts).
-      - name: Check out the harness's index reader (main)
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          repository: Prism-Shadow/penguin-harness
-          ref: main
-          path: .harness-main
-          sparse-checkout: /packages/core/src/plugin/index-document.ts
-          sparse-checkout-cone-mode: false
-          persist-credentials: false
-
-      - name: Check the index against every harness reader
+      # Released readers only: they are what deployments run. Harness `main` is checked on pull
+      # requests (ci.yml), so an unreleased reader change can never stop the index publishing.
+      - name: Check the index against every released harness reader
         run: pnpm check-harness
-        env:
-          HARNESS_MAIN_READER: .harness-main/packages/core/src/plugin/index-document.ts
 
       - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
