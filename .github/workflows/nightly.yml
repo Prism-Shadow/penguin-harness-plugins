@@ -51,14 +51,13 @@ jobs:
       - run: pnpm build
 
       # A build that produced nothing readable must not replace a working asset: every
-      # deployment reads this file, and an empty or malformed one empties their listing.
-      - name: Check the built index before it replaces anything
-        run: |
-          node -e '
-            const doc = JSON.parse(require("node:fs").readFileSync("dist/index.json", "utf8"));
-            if (!Array.isArray(doc)) throw new Error("index.json is not an array");
-            console.log(`index.json holds ${doc.length} entries`);
-          '
+      # deployment reads this file, and a harness refuses the whole document over one row it
+      # does not accept, which empties its listing. So the built index is parsed with the
+      # reader of every harness release from the floor in src/harness-readers.ts up before it
+      # replaces anything. Released readers only, as in deploy.yml: harness `main` is checked on
+      # pull requests (ci.yml), so an unreleased reader change can never stop the index publishing.
+      - name: Check the index against every released harness reader
+        run: pnpm check-harness
 
       # `--clobber` replaces the asset in place; the release and its tag are untouched.
       # Created on first run so the workflow is self-sufficient in a fresh fork.

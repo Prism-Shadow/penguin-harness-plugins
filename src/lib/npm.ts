@@ -27,6 +27,7 @@ import {
   type Manifest,
   type NpmRunner,
 } from "@prismshadow/penguin-plugin-index";
+import { NPM_REGISTRY, npmTarballUrl } from "./channels.js";
 import { probeLibrary } from "./library.js";
 import { MAX_ENTRY_BYTES } from "./vocabulary.js";
 
@@ -56,13 +57,11 @@ export interface Packument {
   versions?: Record<string, PackumentVersion>;
 }
 
-const REGISTRY = "https://registry.npmjs.org";
-
 export async function fetchPackument(
   name: string,
   fetchImpl: typeof fetch = fetch,
 ): Promise<Packument> {
-  const res = await fetchImpl(`${REGISTRY}/${encodeURIComponent(name)}`);
+  const res = await fetchImpl(`${NPM_REGISTRY}/${encodeURIComponent(name)}`);
   if (res.status === 404) throw new Error(`package "${name}" does not exist on npm`);
   if (!res.ok) throw new Error(`npm answered HTTP ${res.status} for "${name}"`);
   return (await res.json()) as Packument;
@@ -231,6 +230,15 @@ export async function checkAgainstNpm(
   const declared = manifest.repository.replace(/\/+$/, "");
   if (published !== null && published !== declared) {
     problems.push(`repository mismatch: manifest says "${declared}", npm says "${published}"`);
+  }
+  // index.json publishes the npm channel at the registry's standard address (channels.ts); the
+  // registry's own word for where it serves this version must be that address.
+  const tarball = pkg.dist?.tarball;
+  const derived = npmTarballUrl(manifest.name, manifest.version);
+  if (typeof tarball === "string" && tarball !== derived) {
+    problems.push(
+      `npm serves the tarball at "${tarball}", not at "${derived}", the address index.json publishes for the npm channel`,
+    );
   }
 
   problems.push(...(await checkContent(manifest, lock, npm)));

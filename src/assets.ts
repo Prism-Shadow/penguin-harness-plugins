@@ -21,6 +21,7 @@ import os from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
 import type { Manifest } from "@prismshadow/penguin-plugin-index";
+import { npmTarballUrl } from "./lib/channels.js";
 
 const execFileAsync = promisify(execFile);
 
@@ -53,12 +54,11 @@ function integrityOf(bytes: Uint8Array): string {
   return `sha512-${createHash("sha512").update(bytes).digest("base64")}`;
 }
 
-/** The tarball URL: the channel's own when one is listed, else the registry's standard shape. */
+/** The tarball URL: the channel's own when one is listed, else the registry's. */
 function tarballUrl(manifest: Manifest): string {
   const channel = manifest.channels.find((c) => c.url !== undefined);
   if (channel !== undefined) return channel.url as string;
-  const file = manifest.name.replace(/^@\//, "").replace("/", "-");
-  return `https://registry.npmjs.org/${manifest.name}/-/${file}-${manifest.version}.tgz`;
+  return npmTarballUrl(manifest.name, manifest.version);
 }
 
 async function download(url: string, fetchImpl: typeof fetch): Promise<Uint8Array> {

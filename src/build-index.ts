@@ -25,6 +25,7 @@ import path from "node:path";
 import { ManifestError, parseManifest } from "@prismshadow/penguin-plugin-index";
 import semver from "semver";
 import { collectAssets } from "./assets.js";
+import { publishedChannels, type PublishedChannel } from "./lib/channels.js";
 import { lastCommitTimestamp, listManifestFiles } from "./lib/git.js";
 
 interface IndexEntry {
@@ -41,8 +42,12 @@ interface IndexEntry {
   keywords?: string[];
   categories?: string[];
   integrity: string;
-  /** Where the package can be installed from; each channel serves the same tarball. */
-  channels: { kind: string; url?: string }[];
+  /**
+   * Where the package can be installed from; each channel serves the same tarball. Every one
+   * carries a `url`, the npm channel the registry's (see lib/channels.ts): a harness reader that
+   * finds a channel without one refuses the whole document.
+   */
+  channels: PublishedChannel[];
   updatedAt?: number;
 }
 
@@ -104,7 +109,7 @@ for (const file of listManifestFiles(root)) {
     ...(manifest.keywords !== undefined ? { keywords: manifest.keywords } : {}),
     categories: manifest.categories,
     integrity: manifest.integrity,
-    channels: manifest.channels,
+    channels: publishedChannels(manifest),
     updatedAt: lastCommitTimestamp(file),
   });
 }

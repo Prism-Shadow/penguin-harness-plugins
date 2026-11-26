@@ -83,8 +83,9 @@ export interface Manifest {
 export interface Channel {
   /** Lowercase alphanumeric with hyphens, at most 20 characters. "npm" is the registry. */
   kind: string;
-  /** `https://` URL of the tarball as the channel serves it. The npm channel has none —
-   *  the registry serves `name` at the standard URL. */
+  /** `https://` URL of the tarball as the channel serves it. A manifest's npm channel has
+   *  none: the registry serves every version at its one standard address, which the index
+   *  build writes into the published document's npm channel instead. */
   url?: string;
 }
 
@@ -366,7 +367,9 @@ export function parseManifest(source: string, file: string): Manifest {
             : typeof url === "string" && url.startsWith("https://");
         if (isNpm) {
           if (url !== undefined) {
-            problems.push(`channels[${i}].url must be omitted for the "npm" channel`);
+            problems.push(
+              `channels[${i}].url must be omitted for the "npm" channel: the index build publishes the registry's tarball address of this name and version`,
+            );
           }
         } else if (typeof url !== "string" || !url.startsWith("https://")) {
           problems.push(`channels[${i}].url must be an https URL`);
