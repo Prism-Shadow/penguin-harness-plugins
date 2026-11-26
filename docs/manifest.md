@@ -154,8 +154,7 @@ owners may edit it.
 
 **Against npm** (`pnpm check-npm`): the version exists and is not deprecated; license,
 description and repository match the published package; installing the lock yields a
-package of at most 64 MiB. A JavaScript plugin must expose an ESM entry with an `activate`
-export. A resource-only package can instead declare Skills, a hook package or workbenches in its
+package of at most 64 MiB. A JavaScript plugin must expose an ESM entry. A resource-only package can instead declare Skills, a hook package or workbenches in its
 generated `ifaces.json`. The check follows registered modules to verify their declared
 Skill files, hook command files, workbench manifests, TypeScript entry points, and local iframe pages.
 A hook package declares a dated version and at least one package-local command at a host-supported

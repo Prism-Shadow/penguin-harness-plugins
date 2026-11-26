@@ -109,18 +109,6 @@ export function entryPointOf(pkg: PackumentVersion): string | null {
   return "index.js";
 }
 
-const ACTIVATE_PATTERNS = [
-  /export\s+(?:async\s+)?function\s+activate\b/,
-  /export\s+(?:const|let|var)\s+activate\b/,
-  /export\s*\{[^}]*\bactivate\b[^}]*\}/s,
-  /exports\.activate\s*=/,
-];
-
-/** Whether the entry file's source declares an `activate` export. */
-export function declaresActivate(source: string): boolean {
-  return ACTIVATE_PATTERNS.some((pattern) => pattern.test(source));
-}
-
 /**
  * Reads an installed package's own manifest and entry file. Returns the problems found;
  * an empty array means the package looks like a loadable PenguinHarness plugin.
@@ -131,7 +119,7 @@ export function probePackage(root: string): string[] {
   const problems: string[] = [];
   const published = JSON.parse(fs.readFileSync(manifestPath, "utf8")) as PackumentVersion;
   // Resource-only libraries install into an Agent from their generated table. Packages
-  // advertising a JavaScript entry still go through the original ESM activation check.
+  // advertising a JavaScript entry still go through the ESM entry check below.
   if (
     published.main === undefined &&
     published.exports === undefined &&
@@ -147,11 +135,6 @@ export function probePackage(root: string): string[] {
   if (!entryPath.startsWith(root + path.sep) || !fs.existsSync(entryPath)) {
     problems.push(`entry point "${entry}" is missing from the published package`);
     return problems;
-  }
-  if (!declaresActivate(fs.readFileSync(entryPath, "utf8"))) {
-    problems.push(
-      `entry point "${entry}" declares no "activate" export; a plugin's contract is one named export activate(ctx)`,
-    );
   }
   return problems;
 }

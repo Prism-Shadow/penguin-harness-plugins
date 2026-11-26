@@ -89,11 +89,9 @@ describe("resource-only packages", () => {
     table({ "PluginLibraryModule.workbenches": [{ ...board, path: "../board" }] });
     expect(probePackage(root)).not.toEqual([]);
   });
-  it("preserves the code-plugin check when a JavaScript entry is declared", () => {
+  it("accepts a code entry that exports no activate function", () => {
     put("package.json", { type: "module", main: "index.js" });
     put("index.js", "export const unrelated = 1;");
-    expect(probePackage(root).join(" ")).toContain("activate");
-    put("index.js", "export function activate() {}");
     expect(probePackage(root)).toEqual([]);
   });
 });

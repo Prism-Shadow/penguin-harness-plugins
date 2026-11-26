@@ -23,9 +23,6 @@ The published package must:
 - carry any valid npm name, optionally under your own scope (`@you/widgets`); there is
   no required prefix;
 - declare `"type": "module"` — the harness imports plugins as ESM;
-- export a named `activate` function from its entry point. That is the plugin contract:
-  `activate(ctx)` runs once per process at load, and every harness view arrives through
-  `ctx.on(...)` subscriptions made during that call;
 - carry an [allowed license](docs/licensing.md), both in `package.json` and as a license
   file in the repository;
 - have a public source repository. A plugin nobody can read is a plugin nobody can
@@ -80,8 +77,7 @@ the PR. One entry per pull request.
 
 CI decides the mechanical questions: the manifest parses and its path spells its name,
 version and hash; the metadata matches what npm serves; installing the lock produces
-exactly the content the hash names; the package is loadable ESM with an `activate`
-export; the license is allowed. A maintainer then looks at the rest:
+exactly the content the hash names; the package is loadable ESM; the license is allowed. A maintainer then looks at the rest:
 
 - **Usefulness.** The plugin should do something other people want, and do it through
   the harness's own capability vocabulary rather than by working around it.
