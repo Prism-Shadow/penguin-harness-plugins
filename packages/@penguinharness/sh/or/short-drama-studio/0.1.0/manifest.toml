@@ -1,0 +1,18 @@
+name = "@penguinharness/short-drama-studio"
+version = "0.1.0"
+description = "AI short drama storyboard and video workbench: break down episode scripts into character consistency cards, scene settings and editable shot-by-shot storyboards, generate or redo individual shots via Seedance, MiniMax H3 or local FFmpeg studio without rerunning the episode, and export playable MP4 films."
+authors = ["Prism-Shadow <https://github.com/Prism-Shadow>"]
+license = "Apache-2.0"
+repository = "https://github.com/Prism-Shadow/penguin-harness-apps"
+homepage = "https://github.com/lzh368/penguin-harness-apps/tree/321b0a8dba6765c189dc86bf159ac48c3661e082/plugins/short-drama-studio"
+title = "AI Short Drama Storyboard & Video Workbench"
+title_zh = "AI 短剧分镜与视频生成工作台"
+description_zh = "面向 AI 漫剧与真人短剧创作者的分镜拆解、角色/场景一致性设定、单镜无损重做与成片 MP4 合成工作台。预置《纸箱小屋》完整剧本与 8 段 720p H.264 实景分镜视频。"
+keywords = ["penguin-plugin", "penguinharness", "skills", "workbench", "short-drama"]
+categories = ["entertainment", "ai-app-development"]
+owners = ["lzh368", "hiyouga"]
+integrity = "sha512-imqzHfjgg0T1gnXgaWvRyT1I7NijY8KDfqlwhr9HpVQl78OMdHSgH0fSVIX1JzPGtIe0SJnD3rCjy2dl76j82Q=="
+
+[[channels]]
+kind = "github"
+url = "https://github.com/lzh368/penguin-harness-apps/releases/download/v0.1.0-short-drama-studio/short-drama-studio-0.1.0.tgz"
