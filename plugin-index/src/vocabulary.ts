@@ -61,6 +61,7 @@ export const LICENSES = [
   "MPL-2.0",
   "LGPL-3.0-only",
   "LGPL-3.0-or-later",
+  "GPL-2.0-only",
   "GPL-3.0-only",
   "GPL-3.0-or-later",
   "AGPL-3.0-only",

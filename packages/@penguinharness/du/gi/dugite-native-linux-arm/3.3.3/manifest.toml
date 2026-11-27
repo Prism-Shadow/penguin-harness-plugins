@@ -1,0 +1,14 @@
+name = "@penguinharness/dugite-native-linux-arm"
+version = "3.3.3"
+description = "The Git build dugite 3.3.3 pins for linux-arm (dugite-native 2.56.1-238326e), packaged whole as a PenguinHarness plugin dependency."
+authors = ["Prism-Shadow <https://github.com/Prism-Shadow>"]
+license = "GPL-2.0-only"
+repository = "https://github.com/desktop/dugite-native"
+keywords = ["git", "linux"]
+categories = ["software-development"]
+owners = ["hiyouga"]
+integrity = "sha512-zembF/i2xAXH6+5MnurhPrA+0RPnlPQ8PfD2ZFTX0W7rIcw+Q5o1JB8wRqi2rRt+PmNbKVHZU6f/WSv069/Z+Q=="
+
+[[channels]]
+kind = "github"
+url = "https://github.com/Prism-Shadow/penguin-harness-plugins/releases/download/nightly/penguinharness-dugite-native-linux-arm-3.3.3.tgz"

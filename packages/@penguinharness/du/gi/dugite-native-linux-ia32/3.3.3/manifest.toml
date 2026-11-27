@@ -1,0 +1,14 @@
+name = "@penguinharness/dugite-native-linux-ia32"
+version = "3.3.3"
+description = "The Git build dugite 3.3.3 pins for linux-ia32 (dugite-native 2.56.1-238326e), packaged whole as a PenguinHarness plugin dependency."
+authors = ["Prism-Shadow <https://github.com/Prism-Shadow>"]
+license = "GPL-2.0-only"
+repository = "https://github.com/desktop/dugite-native"
+keywords = ["git", "linux"]
+categories = ["software-development"]
+owners = ["hiyouga"]
+integrity = "sha512-D4jfb8KM6gmkTcNqsGLc7eFLa5s7BOKo3glTazmOB2uVsbw7q972I4RwxCVxrgeMcI4CpSF//2rFWtIMWuYuXg=="
+
+[[channels]]
+kind = "github"
+url = "https://github.com/Prism-Shadow/penguin-harness-plugins/releases/download/nightly/penguinharness-dugite-native-linux-ia32-3.3.3.tgz"

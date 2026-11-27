@@ -1,0 +1,14 @@
+name = "@penguinharness/dugite-native-darwin-arm64"
+version = "3.3.3"
+description = "The Git build dugite 3.3.3 pins for darwin-arm64 (dugite-native 2.56.1-238326e), packaged whole as a PenguinHarness plugin dependency."
+authors = ["Prism-Shadow <https://github.com/Prism-Shadow>"]
+license = "GPL-2.0-only"
+repository = "https://github.com/desktop/dugite-native"
+keywords = ["git", "macos"]
+categories = ["software-development"]
+owners = ["hiyouga"]
+integrity = "sha512-xT99T0YJPODWTjbETbY2+7gjMRdNJOkHTGrQApwteUueSoNT6K1Esc6SzDwIKYxS/PAgMZj5gjhD625tIRysAw=="
+
+[[channels]]
+kind = "github"
+url = "https://github.com/Prism-Shadow/penguin-harness-plugins/releases/download/nightly/penguinharness-dugite-native-darwin-arm64-3.3.3.tgz"

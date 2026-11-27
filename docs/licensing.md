@@ -8,7 +8,7 @@ read is one a human should look at.
 ## Accepted identifiers
 
 `MIT`, `Apache-2.0`, `BSD-2-Clause`, `BSD-3-Clause`, `ISC`, `MPL-2.0`,
-`LGPL-3.0-only`, `LGPL-3.0-or-later`, `GPL-3.0-only`, `GPL-3.0-or-later`,
+`LGPL-3.0-only`, `LGPL-3.0-or-later`, `GPL-2.0-only`, `GPL-3.0-only`, `GPL-3.0-or-later`,
 `AGPL-3.0-only`, `AGPL-3.0-or-later`, `BlueOak-1.0.0`, `Unlicense`, `CC0-1.0`.
 
 Flat combinations are accepted too: `MIT OR Apache-2.0`, `Apache-2.0 AND CC0-1.0`.
