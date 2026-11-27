@@ -1,0 +1,18 @@
+name = "@penguinharness/latex-desk"
+version = "0.1.3"
+description = "A LaTeX paper workbench: import an Overleaf project, compile it to PDF beside the source, and edit it with an Agent that proposes review comments and diffs."
+authors = ["Prism-Shadow <https://github.com/Prism-Shadow>"]
+license = "Apache-2.0"
+repository = "https://github.com/Prism-Shadow/penguin-harness-apps"
+homepage = "https://github.com/yenanjing/penguin-harness-apps/tree/15e8fe5/plugins/latex-desk"
+title = "LaTeX Paper Desk"
+title_zh = "LaTeX 论文工作台"
+description_zh = "面向 LaTeX 论文写作的工作台：导入 Overleaf 工程，在源码旁实时编译出 PDF，由 Agent 提出审稿意见与修改建议，逐条预览 Diff 后采纳，片段级锚定保证同行其余内容不丢失。支持中英双语界面与 PDF 双击反查源码。"
+keywords = ["penguin-plugin", "workbench", "latex", "paper", "writing"]
+categories = ["office-productivity", "software-development"]
+owners = ["yenanjing", "hiyouga"]
+integrity = "sha512-d5KiN9M5b1U84QaXzEdaatpbdaDfw/UdbsmmchD3Y8WkaKNwKNwN4kxwmMgryrjHJG2mPoQyiFp/E6QBYtLB6Q=="
+
+[[channels]]
+kind = "github"
+url = "https://github.com/yenanjing/penguin-harness-apps/releases/download/v0.1.3-latex-desk/latex-desk-0.1.3.tgz"
