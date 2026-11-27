@@ -1,0 +1,18 @@
+name = "@penguinharness/pixcake"
+version = "1.0.0"
+description = "Local portrait and travel photo retouching workbench with frequency-preserving skin smoothing, 2D mesh reshaping, catchlight and makeup tools, film LUT color grading, manual liquify and spot healing brushes, and before/after split comparison."
+authors = ["zhaozhao1220yy <@zhaozhao1220yy>"]
+license = "Apache-2.0"
+repository = "https://github.com/Prism-Shadow/penguin-harness-apps"
+homepage = "https://github.com/zhaozhao1220yy/penguin-harness-apps/tree/def42d021487a0b7a8c870394b3e4cb4b1b58a97/plugins/pixcake"
+title = "PixCake Studio"
+title_zh = "像素蛋糕个人版"
+description_zh = "纯本地人像与旅拍精修工作台：内置高低频双边质感磨皮、五官与全身 2D 网格液化微调、眼神光与美妆贴合、旅拍胶片 LUT 调色、手动推脸液化笔与祛痘修复笔，以及修前修后分屏卷帘对比。"
+keywords = ["penguin-plugin", "penguinharness", "workbench", "photo-editing", "portrait"]
+categories = ["learning-life", "utilities"]
+owners = ["zhaozhao1220yy"]
+integrity = "sha512-CkTizQfgeKJqLQbnUAejt9uSW5kBUumBvFWvhcksU+u0cUpbCiwp0dUbwUje+orZbJnZh3/bDV/qssS+SpvOAQ=="
+
+[[channels]]
+kind = "github"
+url = "https://github.com/zhaozhao1220yy/penguin-harness-apps/releases/download/v1.0.0-pixcake/pixcake-1.0.0.tgz"
