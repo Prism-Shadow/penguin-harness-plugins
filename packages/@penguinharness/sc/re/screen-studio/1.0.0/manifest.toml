@@ -1,0 +1,18 @@
+name = "@penguinharness/screen-studio"
+version = "1.0.0"
+description = "Screen recording and demo video studio with spring-physics auto-zoom, native macOS cursor tracking, timeline editing, webcam picture-in-picture, and MP4/WebM export."
+authors = ["zhaozhao1220yy <@zhaozhao1220yy>"]
+license = "Apache-2.0"
+repository = "https://github.com/Prism-Shadow/penguin-harness-apps"
+homepage = "https://github.com/zhaozhao1220yy/penguin-harness-apps/tree/cb5ccd046d5db2780ed352d851142d03aeca480e/plugins/screen-studio"
+title = "Screen Studio"
+title_zh = "Screen Studio 录屏工坊"
+description_zh = "支持弹簧物理自动缩放、macOS 原生全局鼠标与点击追踪、多轨时间轴剪辑、摄像头画中画与背景边框美化的录屏演示视频工坊，可导出 MP4 与 WebM 视频。"
+keywords = ["penguin-plugin", "penguinharness", "workbench", "screen-recording", "video-editor"]
+categories = ["utilities"]
+owners = ["zhaozhao1220yy"]
+integrity = "sha512-LBaVaFKUJJDxdBnPuSvBAA/vLJBbDus92ML3E9Nrid1lnW9RfK+a314qIWmPHkjzvvuZUoy2Pf0iGx7z6ANMvw=="
+
+[[channels]]
+kind = "github"
+url = "https://github.com/zhaozhao1220yy/penguin-harness-apps/releases/download/v1.0.0-screen-studio/screen-studio-1.0.0.tgz"
