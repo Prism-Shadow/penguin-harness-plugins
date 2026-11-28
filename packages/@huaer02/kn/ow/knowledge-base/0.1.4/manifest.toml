@@ -1,0 +1,18 @@
+name = "@huaer02/knowledge-base"
+version = "0.1.4"
+description = "Agent-owned knowledge base plugin: multi-source ingestion (Markdown, code, web URLs, PDF), hybrid BM25 + embedding retrieval, inline versioned citations, and automatic Stop-hook knowledge accumulation."
+authors = ["Huaer02 <https://github.com/Huaer02>"]
+license = "Apache-2.0"
+repository = "https://github.com/Huaer02/penguin-knowledge-base"
+homepage = "https://github.com/Huaer02/penguin-knowledge-base"
+title = "Knowledge Base"
+title_zh = "知识库"
+description_zh = "Agent 知识库：支持 Markdown、代码文件（保留行号）、网页 URL 与 PDF 多源切分入库，BM25 + 可选向量混合检索、行内版本化引用标注，以及长任务轨迹自动沉淀并提示（可随时撤销或切换为先审后发）。"
+keywords = ["penguin-plugin", "knowledge-base", "rag", "skills", "workbench"]
+categories = ["office-productivity"]
+owners = ["Huaer02"]
+integrity = "sha512-EzB9HL6k15wmpocYStGZUN/OIeD68WtATvtV7jJ1SQ7TKzR3lVRdIYN1LIlZVVkNf0mqZxBIuvAH04ae2jqdAw=="
+
+[[channels]]
+kind = "github"
+url = "https://github.com/Huaer02/penguin-knowledge-base/releases/download/v0.1.4/huaer02-knowledge-base-0.1.4.tgz"
