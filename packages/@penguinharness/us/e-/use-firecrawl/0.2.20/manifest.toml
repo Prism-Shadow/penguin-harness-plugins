@@ -1,0 +1,18 @@
+name = "@penguinharness/use-firecrawl"
+version = "0.2.20"
+description = "Search the web and scrape pages into clean markdown with the Firecrawl API — query-based discovery, single-URL extraction including public PDFs, driven by curl with a vault-stored API key."
+authors = ["Prism-Shadow <https://github.com/Prism-Shadow>"]
+license = "Apache-2.0"
+repository = "https://github.com/Prism-Shadow/penguin-harness-apps"
+homepage = "https://github.com/Prism-Shadow/penguin-harness-apps/tree/v2026.11.28/plugins/use-firecrawl"
+title = "Firecrawl Search"
+title_zh = "Firecrawl 搜索"
+description_zh = "用 Firecrawl 做网络搜索与页面抓取。"
+keywords = ["penguin-plugin", "penguinharness", "skills"]
+categories = ["office-productivity"]
+owners = ["hiyouga"]
+integrity = "sha512-XZ5H9IfhY1SYGEoqg11+f0UqbIuStMD9Vv2gkMq+LLMc+t5fHUwws3+bBjX3XaGZkhP8XhVJU66v+FkuR6RoYw=="
+
+[[channels]]
+kind = "github"
+url = "https://github.com/Prism-Shadow/penguin-harness-apps/releases/download/v2026.11.28/use-firecrawl-0.2.20.tgz"
