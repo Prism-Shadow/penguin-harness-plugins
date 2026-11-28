@@ -1,0 +1,18 @@
+name = "@penguinharness/rrsi-rsi-toolkit"
+version = "0.2.19-rc.2"
+description = "The RRSI RSI Toolkit: Regularized Recursive Self-Improvement of Agent Harnesses (Xia et al., 2026, https://arxiv.org/abs/2609.24972), run the way the paper does — an annealed edit budget bounds what one proposal may bundle, a leakage Critic screens it before any measurement is spent, a Pruner deletes machinery that stopped earning its place, and a noise-adjusted floor plus a token-cost rule select the next harness. Self-contained: it creates the Target's harness slot, evaluates its own cells and writes the Evaluation Center's scoreboard."
+authors = ["Prism-Shadow <https://github.com/Prism-Shadow>"]
+license = "Apache-2.0"
+repository = "https://github.com/Prism-Shadow/penguin-harness-rsi-platform"
+homepage = "https://github.com/Prism-Shadow/penguin-harness-rsi-platform/tree/v0.2.0/plugins/rrsi-rsi-toolkit"
+title = "RRSI RSI Toolkit"
+title_zh = "RRSI 自进化工具包"
+description_zh = "RRSI RSI 工具包：演化 harness 且不致基准过拟合。"
+keywords = ["penguin-plugin", "penguinharness", "skills"]
+categories = ["rsi"]
+owners = ["hiyouga"]
+integrity = "sha512-Tc5Fq+Ij+7v+LqHWeNh3+ACmgOiJRnd6yUNFjk1kqj9YJ+SG+scLGCaXXXsirHsKdH0quzE18ur3YwIs1KDvqA=="
+
+[[channels]]
+kind = "github"
+url = "https://github.com/Prism-Shadow/penguin-harness-rsi-platform/releases/download/v0.2.0/penguinharness-rrsi-rsi-toolkit-0.2.19-rc.2.tgz"

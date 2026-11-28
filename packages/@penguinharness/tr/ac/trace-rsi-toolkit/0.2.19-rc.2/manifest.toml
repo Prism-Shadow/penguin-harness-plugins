@@ -1,0 +1,18 @@
+name = "@penguinharness/trace-rsi-toolkit"
+version = "0.2.19-rc.2"
+description = "The TRACE RSI Toolkit: organize container training and evaluation, refine a modular skill bank from contrasting trajectories, and test the checkpoint selected by training scores."
+authors = ["Prism-Shadow <https://github.com/Prism-Shadow>"]
+license = "Apache-2.0"
+repository = "https://github.com/Prism-Shadow/penguin-harness-rsi-platform"
+homepage = "https://github.com/Prism-Shadow/penguin-harness-rsi-platform/tree/v0.2.0/plugins/trace-rsi-toolkit"
+title = "TRACE RSI Toolkit"
+title_zh = "TRACE 自进化工具包"
+description_zh = "TRACE RSI 工具包：对比轨迹，进化技能库。"
+keywords = ["penguin-plugin", "penguinharness", "skills"]
+categories = ["rsi"]
+owners = ["hiyouga"]
+integrity = "sha512-zFCDIFNDCLbbM5tEgmCAR++c9kSFzg1HBOZCoExR+nTTiG586Z5fCEoe4UTWZr7XdE8Oy9V+bu8r6jzUDIQU4w=="
+
+[[channels]]
+kind = "github"
+url = "https://github.com/Prism-Shadow/penguin-harness-rsi-platform/releases/download/v0.2.0/penguinharness-trace-rsi-toolkit-0.2.19-rc.2.tgz"

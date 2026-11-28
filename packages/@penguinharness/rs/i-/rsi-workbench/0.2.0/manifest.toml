@@ -1,0 +1,21 @@
+name = "@penguinharness/rsi-workbench"
+version = "0.2.0"
+description = "The Self-Evolution Workbench for PenguinHarness: a workbench of the default Agent to create, import, evaluate and optimize Agents against its Benchmarks, with the benchmark-design and agent-evaluation Skills and the Benchmark format as ./format."
+authors = ["Prism-Shadow <https://github.com/Prism-Shadow>"]
+license = "Apache-2.0"
+repository = "https://github.com/Prism-Shadow/penguin-harness-rsi-platform"
+homepage = "https://github.com/Prism-Shadow/penguin-harness-rsi-platform/tree/v0.2.0"
+title = "Self-Evolution Workbench"
+title_zh = "自进化工作台"
+description_zh = "默认 Agent 的自进化工作台：在应用窗口里管理这个 Agent 的 Benchmark——手动创建、用 AI 设计并校准、导入与导出——并一键发起评估与优化，任务作为你的对话出现在侧栏；附带 benchmark-design 与 agent-evaluation 两个 Skill，RSI 工具包的优化循环以这些测量为准。"
+keywords = ["penguin-plugin", "penguinharness", "benchmark", "evaluation", "rsi"]
+categories = ["rsi"]
+owners = ["hiyouga"]
+integrity = "sha512-VwTIz5f12U6SWYJlqnyiLuTtxzi7xB2IHTweXu50q2nNqHmEkbnS4aqdsomn+JjcGcuJ9s+Iz8dv2rsRmG8hog=="
+
+[[channels]]
+kind = "github"
+url = "https://github.com/Prism-Shadow/penguin-harness-rsi-platform/releases/download/v0.2.0/penguinharness-rsi-workbench-0.2.0.tgz"
+
+[[channels]]
+kind = "npm"
