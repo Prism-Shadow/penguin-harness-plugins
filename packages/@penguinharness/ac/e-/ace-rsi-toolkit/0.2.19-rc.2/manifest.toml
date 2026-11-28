@@ -16,6 +16,3 @@ integrity = "sha512-+OKm8plcHWGB6wbnysJEPNt3MmuIIC4qzE+Vnc6IyOMvmSP3yyNOJ3prHTTE
 [[channels]]
 kind = "github"
 url = "https://github.com/Prism-Shadow/penguin-harness-rsi-platform/releases/download/v0.2.0/penguinharness-ace-rsi-toolkit-0.2.19-rc.2.tgz"
-
-[[channels]]
-kind = "npm"
